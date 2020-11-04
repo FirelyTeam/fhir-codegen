@@ -125,10 +125,19 @@ namespace Microsoft.Health.Fhir.SpecManager.Language
             "Meta",
             "PrimitiveType",
             "Narrative",
+
+            /*
+             * These types have been added post-beta2
+             */
             "Reference",
             "Identifier",
             "CodeableConcept",
             "Period",
+            "Attachment",
+            "Quantity",
+            "HumanName",
+            "ContactPoint",
+            "Address"
         };
 
         /// <summary>
@@ -137,7 +146,7 @@ namespace Microsoft.Health.Fhir.SpecManager.Language
         private static readonly List<string> _commmonResourceTypes = new List<string>()
         {
             "Resource",
-            "DomainResource",
+            "DomainResource",   // Post beta2
         };
 
         /// <summary>Gets the reserved words.</summary>
@@ -782,6 +791,9 @@ namespace Microsoft.Health.Fhir.SpecManager.Language
             WriteIndentedComment($"{complex.ShortDescription}");
 
             WriteSerializable();
+
+
+
             if (isResource)
             {
                 _writer.WriteLineIndented($"[FhirType(\"{complex.Name}\", IsResource=true)]");
@@ -1608,28 +1620,56 @@ namespace Microsoft.Health.Fhir.SpecManager.Language
                 out string allowedTypes,
                 out string resourceReferences);
 
-            /* Exceptions:
-             *  o Meta.source only exists since R5, it is still present in the common version.
-             *  o Meta.profile has changed types from `uri` to `canonical`, but we stick to Uri for the common version
-             *
-             * If we start to include more classes like this, we might need to
-             * automate this, by scanning differences between 3/4/5/6/7 etc.. */
-            if (element.Path == "Meta.source")
+            // Specify differences across versions necessary to generate the correct common datatypes.
+            Dictionary<string, MultiVersionDifference> exceptions = new Dictionary<string, MultiVersionDifference>
             {
-                _writer.WriteLineIndented($"[FhirElement(\"{name}\"{summary}, Order={GetOrder(element)}{choice}, Since=FhirRelease.R4)]");
-            }
-            else if (element.Path == "Reference.type")
+                // Meta.source only exists since R4
+                ["Meta.source"] = new MultiVersionDifference { Since = "R4" },
+
+                // Meta.profile existed, but its type changed from uri to canonical. Common version uses
+                // FhirUri as datatype.
+                ["Meta.profile"] = new MultiVersionDifference { GeneratedType = "uri", DeclaredType = "Canonical", DeclaredTypeSince = "R4" },
+
+                // Reference.type only exists since R4
+                ["Reference.type"] = new MultiVersionDifference { Since = "R4" },
+
+                ["Attachment.url"] = new MultiVersionDifference { GeneratedType = "uri", DeclaredType = "FhirUrl", DeclaredTypeSince = "R4" },
+                ["Attachment.height"] = new MultiVersionDifference { Since = "R5" },
+                ["Attachment.width"] = new MultiVersionDifference { Since = "R5" },
+                ["Attachment.frames"] = new MultiVersionDifference { Since = "R5" },
+                ["Attachment.duration"] = new MultiVersionDifference { Since = "R5" },
+                ["Attachment.pages"] = new MultiVersionDifference { Since = "R5" },
+            };
+
+            MultiVersionDifference diff =
+                exceptions.TryGetValue(element.Path, out MultiVersionDifference md) ? md : null;
+
+            /*
+             * Write the [FhirElement] attribute, adapt it if there are any multi-version
+             * differences specified
+             */
+            string fhirElementAttribute = $"[FhirElement(\"{name}\"{summary}, Order={GetOrder(element)}{choice}";
+
+            if (diff?.Since != null)
             {
-                _writer.WriteLineIndented($"[FhirElement(\"{name}\"{summary}, Order={GetOrder(element)}{choice}, Since=FhirRelease.R4)]");
-            }
-            else
-            {
-                _writer.WriteLineIndented($"[FhirElement(\"{name}\"{summary}, Order={GetOrder(element)}{choice})]");
+                fhirElementAttribute += $", Since=FhirRelease.{diff.Since}";
             }
 
-            if (element.Path == "Meta.profile")
+            _writer.WriteLineIndented(fhirElementAttribute + ")]");
+
+            /*
+             * Write the [DeclaredType] attribute, adapt it if there are any multi-version
+             * differences specified
+             */
+            if (diff?.DeclaredType != null)
             {
-                _writer.WriteLineIndented($"[DeclaredType(Type = typeof(Canonical), Since = FhirRelease.R4)]");
+                string declaredTypeAttribute = $"[DeclaredType(Type=typeof({diff.DeclaredType})";
+                if (diff.DeclaredTypeSince != null)
+                {
+                    declaredTypeAttribute += $", Since=FhirRelease.{diff.DeclaredTypeSince}";
+                }
+
+                _writer.WriteLineIndented(declaredTypeAttribute + ")]");
             }
 
             if ((!string.IsNullOrEmpty(resourceReferences)) && string.IsNullOrEmpty(allowedTypes))
@@ -1670,12 +1710,14 @@ namespace Microsoft.Health.Fhir.SpecManager.Language
                 type = "object";
             }
 
-            /* This is an exception - we want to share Meta across different FHIR versions
-             * in the common library, so we use the "most common" type to the versions, which
-             * is uri rather than the more specific canonical. */
-            if (element.Path == "Meta.profile")
+            /*
+             * For multi-version (common) datatypes, the generated type may
+             * differ from the type specified in the data we generate from
+             * (which is normally the latest version).
+             */
+            if (diff?.GeneratedType != null)
             {
-                type = "uri";
+                type = diff.GeneratedType;
             }
 
             _writer.WriteLineIndented("[DataMember]");
@@ -2387,6 +2429,20 @@ namespace Microsoft.Health.Fhir.SpecManager.Language
             internal string FhirName;
             internal string CsName;
             internal bool IsAbstract;
+        }
+
+        /// <summary>
+        /// Specifies some aspects of the generation of the attributes that
+        /// differ from what is visible in the structuredefinitions. Used for
+        /// generating common classes based in R5, but that need annotations
+        /// for differences between previous versions.
+        /// </summary>
+        private class MultiVersionDifference
+        {
+            public string Since;
+            public string GeneratedType;
+            public string DeclaredType;
+            public string DeclaredTypeSince;
         }
     }
 }
