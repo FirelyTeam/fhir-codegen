@@ -2008,7 +2008,7 @@ namespace Microsoft.Health.Fhir.SpecManager.Language
                     case "UnsignedInt":
                     case "Instant":
                     case "Integer64":
-                        _writer.WriteLineIndented($"JsonStreamUtilities.SerializePrimitiveProperty(\"{elementInfo.FhirElementName}\",{currentName},writer,options);");
+                        _writer.WriteLineIndented($"JsonStreamUtilities.SerializePrimitiveProperty(\"{fhirCombinedName}\",{caseVarName},writer,options);");
                         break;
 
                     // special case for Element.id, Extension.url, and Narrative.div
@@ -2020,12 +2020,12 @@ namespace Microsoft.Health.Fhir.SpecManager.Language
                         // check for enum-typed codes (non-enum codes are handled above)
                         if (kvp.Value.StartsWith("Code<", StringComparison.Ordinal))
                         {
-                            _writer.WriteLineIndented($"JsonStreamUtilities.SerializePrimitiveProperty(\"{elementInfo.FhirElementName}\",{currentName},writer,options);");
+                            _writer.WriteLineIndented($"JsonStreamUtilities.SerializePrimitiveProperty(\"{fhirCombinedName}\",{caseVarName},writer,options);");
                         }
                         else
                         {
-                            _writer.WriteLineIndented($"JsonStreamUtilities.SerializeComplexProperty(\"{elementInfo.FhirElementName}\", " +
-                                $"{currentName}, writer, options);");
+                            _writer.WriteLineIndented($"JsonStreamUtilities.SerializeComplexProperty(\"{fhirCombinedName}\", " +
+                                $"{caseVarName}, writer, options);");
                         }
 
                         break;

@@ -970,7 +970,11 @@ namespace Microsoft.Health.Fhir.SpecManager.Language
             foreach (var info in exportedElements)
             {
                 var nullcheck = !info.IsList ? " is not null" : "?.Any() == true";
-                _writer.WriteLineIndented($"if ({info.ExportedName}{nullcheck}) yield return new KeyValuePair<string,object>(\"{info.FhirElementName}\",{info.ExportedName});");
+                var elementProp = info.IsChoice ?
+                    $"PocoDictionary.ComposeChoiceElementName(\"{info.FhirElementName}\", {info.ExportedName})"
+                    : $"\"{info.FhirElementName}\"";
+                _writer.WriteLineIndented($"if ({info.ExportedName}{nullcheck}) yield return new " +
+                    $"KeyValuePair<string,object>({elementProp},{info.ExportedName});");
             }
 
             CloseScope();
@@ -1630,6 +1634,7 @@ namespace Microsoft.Health.Fhir.SpecManager.Language
                         ExportedName = $"{pascal}{matchTrailer}Element",
                         ExportedType = codeLiteral,
                         IsList = false,
+                        IsChoice = element.Name.Contains("[x]", StringComparison.Ordinal),
                     });
 
                 _writer.WriteLineIndented($"public {codeLiteral} {pascal}{matchTrailer}Element");
@@ -1651,6 +1656,7 @@ namespace Microsoft.Health.Fhir.SpecManager.Language
                         ExportedName = $"{pascal}{matchTrailer}Element",
                         ExportedType = $"List<{codeLiteral}>",
                         IsList = true,
+                        IsChoice = element.Name.Contains("[x]", StringComparison.Ordinal),
                     });
 
                 _writer.WriteLineIndented($"public List<{codeLiteral}> {pascal}{matchTrailer}Element");
@@ -1880,6 +1886,7 @@ namespace Microsoft.Health.Fhir.SpecManager.Language
                         ExportedName = $"{pascal}{elementTag}",
                         ExportedType = $"{Namespace}.{type}",
                         IsList = false,
+                        IsChoice = element.Name.Contains("[x]", StringComparison.Ordinal),
                     });
 
                 _writer.WriteLineIndented($"public {Namespace}.{type} {pascal}{elementTag}");
@@ -1901,6 +1908,7 @@ namespace Microsoft.Health.Fhir.SpecManager.Language
                         ExportedName = $"{pascal}{elementTag}",
                         ExportedType = $"List<{Namespace}.{type}>",
                         IsList = true,
+                        IsChoice = element.Name.Contains("[x]", StringComparison.Ordinal),
                     });
 
                 _writer.WriteLineIndented($"public List<{Namespace}.{type}> {pascal}{elementTag}");
@@ -2583,6 +2591,7 @@ namespace Microsoft.Health.Fhir.SpecManager.Language
             internal string ExportedName;
             internal string ExportedType;
             internal bool IsList;
+            internal bool IsChoice;
         }
 
         /// <summary>Information about the written model.</summary>
