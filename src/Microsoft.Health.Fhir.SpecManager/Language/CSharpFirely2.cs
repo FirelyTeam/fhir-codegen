@@ -919,7 +919,7 @@ namespace Microsoft.Health.Fhir.SpecManager.Language
             WriteChildren(exportedElements);
             WriteNamedChildren(exportedElements);
 
-            WriteIDictionarySupport(exportedElements);
+            WriteIDictionarySupport(exportedElements, isResource ? complex.Name : null);
 
             // close class
             CloseScope();
@@ -951,60 +951,121 @@ namespace Microsoft.Health.Fhir.SpecManager.Language
             return baseTypeName;
         }
 
-        private void WriteIDictionarySupport(IEnumerable<WrittenElementInfo> exportedElements)
+        private void WriteIDictionarySupport(IEnumerable<WrittenElementInfo> exportedElements, string resourceName)
         {
-            WriteDictionaryTryGetValue(exportedElements);
-            WriteDictionaryPairs(exportedElements);
+            WriteDictionaryTryGetValue(exportedElements, resourceName);
+            WriteDictionaryPairs(exportedElements, resourceName);
         }
 
 
-        private void WriteDictionaryPairs(IEnumerable<WrittenElementInfo> exportedElements)
+        private string NullCheck(WrittenElementInfo info) => info.ExportedName + (!info.IsList ? " is not null" : "?.Any() == true");
+
+        private void WriteDictionaryPairs(IEnumerable<WrittenElementInfo> exportedElements, string resourceName)
         {
-            if (!exportedElements.Any()) return;
+            if (!exportedElements.Any())
+            {
+                return;
+            }
 
             _writer.WriteLineIndented("protected override IEnumerable<KeyValuePair<string, object>> GetElementPairs()");
             OpenScope();
 
+            if (resourceName == "Resource")
+                _writer.WriteLineIndented($"yield return new KeyValuePair<string,object>(\"resourceType\",TypeName);");
+
             _writer.WriteLineIndented("foreach (var kvp in base.GetElementPairs()) yield return kvp;");
 
-            foreach (var info in exportedElements)
+            foreach (WrittenElementInfo info in exportedElements)
             {
-                var nullcheck = !info.IsList ? " is not null" : "?.Any() == true";
-                var elementProp = info.IsChoice ?
+                string elementProp = info.IsChoice ?
                     $"PocoDictionary.ComposeChoiceElementName(\"{info.FhirElementName}\", {info.ExportedName})"
                     : $"\"{info.FhirElementName}\"";
-                _writer.WriteLineIndented($"if ({info.ExportedName}{nullcheck}) yield return new " +
+                _writer.WriteLineIndented($"if ({NullCheck(info)}) yield return new " +
                     $"KeyValuePair<string,object>({elementProp},{info.ExportedName});");
             }
 
             CloseScope();
         }
 
-        private void WriteDictionaryTryGetValue(IEnumerable<WrittenElementInfo> exportedElements)
+        private void WriteDictionaryTryGetValue(IEnumerable<WrittenElementInfo> exportedElements, string resourceName)
         {
             // Don't override anything if there are no additional elements.
-            if (!exportedElements.Any()) return;
+            if (!exportedElements.Any())
+            {
+                return;
+            }
 
             _writer.WriteLineIndented("public override bool TryGetValue(string key, out object value)");
             OpenScope();
-            _writer.WriteLineIndented("value = key switch");
+
+            // switch
+            _writer.WriteLineIndented("switch (key)");
             OpenScope();
 
-            foreach (WrittenElementInfo info in exportedElements)
+            if (resourceName == "Resource")
             {
-                _writer.WriteIndented($"\"{info.FhirElementName}\" => ");
-
-                if (!info.IsList)
-                    _writer.WriteLine($"{info.ExportedName},");
-                else
-                    _writer.WriteLine($"{info.ExportedName}?.Any() == true ? {info.ExportedName} : null,");
+                _writer.WriteLineIndented($"case \"resourceType\":");
+                _writer.IncreaseIndent();
+                _writer.WriteLineIndented("value = TypeName;");
+                _writer.WriteLineIndented("return true;");
+                _writer.DecreaseIndent();
             }
 
-            _writer.WriteLineIndented("_ => default");
+            bool hasChoices = false;
+            foreach (WrittenElementInfo info in exportedElements)
+            {
+                _writer.WriteLineIndented($"case \"{info.FhirElementName}\":");
+                _writer.IncreaseIndent();
+
+                _writer.WriteLineIndented($"value = {info.ExportedName};");
+                _writer.WriteLineIndented($"return {NullCheck(info)};");
+
+                _writer.DecreaseIndent();
+
+                hasChoices |= info.IsChoice;
+            }
+
+            _writer.WriteLineIndented("default:");
+            _writer.IncreaseIndent();
+            if (!hasChoices)
+                writeBaseTryGetValue();
+            else
+                _writer.WriteLineIndented("return choiceMatches(out value);");
+            _writer.DecreaseIndent();
+
+            // end switch
             CloseScope(includeSemicolon: true);
 
-            _writer.WriteLineIndented("return value is not null || base.TryGetValue(key, out value);");
+            if (hasChoices)
+            {
+                // write a matches for prefixes of element names for choice elements
+                _writer.WriteLineIndented("bool choiceMatches(out object value)");
+                OpenScope();
+
+                bool needElse = false;
+
+                foreach (WrittenElementInfo info in exportedElements.Where(i => i.IsChoice))
+                {
+                    _writer.WriteLineIndented($"{(needElse ? "else if" : "if")} (key.StartsWith(\"{info.FhirElementName}\"))");
+                    needElse = true;
+                    _writer.OpenScope();
+
+                    _writer.WriteLineIndented($"value = {info.ExportedName};");
+                    _writer.WriteIndented($"return {NullCheck(info)} && ");
+                    _writer.WriteLine($"key.EndsWith({info.ExportedName}.TypeName, StringComparison.OrdinalIgnoreCase);");
+
+                    _writer.CloseScope();
+                }
+
+                writeBaseTryGetValue();
+
+                CloseScope();
+            }
+
+            // end function
             CloseScope();
+
+            void writeBaseTryGetValue() => _writer.WriteLineIndented("return base.TryGetValue(key, out value);");
         }
 
         /// <summary>Writes the children of this item.</summary>
@@ -1292,7 +1353,7 @@ namespace Microsoft.Health.Fhir.SpecManager.Language
                 WriteIsExactly(exportName, exportedElements);
                 WriteChildren(exportedElements);
                 WriteNamedChildren(exportedElements);
-                WriteIDictionarySupport(exportedElements);
+                WriteIDictionarySupport(exportedElements, isResource ? complex.Name : null);
             }
 
             // close class
