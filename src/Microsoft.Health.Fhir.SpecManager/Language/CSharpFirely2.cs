@@ -955,6 +955,7 @@ namespace Microsoft.Health.Fhir.SpecManager.Language
         {
             WriteDictionaryTryGetValue(exportedElements, resourceName);
             WriteDictionaryPairs(exportedElements, resourceName);
+            WriteDictionaryCallback(exportedElements, resourceName);
         }
 
 
@@ -982,6 +983,32 @@ namespace Microsoft.Health.Fhir.SpecManager.Language
                     : $"\"{info.FhirElementName}\"";
                 _writer.WriteLineIndented($"if ({NullCheck(info)}) yield return new " +
                     $"KeyValuePair<string,object>({elementProp},{info.ExportedName});");
+            }
+
+            CloseScope();
+        }
+
+        private void WriteDictionaryCallback(IEnumerable<WrittenElementInfo> exportedElements, string resourceName)
+        {
+            if (!exportedElements.Any())
+            {
+                return;
+            }
+
+            _writer.WriteLineIndented("public override void EnumerateElements(Action<string,object> callback)");
+            OpenScope();
+
+            if (resourceName == "Resource")
+                _writer.WriteLineIndented($"callback(\"resourceType\",TypeName);");
+
+            _writer.WriteLineIndented("base.EnumerateElements(callback);");
+
+            foreach (WrittenElementInfo info in exportedElements)
+            {
+                string elementProp = info.IsChoice ?
+                    $"PocoDictionary.ComposeChoiceElementName(\"{info.FhirElementName}\", {info.ExportedName})"
+                    : $"\"{info.FhirElementName}\"";
+                _writer.WriteLineIndented($"if ({NullCheck(info)}) callback({elementProp},{info.ExportedName});");
             }
 
             CloseScope();
