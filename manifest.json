@@ -909,7 +909,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Microsoft.Health.Fhir.CodeGenCommon.Models.FhirUtils.html",
-          "hash": "ZMb8hI51IpmiY0it7M1AZ3aNAgHJ8JMhcKJfLS0roFQ="
+          "hash": "/QD0CwgvbQYkM5mvMd3VYx2On33xustd7wKomtH1EiE="
         }
       },
       "is_incremental": false,
@@ -1149,7 +1149,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Microsoft.Health.Fhir.SpecManager.Language.CSharpFirely2.html",
-          "hash": "65qT7IjKc0HLdLrAf22aRx1GgrMr4IbyYuIL3yvYC84="
+          "hash": "hRNfDJRPB9l2bjc6cVSc4mr8MnaY58x/Z0Sktx7VoCA="
         }
       },
       "is_incremental": false,
