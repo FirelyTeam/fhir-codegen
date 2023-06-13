@@ -1365,7 +1365,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Microsoft.Health.Fhir.SpecManager.Language.CSharpFirely2.html",
-          "hash": "PIgw+J5t/vGL3tKmGLCTQtygotrBhEZaS9scX+LUSxQ="
+          "hash": "/8LOaG6fGeGVflZMOzRzXS3lNoR27vppweis4wI/mOg="
         }
       },
       "is_incremental": false,
@@ -1377,7 +1377,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Microsoft.Health.Fhir.SpecManager.Language.CSharpFirely2IG.html",
-          "hash": "Wqls8kycSeECkDy8E7+uV79cid9KmVDwgtyBoOG94uc="
+          "hash": "5vSyO2W2n8HceeR6+aimyiz3UPA0AcWGWoBRY+ars5s="
         }
       },
       "is_incremental": false,
@@ -1905,7 +1905,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Microsoft.Health.Fhir.SpecManager.Manager.FhirPackageCommon.html",
-          "hash": "GVzEZt02gWVfZgLa3HP8vGvZ1R2O6H8nEzVW8qnm14A="
+          "hash": "LNBOnBO3SEuVArbBvDI6rGuLS+CJTcgh0vghgLzTtcM="
         }
       },
       "is_incremental": false,
@@ -2122,6 +2122,378 @@
         ".html": {
           "relative_path": "api/Microsoft.Health.Fhir.SpecManager.PackageManager.html",
           "hash": "ZnG6k0+E22jhy51mhToNdrJ7EbPixIiUb5zcddQKtYk="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Ncqa.Cql.Model.BindingInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Ncqa.Cql.Model.BindingInfo.html",
+          "hash": "QkT1nq3lpvOehWesUuQsaOonf/qYNioog4s/0UTAfjw="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Ncqa.Cql.Model.BindingStrength.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Ncqa.Cql.Model.BindingStrength.html",
+          "hash": "Op0QZTJvEhhfCAHSz+dafZJ427rau5zzPVXobL+xYfA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Ncqa.Cql.Model.BoundParameterTypeSpecifier.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Ncqa.Cql.Model.BoundParameterTypeSpecifier.html",
+          "hash": "u9QIJ9gl+2+NoKrsLVw729CPul+xGmUlACsGIDSV6po="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Ncqa.Cql.Model.ChoiceTypeInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Ncqa.Cql.Model.ChoiceTypeInfo.html",
+          "hash": "Ed8fQkm3YkD32YeksDWbYkC1VcFNOkUMoF6TeO/C1Y8="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Ncqa.Cql.Model.ChoiceTypeSpecifier.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Ncqa.Cql.Model.ChoiceTypeSpecifier.html",
+          "hash": "a3oUwZnRLDHfJwseCzLzpVf4kCJH034vSdVYiflt3cA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Ncqa.Cql.Model.ClassInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Ncqa.Cql.Model.ClassInfo.html",
+          "hash": "tREjaTPF6OEV0KIQPdCB/bKmKsI+smajDv9dLoIugaY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Ncqa.Cql.Model.ClassInfoElement.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Ncqa.Cql.Model.ClassInfoElement.html",
+          "hash": "Y4BiHozSzCRGggEKm/U+GgLhU2KUrTIwzPpeEIrXK08="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Ncqa.Cql.Model.ConstraintInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Ncqa.Cql.Model.ConstraintInfo.html",
+          "hash": "l+6p4zVGGPCmAbA9pA7XlVYuafFGzYZ5vlmMF+OEYX8="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Ncqa.Cql.Model.ContextInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Ncqa.Cql.Model.ContextInfo.html",
+          "hash": "FuRaMi4lJY1VdW3sVyPA7IcuymtWyKgukJMP4afeTM8="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Ncqa.Cql.Model.ConversionInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Ncqa.Cql.Model.ConversionInfo.html",
+          "hash": "Z0tZyg06VV2/op8bJNRbxUC9uNGWu8XRO2CqLcNrfcc="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Ncqa.Cql.Model.ExpressionInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Ncqa.Cql.Model.ExpressionInfo.html",
+          "hash": "q3XDYxFL8S8OG1BcePPbnt1mxQfjWu+pdfSyLEAKnOM="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Ncqa.Cql.Model.IntervalTypeInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Ncqa.Cql.Model.IntervalTypeInfo.html",
+          "hash": "0XV+HmGBoC3toUp67I1miGWi098z2/p0HsVt1HePg+I="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Ncqa.Cql.Model.IntervalTypeSpecifier.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Ncqa.Cql.Model.IntervalTypeSpecifier.html",
+          "hash": "y+IuTptB90L4tVc8dPhkyUmV9Zz5qdmI9Eravl3aKpo="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Ncqa.Cql.Model.ListTypeInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Ncqa.Cql.Model.ListTypeInfo.html",
+          "hash": "C+UADPnDM/7UMLfQhDZNbZ7HE5VXcjeKe/6RQQFYSU4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Ncqa.Cql.Model.ListTypeSpecifier.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Ncqa.Cql.Model.ListTypeSpecifier.html",
+          "hash": "HR70nj7WAICD3Cza86+vWKelUBC4K7HspFQcgEVWJ9E="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Ncqa.Cql.Model.ModelInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Ncqa.Cql.Model.ModelInfo.html",
+          "hash": "N3qtwKyL3JFV3L/FpCjJlTbalGbqwRQ4lFGlU5ny0wY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Ncqa.Cql.Model.ModelSpecifier.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Ncqa.Cql.Model.ModelSpecifier.html",
+          "hash": "zTPTOEe6IXztGNp6AmBOgv+CwcyTOniMTMtPqqJQ/g0="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Ncqa.Cql.Model.NamedTypeSpecifier.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Ncqa.Cql.Model.NamedTypeSpecifier.html",
+          "hash": "qLBBk7Io0O0IISdCGO86Iqi9FSfdAnmiKQi73JWIfYc="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Ncqa.Cql.Model.ParameterTypeSpecifier.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Ncqa.Cql.Model.ParameterTypeSpecifier.html",
+          "hash": "iUNFqWhy6NLOqJOQUYmsdTdkWB9vxABRnIIWf3BWdcM="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Ncqa.Cql.Model.ProfileInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Ncqa.Cql.Model.ProfileInfo.html",
+          "hash": "a201Eg5ltdqUywTd2QsZaP9ZW7m+0dyK133z6AiIisk="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Ncqa.Cql.Model.RelationshipInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Ncqa.Cql.Model.RelationshipInfo.html",
+          "hash": "t9zznZGLelvJqF+cZQ2kavo9NLNDmIKMTxrcxUYpQoM="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Ncqa.Cql.Model.SearchInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Ncqa.Cql.Model.SearchInfo.html",
+          "hash": "MBocr5o8H3Kd9XgYh49jWWTkGjN8IXqw/qk1w9UUQUQ="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Ncqa.Cql.Model.SimpleTypeInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Ncqa.Cql.Model.SimpleTypeInfo.html",
+          "hash": "Nom6EQ4vHFce52FInXGrj040dpAJ7JS5w+wNbfFc+ZU="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Ncqa.Cql.Model.TupleTypeInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Ncqa.Cql.Model.TupleTypeInfo.html",
+          "hash": "KlJ/Q3MQXRRCUf+Ru/uuw7AWNyYz1ta3XS46zadhJqA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Ncqa.Cql.Model.TupleTypeInfoElement.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Ncqa.Cql.Model.TupleTypeInfoElement.html",
+          "hash": "XCE5GcmMRbj+0i25X0MBnS649pbRwm82wZMiLvM1sM4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Ncqa.Cql.Model.TupleTypeSpecifier.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Ncqa.Cql.Model.TupleTypeSpecifier.html",
+          "hash": "Rlv6wrFN8qKqxjmbRqAlDNUh/9OmAqqwao7FO5GZtuw="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Ncqa.Cql.Model.TupleTypeSpecifierElement.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Ncqa.Cql.Model.TupleTypeSpecifierElement.html",
+          "hash": "oRCXIjWlitpYCIJt9oDTcZ341DQb/6zJ1bzp5/QMO8w="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Ncqa.Cql.Model.TypeInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Ncqa.Cql.Model.TypeInfo.html",
+          "hash": "eAEW/cSJz1LXy+/WrX3HyVH5XUCQ76EqlBTZhPg2C2g="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Ncqa.Cql.Model.TypeParameterInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Ncqa.Cql.Model.TypeParameterInfo.html",
+          "hash": "UVC7CuspZHIZHULzmCgLxNSgnXSeAa0ly+NqbKgmvBo="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Ncqa.Cql.Model.TypeSpecifier.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Ncqa.Cql.Model.TypeSpecifier.html",
+          "hash": "qHbE9Q4BuEwGHIhCprztDSO81dE+kC0LR9oY7IYN2vY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Ncqa.Cql.Model.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Ncqa.Cql.Model.html",
+          "hash": "+1/03f396AbjuOtx2M4vh1lBfYcICWOTG6+7/pedkQ8="
         }
       },
       "is_incremental": false,
@@ -10128,7 +10500,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "7FrV6HkXmYELnIcTGWuA5PxRZ9vgOovdBO6zXr1Vn4s="
+          "hash": "QwqufNKPGxME6cfFmqE8AR9BhTcW7eeGgGsVK4s2c44="
         }
       },
       "is_incremental": false,
@@ -10263,7 +10635,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 842,
+          "total_file_count": 873,
           "skipped_file_count": 0
         },
         "TocDocumentProcessor": {
