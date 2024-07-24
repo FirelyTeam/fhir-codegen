@@ -1,0 +1,2350 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class OpenApiOptions
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class OpenApiOptions
+   ">
+    <meta name="generator" content="docfx 2.59.4.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions">
+  
+  
+  <h1 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions" class="text-break">Class OpenApiOptions
+  </h1>
+  <div class="markdown level0 summary"><p>An open API options.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Configuration.ConfigRoot.html">ConfigRoot</a></div>
+    <div class="level2"><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Configuration.ConfigGenerate.html">ConfigGenerate</a></div>
+    <div class="level3"><span class="xref">OpenApiOptions</span></div>
+  </div>
+  <div class="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Configuration.ICodeGenConfig.html">ICodeGenConfig</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="Microsoft.Health.Fhir.CodeGen.Configuration.ConfigGenerate.html#Microsoft_Health_Fhir_CodeGen_Configuration_ConfigGenerate_ExportStructures">ConfigGenerate.ExportStructures</a>
+    </div>
+    <div>
+      <a class="xref" href="Microsoft.Health.Fhir.CodeGen.Configuration.ConfigGenerate.html#Microsoft_Health_Fhir_CodeGen_Configuration_ConfigGenerate_ExportKeys">ConfigGenerate.ExportKeys</a>
+    </div>
+    <div>
+      <a class="xref" href="Microsoft.Health.Fhir.CodeGen.Configuration.ConfigGenerate.html#Microsoft_Health_Fhir_CodeGen_Configuration_ConfigGenerate_IncludeExperimental">ConfigGenerate.IncludeExperimental</a>
+    </div>
+    <div>
+      <a class="xref" href="Microsoft.Health.Fhir.CodeGen.Configuration.ConfigRoot.html#Microsoft_Health_Fhir_CodeGen_Configuration_ConfigRoot_FhirCacheDirectory">ConfigRoot.FhirCacheDirectory</a>
+    </div>
+    <div>
+      <a class="xref" href="Microsoft.Health.Fhir.CodeGen.Configuration.ConfigRoot.html#Microsoft_Health_Fhir_CodeGen_Configuration_ConfigRoot_OutputDirectory">ConfigRoot.OutputDirectory</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.html">Microsoft.Health.Fhir.CodeGen.Language.OpenApi</a></h6>
+  <h6><strong>Assembly</strong>: Microsoft.Health.Fhir.CodeGen.dll</h6>
+  <h5 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class OpenApiOptions : ConfigGenerate, ICodeGenConfig</code></pre>
+  </div>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_BasicScopesOnly.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.BasicScopesOnly%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L66">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_BasicScopesOnly_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.BasicScopesOnly*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_BasicScopesOnly" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.BasicScopesOnly">BasicScopesOnly</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool BasicScopesOnly { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_ConditionalRead.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.ConditionalRead%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L303">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_ConditionalRead_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.ConditionalRead*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_ConditionalRead" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.ConditionalRead">ConditionalRead</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public CapabilityStatement.ConditionalReadStatus? ConditionalRead { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">CapabilityStatement.ConditionalReadStatus</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_ConsolidateSearchParameters.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.ConsolidateSearchParameters%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L253">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_ConsolidateSearchParameters_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.ConsolidateSearchParameters*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_ConsolidateSearchParameters" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.ConsolidateSearchParameters">ConsolidateSearchParameters</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating whether the consolidate search parameters.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool ConsolidateSearchParameters { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_DefinitionVersion.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.DefinitionVersion%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L79">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_DefinitionVersion_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.DefinitionVersion*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_DefinitionVersion" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.DefinitionVersion">DefinitionVersion</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string DefinitionVersion { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_DescriptionMaxLength.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.DescriptionMaxLength%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L812">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_DescriptionMaxLength_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.DescriptionMaxLength*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_DescriptionMaxLength" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.DescriptionMaxLength">DescriptionMaxLength</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the length of the description maximum.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int DescriptionMaxLength { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_ExpandProfiles.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.ExpandProfiles%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L848">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_ExpandProfiles_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.ExpandProfiles*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_ExpandProfiles" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.ExpandProfiles">ExpandProfiles</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating whether the expand profiles.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool ExpandProfiles { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_ExpandReferences.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.ExpandReferences%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L865">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_ExpandReferences_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.ExpandReferences*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_ExpandReferences" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.ExpandReferences">ExpandReferences</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating whether the expand references.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool ExpandReferences { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_ExportReadOnly.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.ExportReadOnly%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L758">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_ExportReadOnly_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.ExportReadOnly*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_ExportReadOnly" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.ExportReadOnly">ExportReadOnly</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating whether the read only should be exported.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool ExportReadOnly { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_ExportSearchParams.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.ExportSearchParams%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L217">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_ExportSearchParams_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.ExportSearchParams*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_ExportSearchParams" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.ExportSearchParams">ExportSearchParams</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating whether the search parameters should be exported.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool ExportSearchParams { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_ExportWriteOnly.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.ExportWriteOnly%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L777">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_ExportWriteOnly_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.ExportWriteOnly*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_ExportWriteOnly" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.ExportWriteOnly">ExportWriteOnly</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating whether the write only should be exported.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool ExportWriteOnly { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_ExtensionSupport.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.ExtensionSupport%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L96">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_ExtensionSupport_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.ExtensionSupport*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_ExtensionSupport" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.ExtensionSupport">ExtensionSupport</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the FHIR structures to export, default is all.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiCommon.ExtensionSupportLevel ExtensionSupport { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiCommon.ExtensionSupportLevel.html">OpenApiCommon.ExtensionSupportLevel</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_FhirMimeTypes.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.FhirMimeTypes%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L164">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_FhirMimeTypes_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.FhirMimeTypes*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_FhirMimeTypes" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.FhirMimeTypes">FhirMimeTypes</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a list of types of the FHIR mimes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiCommon.OaFhirMimeCodes FhirMimeTypes { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiCommon.OaFhirMimeCodes.html">OpenApiCommon.OaFhirMimeCodes</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_FileFormat.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.FileFormat%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L34">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_FileFormat_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.FileFormat*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_FileFormat" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.FileFormat">FileFormat</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the file format.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiCommon.OaFileFormat FileFormat { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiCommon.OaFileFormat.html">OpenApiCommon.OaFileFormat</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_HistoryHash.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.HistoryHash%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L1117">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_HistoryHash_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.HistoryHash*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_HistoryHash" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.HistoryHash">HistoryHash</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public HashSet&lt;string&gt; HistoryHash { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">HashSet</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_HistoryParams.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.HistoryParams%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L1119">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_HistoryParams_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.HistoryParams*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_HistoryParams" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.HistoryParams">HistoryParams</h4>
+  <div class="markdown level1 summary"><p>Gets or sets options for controlling the history.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string HistoryParams { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_HttpCommonParams.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.HttpCommonParams%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L1008">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_HttpCommonParams_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.HttpCommonParams*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_HttpCommonParams" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.HttpCommonParams">HttpCommonParams</h4>
+  <div class="markdown level1 summary"><p>Gets or sets options for controlling the HTTP common.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string HttpCommonParams { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_HttpCommonParamsHash.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.HttpCommonParamsHash%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L1005">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_HttpCommonParamsHash_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.HttpCommonParamsHash*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_HttpCommonParamsHash" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.HttpCommonParamsHash">HttpCommonParamsHash</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public HashSet&lt;string&gt; HttpCommonParamsHash { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">HashSet</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_HttpReadHash.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.HttpReadHash%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L1034">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_HttpReadHash_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.HttpReadHash*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_HttpReadHash" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.HttpReadHash">HttpReadHash</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public HashSet&lt;string&gt; HttpReadHash { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">HashSet</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_HttpReadParams.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.HttpReadParams%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L1037">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_HttpReadParams_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.HttpReadParams*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_HttpReadParams" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.HttpReadParams">HttpReadParams</h4>
+  <div class="markdown level1 summary"><p>Gets or sets options for controlling the HTTP read.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string HttpReadParams { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_IdNamingConvention.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.IdNamingConvention%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L899">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_IdNamingConvention_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.IdNamingConvention*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_IdNamingConvention" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.IdNamingConvention">IdNamingConvention</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the identifier naming convention.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiCommon.OaNamingConventionCodes IdNamingConvention { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiCommon.OaNamingConventionCodes.html">OpenApiCommon.OaNamingConventionCodes</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_IncludeDescriptions.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.IncludeDescriptions%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L796">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_IncludeDescriptions_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.IncludeDescriptions*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_IncludeDescriptions" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.IncludeDescriptions">IncludeDescriptions</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating whether the descriptions should be included.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IncludeDescriptions { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_IncludeHttpHeaders.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.IncludeHttpHeaders%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L971">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_IncludeHttpHeaders_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.IncludeHttpHeaders*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_IncludeHttpHeaders" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.IncludeHttpHeaders">IncludeHttpHeaders</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating whether the HTTP headers should be included.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IncludeHttpHeaders { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_IncludeSummaries.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.IncludeSummaries%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L952">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_IncludeSummaries_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.IncludeSummaries*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_IncludeSummaries" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.IncludeSummaries">IncludeSummaries</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating whether the summaries should be included.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IncludeSummaries { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionBatch.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionBatch%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L706">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionBatch_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionBatch*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionBatch" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionBatch">InteractionBatch</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiCommon.OaCapabilityBoolean InteractionBatch { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiCommon.OaCapabilityBoolean.html">OpenApiCommon.OaCapabilityBoolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionCapabilities.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionCapabilities%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L690">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionCapabilities_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionCapabilities*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionCapabilities" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionCapabilities">InteractionCapabilities</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating whether the system supports the metadata endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiCommon.OaCapabilityBoolean InteractionCapabilities { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiCommon.OaCapabilityBoolean.html">OpenApiCommon.OaCapabilityBoolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionCreate.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionCreate%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L560">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionCreate_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionCreate*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionCreate" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionCreate">InteractionCreate</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the interaction create.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiCommon.OaCapabilityBoolean InteractionCreate { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiCommon.OaCapabilityBoolean.html">OpenApiCommon.OaCapabilityBoolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionCreateConditional.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionCreateConditional%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L576">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionCreateConditional_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionCreateConditional*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionCreateConditional" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionCreateConditional">InteractionCreateConditional</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the interaction create conditional.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiCommon.OaCapabilityBoolean InteractionCreateConditional { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiCommon.OaCapabilityBoolean.html">OpenApiCommon.OaCapabilityBoolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionDelete.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionDelete%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L422">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionDelete_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionDelete*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionDelete" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionDelete">InteractionDelete</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the interaction delete.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiCommon.OaCapabilityBoolean InteractionDelete { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiCommon.OaCapabilityBoolean.html">OpenApiCommon.OaCapabilityBoolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionDeleteConditionalMultiple.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionDeleteConditionalMultiple%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L456">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionDeleteConditionalMultiple_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionDeleteConditionalMultiple*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionDeleteConditionalMultiple" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionDeleteConditionalMultiple">InteractionDeleteConditionalMultiple</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the interaction delete conditional multiple.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiCommon.OaCapabilityBoolean InteractionDeleteConditionalMultiple { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiCommon.OaCapabilityBoolean.html">OpenApiCommon.OaCapabilityBoolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionDeleteConditionalSingle.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionDeleteConditionalSingle%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L439">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionDeleteConditionalSingle_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionDeleteConditionalSingle*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionDeleteConditionalSingle" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionDeleteConditionalSingle">InteractionDeleteConditionalSingle</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the interaction delete conditional single.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiCommon.OaCapabilityBoolean InteractionDeleteConditionalSingle { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiCommon.OaCapabilityBoolean.html">OpenApiCommon.OaCapabilityBoolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionDeleteHistory.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionDeleteHistory%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L473">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionDeleteHistory_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionDeleteHistory*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionDeleteHistory" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionDeleteHistory">InteractionDeleteHistory</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the interaction delete history.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiCommon.OaCapabilityBoolean InteractionDeleteHistory { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiCommon.OaCapabilityBoolean.html">OpenApiCommon.OaCapabilityBoolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionDeleteHistoryVersion.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionDeleteHistoryVersion%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L491">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionDeleteHistoryVersion_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionDeleteHistoryVersion*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionDeleteHistoryVersion" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionDeleteHistoryVersion">InteractionDeleteHistoryVersion</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the interaction delete history version.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiCommon.OaCapabilityBoolean InteractionDeleteHistoryVersion { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiCommon.OaCapabilityBoolean.html">OpenApiCommon.OaCapabilityBoolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionHistoryInstance.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionHistoryInstance%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L509">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionHistoryInstance_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionHistoryInstance*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionHistoryInstance" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionHistoryInstance">InteractionHistoryInstance</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the interaction history instance.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiCommon.OaCapabilityBoolean InteractionHistoryInstance { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiCommon.OaCapabilityBoolean.html">OpenApiCommon.OaCapabilityBoolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionHistorySystem.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionHistorySystem%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L542">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionHistorySystem_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionHistorySystem*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionHistorySystem" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionHistorySystem">InteractionHistorySystem</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiCommon.OaCapabilityBoolean InteractionHistorySystem { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiCommon.OaCapabilityBoolean.html">OpenApiCommon.OaCapabilityBoolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionHistoryType.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionHistoryType%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L526">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionHistoryType_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionHistoryType*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionHistoryType" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionHistoryType">InteractionHistoryType</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the type of the interaction history.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiCommon.OaCapabilityBoolean InteractionHistoryType { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiCommon.OaCapabilityBoolean.html">OpenApiCommon.OaCapabilityBoolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionOperationInstance.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionOperationInstance%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L673">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionOperationInstance_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionOperationInstance*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionOperationInstance" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionOperationInstance">InteractionOperationInstance</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiCommon.OaCapabilityBoolean InteractionOperationInstance { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiCommon.OaCapabilityBoolean.html">OpenApiCommon.OaCapabilityBoolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionOperationSystem.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionOperationSystem%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L641">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionOperationSystem_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionOperationSystem*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionOperationSystem" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionOperationSystem">InteractionOperationSystem</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiCommon.OaCapabilityBoolean InteractionOperationSystem { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiCommon.OaCapabilityBoolean.html">OpenApiCommon.OaCapabilityBoolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionOperationType.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionOperationType%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L657">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionOperationType_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionOperationType*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionOperationType" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionOperationType">InteractionOperationType</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiCommon.OaCapabilityBoolean InteractionOperationType { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiCommon.OaCapabilityBoolean.html">OpenApiCommon.OaCapabilityBoolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionPatch.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionPatch%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L388">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionPatch_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionPatch*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionPatch" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionPatch">InteractionPatch</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the interaction patch.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiCommon.OaCapabilityBoolean InteractionPatch { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiCommon.OaCapabilityBoolean.html">OpenApiCommon.OaCapabilityBoolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionPatchConditional.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionPatchConditional%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L405">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionPatchConditional_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionPatchConditional*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionPatchConditional" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionPatchConditional">InteractionPatchConditional</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the interaction patch conditional.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiCommon.OaCapabilityBoolean InteractionPatchConditional { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiCommon.OaCapabilityBoolean.html">OpenApiCommon.OaCapabilityBoolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionRead.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionRead%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L320">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionRead_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionRead*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionRead" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionRead">InteractionRead</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the interaction read.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiCommon.OaCapabilityBoolean InteractionRead { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiCommon.OaCapabilityBoolean.html">OpenApiCommon.OaCapabilityBoolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionSearchCompartment.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionSearchCompartment%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L625">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionSearchCompartment_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionSearchCompartment*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionSearchCompartment" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionSearchCompartment">InteractionSearchCompartment</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiCommon.OaCapabilityBoolean InteractionSearchCompartment { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiCommon.OaCapabilityBoolean.html">OpenApiCommon.OaCapabilityBoolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionSearchSystem.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionSearchSystem%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L609">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionSearchSystem_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionSearchSystem*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionSearchSystem" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionSearchSystem">InteractionSearchSystem</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiCommon.OaCapabilityBoolean InteractionSearchSystem { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiCommon.OaCapabilityBoolean.html">OpenApiCommon.OaCapabilityBoolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionSearchType.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionSearchType%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L593">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionSearchType_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionSearchType*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionSearchType" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionSearchType">InteractionSearchType</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the type of the interaction search.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiCommon.OaCapabilityBoolean InteractionSearchType { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiCommon.OaCapabilityBoolean.html">OpenApiCommon.OaCapabilityBoolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionTransaction.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionTransaction%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L722">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionTransaction_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionTransaction*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionTransaction" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionTransaction">InteractionTransaction</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiCommon.OaCapabilityBoolean InteractionTransaction { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiCommon.OaCapabilityBoolean.html">OpenApiCommon.OaCapabilityBoolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionUpdate.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionUpdate%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L354">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionUpdate_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionUpdate*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionUpdate" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionUpdate">InteractionUpdate</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the interaction update.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiCommon.OaCapabilityBoolean InteractionUpdate { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiCommon.OaCapabilityBoolean.html">OpenApiCommon.OaCapabilityBoolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionUpdateConditional.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionUpdateConditional%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L371">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionUpdateConditional_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionUpdateConditional*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionUpdateConditional" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionUpdateConditional">InteractionUpdateConditional</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the interaction update conditional.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiCommon.OaCapabilityBoolean InteractionUpdateConditional { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiCommon.OaCapabilityBoolean.html">OpenApiCommon.OaCapabilityBoolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionVRead.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionVRead%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L337">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionVRead_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionVRead*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_InteractionVRead" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.InteractionVRead">InteractionVRead</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the interaction v read.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiCommon.OaCapabilityBoolean InteractionVRead { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiCommon.OaCapabilityBoolean.html">OpenApiCommon.OaCapabilityBoolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_MaxRecursions.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.MaxRecursions%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L147">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_MaxRecursions_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.MaxRecursions*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_MaxRecursions" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.MaxRecursions">MaxRecursions</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the maximum recursions.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int MaxRecursions { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_Minify.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.Minify%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L882">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_Minify_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.Minify*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_Minify" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.Minify">Minify</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating whether the minify.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Minify { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_MultiFile.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.MultiFile%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L987">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_MultiFile_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.MultiFile*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_MultiFile" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.MultiFile">MultiFile</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating whether the multi file.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool MultiFile { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_OpenApiVersion.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.OpenApiVersion%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L17">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_OpenApiVersion_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.OpenApiVersion*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_OpenApiVersion" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.OpenApiVersion">OpenApiVersion</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the open API version.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiCommon.OaVersion OpenApiVersion { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiCommon.OaVersion.html">OpenApiCommon.OaVersion</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_OperationSupport.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.OperationSupport%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L270">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_OperationSupport_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.OperationSupport*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_OperationSupport" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.OperationSupport">OperationSupport</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the operation support.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiCommon.OaHttpMethods OperationSupport { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiCommon.OaHttpMethods.html">OpenApiCommon.OaHttpMethods</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_PatchMimeTypes.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.PatchMimeTypes%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L181">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_PatchMimeTypes_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.PatchMimeTypes*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_PatchMimeTypes" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.PatchMimeTypes">PatchMimeTypes</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a list of types of the patch mimes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiCommon.OaPatchMimeCodes PatchMimeTypes { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiCommon.OaPatchMimeCodes.html">OpenApiCommon.OaPatchMimeCodes</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_PerformDescriptionValidation.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.PerformDescriptionValidation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L831">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_PerformDescriptionValidation_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.PerformDescriptionValidation*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_PerformDescriptionValidation" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.PerformDescriptionValidation">PerformDescriptionValidation</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating whether the description validation is performed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool PerformDescriptionValidation { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_PostSearchParamLocation.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.PostSearchParamLocation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L234">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_PostSearchParamLocation_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.PostSearchParamLocation*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_PostSearchParamLocation" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.PostSearchParamLocation">PostSearchParamLocation</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the post search parameter location.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiCommon.OaSearchPostParameterLocationCodes PostSearchParamLocation { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiCommon.OaSearchPostParameterLocationCodes.html">OpenApiCommon.OaSearchPostParameterLocationCodes</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_RemoveUncommonFields.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.RemoveUncommonFields%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L916">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_RemoveUncommonFields_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.RemoveUncommonFields*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_RemoveUncommonFields" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.RemoveUncommonFields">RemoveUncommonFields</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating whether the remove uncommon fields.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool RemoveUncommonFields { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_SchemaLevel.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.SchemaLevel%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L113">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_SchemaLevel_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.SchemaLevel*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_SchemaLevel" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.SchemaLevel">SchemaLevel</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the schema level.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiCommon.OaSchemaLevelCodes SchemaLevel { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiCommon.OaSchemaLevelCodes.html">OpenApiCommon.OaSchemaLevelCodes</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_SchemaStyle.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.SchemaStyle%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L130">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_SchemaStyle_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.SchemaStyle*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_SchemaStyle" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.SchemaStyle">SchemaStyle</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the schema style.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiCommon.OaSchemaStyleCodes SchemaStyle { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiCommon.OaSchemaStyleCodes.html">OpenApiCommon.OaSchemaStyleCodes</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_SearchCommonHash.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.SearchCommonHash%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L1090">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_SearchCommonHash_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.SearchCommonHash*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_SearchCommonHash" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.SearchCommonHash">SearchCommonHash</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public HashSet&lt;string&gt; SearchCommonHash { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">HashSet</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_SearchCommonParams.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.SearchCommonParams%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L1092">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_SearchCommonParams_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.SearchCommonParams*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_SearchCommonParams" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.SearchCommonParams">SearchCommonParams</h4>
+  <div class="markdown level1 summary"><p>Gets or sets options for controlling the search common.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string SearchCommonParams { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_SearchResultHash.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.SearchResultHash%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L1063">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_SearchResultHash_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.SearchResultHash*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_SearchResultHash" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.SearchResultHash">SearchResultHash</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public HashSet&lt;string&gt; SearchResultHash { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">HashSet</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_SearchResultParams.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.SearchResultParams%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L1065">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_SearchResultParams_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.SearchResultParams*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_SearchResultParams" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.SearchResultParams">SearchResultParams</h4>
+  <div class="markdown level1 summary"><p>Gets or sets options for controlling the search result.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string SearchResultParams { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_SearchSupport.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.SearchSupport%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L198">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_SearchSupport_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.SearchSupport*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_SearchSupport" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.SearchSupport">SearchSupport</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the search support.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiCommon.OaHttpMethods SearchSupport { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiCommon.OaHttpMethods.html">OpenApiCommon.OaHttpMethods</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_SingleResponses.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.SingleResponses%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L933">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_SingleResponses_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.SingleResponses*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_SingleResponses" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.SingleResponses">SingleResponses</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating whether the single responses.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool SingleResponses { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_SupportBundle.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.SupportBundle%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L739">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_SupportBundle_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.SupportBundle*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_SupportBundle" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.SupportBundle">SupportBundle</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating whether the support bundle.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiCommon.OaCapabilityBoolean SupportBundle { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiCommon.OaCapabilityBoolean.html">OpenApiCommon.OaCapabilityBoolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_Title.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.Title%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L50">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_Title_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.Title*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_Title" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.Title">Title</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Title { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_UpdateCreate.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.UpdateCreate%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L287">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_UpdateCreate_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.UpdateCreate*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_UpdateCreate" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.UpdateCreate">UpdateCreate</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the update create.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiCommon.OaCapabilityBoolean UpdateCreate { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiCommon.OaCapabilityBoolean.html">OpenApiCommon.OaCapabilityBoolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_WriteStream.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.WriteStream%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L1417">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_WriteStream_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.WriteStream*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_WriteStream" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.WriteStream">WriteStream</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the write stream to use.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Stream? WriteStream { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">Stream</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_GetOptions.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.GetOptions%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L1214">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_GetOptions_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.GetOptions*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_GetOptions" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.GetOptions">GetOptions()</h4>
+  <div class="markdown level1 summary"><p>Gets the configuration options for the current instance and its base class.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override ConfigurationOption[] GetOptions()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Microsoft.Health.Fhir.CodeGen.Configuration.ConfigurationOption</span>[]</td>
+        <td><p>An array of configuration options.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_Parse_System_CommandLine_Parsing_ParseResult_.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.Parse(System.CommandLine.Parsing.ParseResult)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L1219">View Source</a>
+  </span>
+  <a id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_Parse_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.Parse*"></a>
+  <h4 id="Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions_Parse_System_CommandLine_Parsing_ParseResult_" data-uid="Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions.Parse(System.CommandLine.Parsing.ParseResult)">Parse(System.CommandLine.Parsing.ParseResult)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Parse(System.CommandLine.Parsing.ParseResult parseResult)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.CommandLine.Parsing.ParseResult</span></td>
+        <td><span class="parametername">parseResult</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="Microsoft.Health.Fhir.CodeGen.Configuration.ICodeGenConfig.html">ICodeGenConfig</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/FirelyTeam/fhir-codegen/new/main/apiSpec/new?filename=Microsoft_Health_Fhir_CodeGen_Language_OpenApi_OpenApiOptions.md&amp;value=---%0Auid%3A%20Microsoft.Health.Fhir.CodeGen.Language.OpenApi.OpenApiOptions%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/FirelyTeam/fhir-codegen/blob/main/src/Microsoft.Health.Fhir.CodeGen/Language/OpenApi/OpenApiOptions.cs/#L14" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
