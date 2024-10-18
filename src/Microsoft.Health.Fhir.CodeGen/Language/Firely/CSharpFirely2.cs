@@ -2636,16 +2636,10 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         */
 
         bool useConcatenationInName = complex.Structure.Name == "Citation";
-
-        string explicitNamePart = string.IsNullOrEmpty(explicitName)
-            ? complex.cgName(NamingConvention.PascalCase, useConcatenationInName, useConcatenationInName)
-            : explicitName;
-        string componentName = parentExportName + "#" + explicitNamePart;
+        string componentName = complex.Element.Path;
 
         WriteSerializable();
-        _writer.WriteLineIndented($"[FhirType(\"{componentName}\")]");
-
-        _writer.WriteLineIndented($"[BackboneType(\"{complex.Element.Path}\")]");
+        _writer.WriteLineIndented($"[FhirType(\"{componentName}\", IsBackboneType=true)]");
 
         _writer.WriteLineIndented(
             $"public partial class" +
