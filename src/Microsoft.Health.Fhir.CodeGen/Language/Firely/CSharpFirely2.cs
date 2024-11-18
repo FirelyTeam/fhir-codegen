@@ -4,7 +4,6 @@
 // </copyright>
 
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Text;
 using Hl7.Fhir.Model;
 using Hl7.Fhir.Utility;
@@ -3148,6 +3147,10 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         {
             _writer.WriteLineIndented($"[DeclaredType(Type = typeof(Code), Since = FhirRelease.R5)]");
         }
+        else if (path == "Attachment.url")
+        {
+            _writer.WriteLineIndented($"[DeclaredType(Type = typeof(FhirUrl), Since = FhirRelease.R4)]");
+        }
         else if (path == "Attachment.size")
         {
             _writer.WriteLineIndented($"[DeclaredType(Type = typeof(UnsignedInt), Since = FhirRelease.STU3)]");
@@ -3275,6 +3278,14 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
                 /* we want to share Meta across different FHIR versions,
                 * so we use the "most common" type to the versions, which
                 * is uri rather than the more specific canonical. */
+                return PrimitiveTypeReference.GetTypeReference("uri");
+            }
+
+            if (element.Path is "Attachment.url")
+            {
+                /* we want to share Attachment across different FHIR versions,
+                * so we use the "most common" type to the versions, which
+                * is uri rather than the more specific url. */
                 return PrimitiveTypeReference.GetTypeReference("uri");
             }
 
