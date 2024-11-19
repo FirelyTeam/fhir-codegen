@@ -2298,8 +2298,8 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         return info.FhirElementPath switch
         {
             "Narrative.div" => $"new FhirString({info.PropertyName}.Value)",
-            "Element.id" => $"new FhirString({info.PropertyName})",
-            "Extension.url" => $"new FhirUri({info.PropertyName})",
+        //    "Element.id" => $"new FhirString({info.PropertyName})",
+        //    "Extension.url" => $"new FhirUri({info.PropertyName})",
             _ => $"{info.PropertyName}"
         };
     }
@@ -3114,6 +3114,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         };
 
         string? xmlSerialization = path == "Narrative.div" ? "XHtml" :
+            path is "Extension.url" or "Element.id" ? "XmlAttr" :
             ei.PropertyType is CqlTypeReference ? "XmlAttr" :
             null;
 
@@ -3176,8 +3177,8 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             _writer.WriteLineIndented($"[Binding(\"{element.cgBindingName()}\")]");
         }
 
-        if (element.cgIsSimple() && element.Type.Count == 1 && element.Type.Single().cgName() == "uri")
-            _writer.WriteLineIndented("[UriPattern]");
+        // if (element.cgIsSimple() && element.Type.Count == 1 && element.Type.Single().cgName() == "uri")
+        //     _writer.WriteLineIndented("[UriPattern]");
 
         bool notClsCompliant = !string.IsNullOrEmpty(allowedTypes) ||
             !string.IsNullOrEmpty(resourceReferences);
@@ -3289,12 +3290,12 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
                 return PrimitiveTypeReference.GetTypeReference("uri");
             }
 
-            if (element.Path is "Element.id" or "Extension.url")
-            {
-                /* these two properties formally use a CQL primitive (at least,
-                * that's how they are encoded in the StructureDefinition. */
-                return CqlTypeReference.SystemString;
-            }
+            // if (element.Path is "Element.id" or "Extension.url")
+            // {
+            //     /* these two properties formally use a CQL primitive (at least,
+            //     * that's how they are encoded in the StructureDefinition. */
+            //     return CqlTypeReference.SystemString;
+            // }
 
             var initialTypeName = getTypeNameFromElement();
 
@@ -3847,7 +3848,29 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         _writer.WriteLineIndented("[DataMember]");
         _writer.WriteLineIndented($"public {typeName} Value");
         OpenScope();
-        _writer.WriteLineIndented($"get {{ return ({typeName})ObjectValue; }}");
+
+        // A bit of a hack until we have a proper way to handle the primitives
+        // in https://github.com/FirelyTeam/firely-net-sdk/issues/2781
+        if (typeName == "long?")
+        {
+            _writer.WriteLineIndented(
+                """
+                get
+                {
+                    return ObjectValue switch
+                    {
+                        null => null,
+                        long l => l,
+                        _ => Convert.ToInt64(ObjectValue)
+                    };
+                }
+                """);
+        }
+        else
+        {
+            _writer.WriteLineIndented($"get {{ return ({typeName})ObjectValue; }}");
+        }
+
         _writer.WriteLineIndented("set { ObjectValue = value; OnPropertyChanged(\"Value\"); }");
         CloseScope();
 
