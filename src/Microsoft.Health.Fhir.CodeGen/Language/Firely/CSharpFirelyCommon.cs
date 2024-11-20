@@ -17,7 +17,7 @@ public static class CSharpFirelyCommon
 {
 
     /// <summary>Dictionary mapping FHIR primitive types to language equivalents (see Template-Model.tt#1252).</summary>
-    public static readonly Dictionary<string, string> PrimitiveTypeMap = new Dictionary<string, string>()
+    public static readonly Dictionary<string, string> PrimitiveTypeMap = new()
     {
         { "base64Binary", "byte[]" },
         { "boolean", "bool?" },
@@ -251,4 +251,10 @@ public static class CSharpFirelyCommon
     {
         return (relativeOrder * 10) + 10;
     }
+}
+
+
+public static class StringHelpers
+{
+    public static string EnsurePeriod(this string s) => s.EndsWith('.') ? s : s + ".";
 }

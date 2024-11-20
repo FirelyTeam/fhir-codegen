@@ -1,5 +1,3 @@
-#nullable enable
-
 using Microsoft.Health.Fhir.CodeGenCommon.Extensions;
 using Microsoft.Health.Fhir.CodeGenCommon.Utils;
 
@@ -43,27 +41,41 @@ public record PrimitiveTypeReference(string Name, string PocoTypeName, Type Conv
     public static PrimitiveTypeReference ForTypeName(string name, Type propertyType) =>
         new(name, MapTypeName(name), propertyType);
 
+    public static readonly PrimitiveTypeReference Boolean = ForTypeName("boolean", typeof(bool));
+    public static readonly PrimitiveTypeReference Base64Binary = ForTypeName("base64Binary", typeof(byte[]));
+    public static readonly PrimitiveTypeReference Canonical = ForTypeName("canonical", typeof(string));
+    public static readonly PrimitiveTypeReference Code = ForTypeName("code", typeof(string));
+    public static readonly PrimitiveTypeReference Date = ForTypeName("date", typeof(string));
+    public static readonly PrimitiveTypeReference DateTime = ForTypeName("dateTime", typeof(string));
+    public static readonly PrimitiveTypeReference Decimal = ForTypeName("decimal", typeof(decimal));
+    public static readonly PrimitiveTypeReference Id = ForTypeName("id", typeof(string));
+    public static readonly PrimitiveTypeReference Instant = ForTypeName("instant", typeof(DateTimeOffset));
+    public static readonly PrimitiveTypeReference Integer = ForTypeName("integer", typeof(int));
+    public static readonly PrimitiveTypeReference Integer64 = ForTypeName("integer64", typeof(long));
+    public static readonly PrimitiveTypeReference Oid = ForTypeName("oid", typeof(string));
+    public static readonly PrimitiveTypeReference PositiveInt = ForTypeName("positiveInt", typeof(int));
+    public static readonly PrimitiveTypeReference String = ForTypeName("string", typeof(string));
+    public static readonly PrimitiveTypeReference Time = ForTypeName("time", typeof(string));
+    public static readonly PrimitiveTypeReference UnsignedInt = ForTypeName("unsignedInt", typeof(int));
+    public static readonly PrimitiveTypeReference Uri = ForTypeName("uri", typeof(string));
+    public static readonly PrimitiveTypeReference Url = ForTypeName("url", typeof(string));
+    public static readonly PrimitiveTypeReference Xhtml = ForTypeName("xhtml", typeof(string));
+    public static readonly PrimitiveTypeReference Markdown = ForTypeName("markdown", typeof(string));
+
     public static readonly IReadOnlyCollection<PrimitiveTypeReference> PrimitiveList =
     [
-        ForTypeName("base64Binary", typeof(byte[])), ForTypeName("boolean", typeof(bool)),
-        ForTypeName("canonical", typeof(string)), ForTypeName("code", typeof(string)),
-        ForTypeName("date", typeof(string)), ForTypeName("dateTime", typeof(string)),
-        ForTypeName("decimal", typeof(decimal)), ForTypeName("id", typeof(string)),
-        ForTypeName("instant", typeof(DateTimeOffset)), ForTypeName("integer", typeof(int)),
-        ForTypeName("integer64", typeof(long)), ForTypeName("oid", typeof(string)),
-        ForTypeName("positiveInt", typeof(int)), ForTypeName("string", typeof(string)),
-        ForTypeName("time", typeof(string)), ForTypeName("unsignedInt", typeof(int)),
-        ForTypeName("uri", typeof(string)), ForTypeName("url", typeof(string)),
-        ForTypeName("xhtml", typeof(string)), ForTypeName("markdown", typeof(string))
+        Boolean, Base64Binary, Canonical, Code, Date, DateTime, Decimal, Id,
+        Instant, Integer, Integer64, Oid, PositiveInt, String, Time, UnsignedInt,
+        Uri, Url, Xhtml, Markdown
     ];
 
-    private static readonly Dictionary<string, PrimitiveTypeReference> s_primitiveDictionary =
+    private static readonly Dictionary<string, PrimitiveTypeReference> _primitiveDictionary =
         PrimitiveList.ToDictionary(ptr => ptr.Name);
 
-    public static bool IsFhirPrimitiveType(string name) => s_primitiveDictionary.ContainsKey(name);
+    public static bool IsFhirPrimitiveType(string name) => _primitiveDictionary.ContainsKey(name);
 
     public static PrimitiveTypeReference GetTypeReference(string name) =>
-        s_primitiveDictionary.TryGetValue(name, out var tr)
+        _primitiveDictionary.TryGetValue(name, out var tr)
             ? tr
             : throw new InvalidOperationException($"Unknown FHIR primitive {name}");
 

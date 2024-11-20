@@ -11,8 +11,10 @@ using Microsoft.Health.Fhir.CodeGen.FhirExtensions;
 using Microsoft.Health.Fhir.CodeGen.Models;
 using Microsoft.Health.Fhir.CodeGen.Utils;
 using Microsoft.Health.Fhir.CodeGenCommon.FhirExtensions;
+using Microsoft.Health.Fhir.CodeGenCommon.Models;
 using Microsoft.Health.Fhir.CodeGenCommon.Packaging;
 using Microsoft.Health.Fhir.CodeGenCommon.Utils;
+using Ncqa.Cql.Model;
 using static Microsoft.Health.Fhir.CodeGen.Language.Firely.CSharpFirelyCommon;
 using static Microsoft.Health.Fhir.CodeGenCommon.Extensions.FhirNameConventionExtensions;
 
@@ -31,7 +33,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         set => _generateHashesInsteadOfOutput = value;
     }
 
-    private Dictionary<string, string> _fileHashes = [];
+    private readonly Dictionary<string, string> _fileHashes = [];
     Dictionary<string, string> IFileHashTestable.FileHashes => _fileHashes;
 
     /// <summary>(Immutable) Name of the language.</summary>
@@ -294,7 +296,19 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         ["http://hl7.org/fhir/ValueSet/fhir-types"] = "FHIRAllTypes"
     };
 
-    private record SinceVersion(FhirReleases.FhirSequenceCodes Since);
+    private record ElementTypeChange(FhirReleases.FhirSequenceCodes Since, TypeReference DeclaredType);
+
+    private static readonly Dictionary<string, ElementTypeChange[]> _elementTypeChanges = new()
+    {
+        ["Attachment.size"] = [
+            new(FhirReleases.FhirSequenceCodes.STU3, PrimitiveTypeReference.UnsignedInt),
+            new (FhirReleases.FhirSequenceCodes.R5, PrimitiveTypeReference.Integer64),
+        ],
+        ["Attachment.url"] = [
+            new(FhirReleases.FhirSequenceCodes.STU3, PrimitiveTypeReference.Uri),
+            new(FhirReleases.FhirSequenceCodes.R4, PrimitiveTypeReference.Url),
+        ]
+     };
 
     private readonly Dictionary<string, string> _sinceAttributes = new()
     {
@@ -392,7 +406,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
     /// <summary>Gets the FHIR primitive type map.</summary>
     /// <value>The FHIR primitive type map.</value>
-    Dictionary<string, string> ILanguage.FhirPrimitiveTypeMap => CSharpFirelyCommon.PrimitiveTypeMap;
+    Dictionary<string, string> ILanguage.FhirPrimitiveTypeMap => PrimitiveTypeMap;
 
     /// <summary>If a Cql ModelInfo is available, this will be the parsed XML model file.</summary>
     private Ncqa.Cql.Model.ModelInfo? _cqlModelInfo = null;
@@ -414,9 +428,9 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
         // STU3 satellite is a combination of satellite and conformance
         if ((info.FhirSequence == FhirReleases.FhirSequenceCodes.STU3) &&
-            (subset == CSharpFirelyCommon.GenSubset.Satellite))
+            (subset == GenSubset.Satellite))
         {
-            subset = CSharpFirelyCommon.GenSubset.Satellite | CSharpFirelyCommon.GenSubset.Conformance;
+            subset = GenSubset.Satellite | GenSubset.Conformance;
         }
 
         // only generate base definitions for R5
@@ -456,8 +470,8 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         string cqlModelResourceKey = options.CqlModel;
         if (!string.IsNullOrEmpty(cqlModelResourceKey))
         {
-            _cqlModelInfo = Ncqa.Cql.Model.CqlModels.LoadEmbeddedResource(cqlModelResourceKey);
-            _cqlModelClassInfo = Ncqa.Cql.Model.CqlModels.ClassesByName(_cqlModelInfo);
+            _cqlModelInfo = CqlModels.LoadEmbeddedResource(cqlModelResourceKey);
+            _cqlModelClassInfo = CqlModels.ClassesByName(_cqlModelInfo);
         }
 
         var allPrimitives = new Dictionary<string, WrittenModelInfo>();
@@ -484,21 +498,21 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
         WriteGenerationComment(infoWriter);
 
-        if (options.ExportStructures.Contains(CodeGenCommon.Models.FhirArtifactClassEnum.ValueSet))
+        if (options.ExportStructures.Contains(FhirArtifactClassEnum.ValueSet))
         {
             WriteSharedValueSets(subset);
         }
 
         _modelWriter.WriteLineIndented("// Generated items");
 
-        if (options.ExportStructures.Contains(CodeGenCommon.Models.FhirArtifactClassEnum.PrimitiveType))
+        if (options.ExportStructures.Contains(FhirArtifactClassEnum.PrimitiveType))
         {
             WritePrimitiveTypes(_info.PrimitiveTypesByName.Values, ref dummy, subset);
         }
 
         AddModels(allPrimitives, _info.PrimitiveTypesByName.Values);
 
-        if (options.ExportStructures.Contains(CodeGenCommon.Models.FhirArtifactClassEnum.ComplexType))
+        if (options.ExportStructures.Contains(FhirArtifactClassEnum.ComplexType))
         {
             WriteComplexDataTypes(_info.ComplexTypesByName.Values, ref dummy, subset);
         }
@@ -506,14 +520,14 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         AddModels(allComplexTypes, _info.ComplexTypesByName.Values);
         AddModels(allComplexTypes, _sharedR5DataTypes);
 
-        if (options.ExportStructures.Contains(CodeGenCommon.Models.FhirArtifactClassEnum.Resource))
+        if (options.ExportStructures.Contains(FhirArtifactClassEnum.Resource))
         {
             WriteResources(_info.ResourcesByName.Values, ref dummy, subset);
         }
 
         AddModels(allResources, _info.ResourcesByName.Values);
 
-        if (options.ExportStructures.Contains(CodeGenCommon.Models.FhirArtifactClassEnum.Interface))
+        if (options.ExportStructures.Contains(FhirArtifactClassEnum.Interface))
         {
             WriteInterfaces(_info.InterfacesByName.Values, ref dummy, subset);
         }
@@ -1775,7 +1789,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             var since = _sinceAttributes.TryGetValue(element.Path, out string? s) ? s : null;
             var until = _untilAttributes.TryGetValue(element.Path, out (string, string) u) ? u : default((string, string)?);
 
-            var description = AttributeDescriptionWithSinceInfo(name, element.Short.Replace("{{title}}", structureName), since, until);
+            var description = MakeAttributeRemarkForNewOrDeprecatedProperties(name, element.Short.Replace("{{title}}", structureName), since, until);
 
             if (TryGetPrimitiveType(ei.PropertyType, out PrimitiveTypeReference? eiPTR))
             {
@@ -3099,25 +3113,26 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         }
 
         string path = element.cgPath();
-
         var since = _sinceAttributes.GetValueOrDefault(path);
         var until = _untilAttributes.TryGetValue(path, out (string, string) u) ? u : default((string, string)?);
 
         // TODO: Modify these elements in ModifyDefinitionsForConsistency
-        var description = path switch
+        var remarks = path switch
         {
-            "Signature.who" => element.Short + ".\nNote 1: Since R4 the type of this element should be a fixed type (ResourceReference). For backwards compatibility it remains of type DataType.\nNote 2: Since R5 the cardinality is expanded to 0..1 (previous it was 1..1).",
-            "Signature.onBehalfOf" => element.Short + ".\nNote: Since R4 the type of this element should be a fixed type (ResourceReference). For backwards compatibility it remains of type DataType.",
-            "Signature.when" => element.Short + ".\nNote: Since R5 the cardinality is expanded to 0..1 (previous it was 1..1).",
-            "Signature.type" => element.Short + ".\nNote: Since R5 the cardinality is expanded to 0..* (previous it was 1..*).",
-            _ => AttributeDescriptionWithSinceInfo(name, element.Short, since, until)
+            "Signature.who" => "Note 1: Since R4 the type of this element should be a fixed type (ResourceReference). For backwards compatibility it remains of type DataType.\nNote 2: Since R5 the cardinality is expanded to 0..1 (previous it was 1..1).",
+            "Signature.onBehalfOf" => "Since R4 the type of this element should be a fixed type (ResourceReference). For backwards compatibility it remains of type DataType.",
+            "Signature.when" => "Since R5 the cardinality is expanded to 0..1 (previous it was 1..1).",
+            "Signature.type" => "Since R5 the cardinality is expanded to 0..* (previous it was 1..*).",
+            _ => MakeAttributeRemarkForNewOrDeprecatedProperties(name, null, since, until)
         };
+
+        if(element.Short is not null) WriteIndentedComment(element.Short.EnsurePeriod());
+        remarks = MakeAttributeRemarkForChangedTypes(path, remarks);
+        if (remarks is not null) WriteIndentedComment(remarks, isSummary: false, isRemarks: true);
 
         string? xmlSerialization = path == "Narrative.div" ? "XHtml" :
             ei.PropertyType is CqlTypeReference ? "XmlAttr" :
             null;
-
-        if (description is not null) WriteIndentedComment(description);
 
         if (path == "OperationOutcome.issue.severity")
         {
@@ -3147,15 +3162,6 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         {
             _writer.WriteLineIndented($"[DeclaredType(Type = typeof(Code), Since = FhirRelease.R5)]");
         }
-        else if (path == "Attachment.url")
-        {
-            _writer.WriteLineIndented($"[DeclaredType(Type = typeof(FhirUrl), Since = FhirRelease.R4)]");
-        }
-        else if (path == "Attachment.size")
-        {
-            _writer.WriteLineIndented($"[DeclaredType(Type = typeof(UnsignedInt), Since = FhirRelease.STU3)]");
-            _writer.WriteLineIndented($"[DeclaredType(Type = typeof(Integer64), Since = FhirRelease.R5)]");
-        }
         else if (path is
             "ElementDefinition.constraint.requirements" or
             "ElementDefinition.binding.description" or
@@ -3174,6 +3180,16 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         if (!string.IsNullOrEmpty(element.cgBindingName()))
         {
             _writer.WriteLineIndented($"[Binding(\"{element.cgBindingName()}\")]");
+        }
+
+        if (_elementTypeChanges.TryGetValue(path, out ElementTypeChange[]? changes))
+        {
+            foreach(var change in changes)
+            {
+                _writer.WriteIndented($"[DeclaredType(Type = typeof({change.DeclaredType.PropertyTypeString})");
+                _writer.Write($", Since = FhirRelease.{change.Since}");
+                _writer.WriteLine(")]");
+            }
         }
 
         if (element.cgIsSimple() && element.Type.Count == 1 && element.Type.Single().cgName() == "uri")
@@ -3216,20 +3232,41 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
     }
 
 
-    private static string? AttributeDescriptionWithSinceInfo(string name, string baseDescription, string? since = null, (string, string)? until = null)
+    private static string? MakeAttributeRemarkForNewOrDeprecatedProperties(string name, string? baseRemark, string? since = null, (string, string)? until = null)
     {
-        return (since, until, baseDescription) switch
+        var deprecationRemark = (since, until, baseRemark) switch
         {
-            (_, _, null) => null,
-            (not null, _, _) => baseDescription +
-                             $". Note: Element was introduced in {since}, do not use when working with older releases.",
-            (_, (var release, ""), _) => baseDescription +
-                                         $". Note: Element is deprecated since {release}, do not use with {release} and newer releases.",
-            (_, (var release, var replacedBy), _) => baseDescription +
-                                                     $". Note: Element is replaced by '{replacedBy}' since {release}. Do not use this element '{name}' with {release} and newer releases.",
-            _ => baseDescription
+            (not null, _, _) => $"Element was introduced in {since}, do not use when working with older releases.",
+            (_, (var release, ""), _) => $"Element is deprecated since {release}, do not use with {release} and newer releases.",
+            (_, (var release, var replacedBy), _) => $"Element is replaced by '{replacedBy}' since {release}. Do not use this element '{name}' with {release} and newer releases.",
+            _ => null
         };
+
+        if(baseRemark is null)
+        {
+            return deprecationRemark;
+        }
+
+        return $"{baseRemark}. {deprecationRemark}";
     }
+
+    private static string? MakeAttributeRemarkForChangedTypes(string path, string? baseDescription)
+    {
+        if(!_elementTypeChanges.TryGetValue(path, out ElementTypeChange[]? changes))
+        {
+            return baseDescription;
+        }
+
+        var changedDescription = $"The type of this element has changed over time. Make sure to use "
+               + string.Join(", ",
+                   changes.Select(change => $"{change.DeclaredType.PropertyTypeString} in {change.Since}")) + ".";
+
+        if (baseDescription is null)
+            return changedDescription;
+
+        return $"{baseDescription}. {changedDescription}";
+    }
+
 
     private static PrimitiveTypeReference BuildTypeReferenceForCode(DefinitionCollection info, ElementDefinition element, Dictionary<string, WrittenValueSetInfo> writtenValueSets)
     {
