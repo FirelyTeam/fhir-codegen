@@ -41,6 +41,7 @@ public record PrimitiveTypeReference(string Name, string PocoTypeName, Type Conv
     public static PrimitiveTypeReference ForTypeName(string name, Type propertyType) =>
         new(name, MapTypeName(name), propertyType);
 
+    public static readonly PrimitiveTypeReference PrimitiveType = ForTypeName("PrimitiveType", typeof(object));
     public static readonly PrimitiveTypeReference Boolean = ForTypeName("boolean", typeof(bool));
     public static readonly PrimitiveTypeReference Base64Binary = ForTypeName("base64Binary", typeof(byte[]));
     public static readonly PrimitiveTypeReference Canonical = ForTypeName("canonical", typeof(string));
@@ -95,10 +96,14 @@ public record CqlTypeReference(string Name, Type PropertyType) : TypeReference(N
 
 public record ComplexTypeReference(string Name, string PocoTypeName) : TypeReference(Name)
 {
+    public ComplexTypeReference(string name) : this(name, name) { }
+
     public override string PropertyTypeString => $"Hl7.Fhir.Model.{PocoTypeName}";
+
+    public static readonly ComplexTypeReference DataTypeReference = new("DataType");
 }
 
-public record ChoiceTypeReference() : ComplexTypeReference("DataType", "DataType");
+public record ChoiceTypeReference() : ComplexTypeReference("DataType");
 
 public record CodedTypeReference(string EnumName, string? EnumClassName)
     : PrimitiveTypeReference("code", EnumName, typeof(Enum))

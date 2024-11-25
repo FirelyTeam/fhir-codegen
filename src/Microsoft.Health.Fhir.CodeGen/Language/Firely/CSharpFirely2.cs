@@ -298,6 +298,12 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
     private record ElementTypeChange(FhirReleases.FhirSequenceCodes Since, TypeReference DeclaredType);
 
+    private static readonly ElementTypeChange[] stringToMarkdown =
+    [
+        new(FhirReleases.FhirSequenceCodes.STU3, PrimitiveTypeReference.String),
+        new(FhirReleases.FhirSequenceCodes.R5, PrimitiveTypeReference.Markdown)
+    ];
+
     private static readonly Dictionary<string, ElementTypeChange[]> _elementTypeChanges = new()
     {
         ["Attachment.size"] = [
@@ -307,7 +313,20 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         ["Attachment.url"] = [
             new(FhirReleases.FhirSequenceCodes.STU3, PrimitiveTypeReference.Uri),
             new(FhirReleases.FhirSequenceCodes.R4, PrimitiveTypeReference.Url),
-        ]
+        ],
+        ["Meta.profile"] = [
+            new(FhirReleases.FhirSequenceCodes.STU3, PrimitiveTypeReference.Uri),
+            new(FhirReleases.FhirSequenceCodes.R4, PrimitiveTypeReference.Canonical),
+        ],
+        ["Bundle.link.relation"] = [
+            new(FhirReleases.FhirSequenceCodes.STU3, PrimitiveTypeReference.String),
+            new(FhirReleases.FhirSequenceCodes.R5, PrimitiveTypeReference.Code)
+        ],
+
+        ["ElementDefinition.constraint.requirements"] = stringToMarkdown,
+        ["ElementDefinition.binding.description"] = stringToMarkdown,
+        ["ElementDefinition.mapping.comment"] = stringToMarkdown,
+        ["CapabilityStatement.implementation.description"] = stringToMarkdown,
      };
 
     private readonly Dictionary<string, string> _sinceAttributes = new()
@@ -1772,7 +1791,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         string exportedComplexName,
         ref List<WrittenElementInfo> exportedElements)
     {
-        var elementsToGenerate = complex.cgGetChildren()
+        IOrderedEnumerable<ElementDefinition> elementsToGenerate = complex.cgGetChildren()
             .Where(e => !e.cgIsInherited(complex.Structure))
             .OrderBy(e => e.cgFieldOrder());
 
@@ -1786,26 +1805,18 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             exportedElements.Add(ei);
 
             string name = element.cgName(removeChoiceMarker: true);
-            var since = _sinceAttributes.TryGetValue(element.Path, out string? s) ? s : null;
-            var until = _untilAttributes.TryGetValue(element.Path, out (string, string) u) ? u : default((string, string)?);
+            string? since = _sinceAttributes.TryGetValue(element.Path, out string? s) ? s : null;
+            (string, string)? until = _untilAttributes.TryGetValue(element.Path, out (string, string) u) ? u : default((string, string)?);
 
-            var description = MakeAttributeRemarkForNewOrDeprecatedProperties(name, element.Short.Replace("{{title}}", structureName), since, until);
+            string? description = MakeAttributeRemarkForNewOrDeprecatedProperties(name, element.Short.Replace("{{title}}", structureName), since, until);
 
-            if (TryGetPrimitiveType(ei.PropertyType, out PrimitiveTypeReference? eiPTR))
+            if (TryGetPrimitiveType(ei.PropertyType, out PrimitiveTypeReference? eiPtr))
             {
                 WriteIndentedComment(element.Short.Replace("{{title}}", structureName));
                 _writer.WriteLineIndented($"/// <remarks>This uses the native .NET datatype, rather than the FHIR equivalent</remarks>");
-                _writer.WriteLineIndented($"{eiPTR.ConveniencePropertyTypeString} {ei.PrimitiveHelperName} {{ get; set; }}");
+                _writer.WriteLineIndented($"{eiPtr.ConveniencePropertyTypeString} {ei.PrimitiveHelperName} {{ get; set; }}");
                 _writer.WriteLine();
             }
-
-            //if (ei.IsPrimitive)
-            //{
-            //    WriteIndentedComment(element.Short.Replace("{{title}}", structureName));
-            //    _writer.WriteLineIndented($"/// <remarks>This uses the native .NET datatype, rather than the FHIR equivalent</remarks>");
-            //    _writer.WriteLineIndented($"{ei.PrimitiveHelperType?.Replace("Hl7.Fhir.Model.", string.Empty) ?? string.Empty} {ei.PrimitiveHelperName} {{ get; set; }}");
-            //    _writer.WriteLine();
-            //}
 
             if (description != null) WriteIndentedComment(description);
             _writer.WriteLineIndented($"{ei.PropertyType.PropertyTypeString ?? string.Empty} {ei.PropertyName} {{ get; set; }}");
@@ -3113,11 +3124,11 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         }
 
         string path = element.cgPath();
-        var since = _sinceAttributes.GetValueOrDefault(path);
-        var until = _untilAttributes.TryGetValue(path, out (string, string) u) ? u : default((string, string)?);
+        string? since = _sinceAttributes.GetValueOrDefault(path);
+        (string, string)? until = _untilAttributes.TryGetValue(path, out (string, string) u) ? u : default((string, string)?);
 
         // TODO: Modify these elements in ModifyDefinitionsForConsistency
-        var remarks = path switch
+        string? remarks = path switch
         {
             "Signature.who" => "Note 1: Since R4 the type of this element should be a fixed type (ResourceReference). For backwards compatibility it remains of type DataType.\nNote 2: Since R5 the cardinality is expanded to 0..1 (previous it was 1..1).",
             "Signature.onBehalfOf" => "Since R4 the type of this element should be a fixed type (ResourceReference). For backwards compatibility it remains of type DataType.",
@@ -3154,25 +3165,8 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         {
             _writer.WriteLineIndented($"[DeclaredType(Type = typeof({ctr.DeclaredTypeString}))]");
         }
-        else if (path == "Meta.profile")
-        {
-            _writer.WriteLineIndented($"[DeclaredType(Type = typeof(Canonical), Since = FhirRelease.R4)]");
-        }
-        else if (path == "Bundle.link.relation")
-        {
-            _writer.WriteLineIndented($"[DeclaredType(Type = typeof(Code), Since = FhirRelease.R5)]");
-        }
-        else if (path is
-            "ElementDefinition.constraint.requirements" or
-            "ElementDefinition.binding.description" or
-            "ElementDefinition.mapping.comment" or
-            "CapabilityStatement.implementation.description")
-        {
-            _writer.WriteLineIndented($"[DeclaredType(Type = typeof(FhirString))]");
-            _writer.WriteLineIndented($"[DeclaredType(Type = typeof(Markdown), Since = FhirRelease.R5)]");
-        }
 
-        if (TryGetPrimitiveType(ei.PropertyType, out var ptr) && ptr is CodedTypeReference)
+        if (TryGetPrimitiveType(ei.PropertyType, out PrimitiveTypeReference? ptr) && ptr is CodedTypeReference)
         {
             _writer.WriteLineIndented("[DeclaredType(Type = typeof(Code))]");
         }
@@ -3184,7 +3178,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
         if (_elementTypeChanges.TryGetValue(path, out ElementTypeChange[]? changes))
         {
-            foreach(var change in changes)
+            foreach(ElementTypeChange change in changes)
             {
                 _writer.WriteIndented($"[DeclaredType(Type = typeof({change.DeclaredType.PropertyTypeString})");
                 _writer.Write($", Since = FhirRelease.{change.Since}");
@@ -3228,7 +3222,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             _writer.WriteLineIndented($"[Cardinality(Min={element.Min},Max={element.cgCardinalityMax()})]");
         }
 
-        writeElementGettersAndSetters(element, ei);
+        WriteElementGettersAndSetters(element, ei);
     }
 
 
@@ -3310,20 +3304,16 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
         TypeReference determineTypeReferenceForFhirElementName()
         {
-            if (element.Path is "Meta.profile")
+            if(_elementTypeChanges.TryGetValue(element.Path, out ElementTypeChange[]? changes))
             {
-                /* we want to share Meta across different FHIR versions,
-                * so we use the "most common" type to the versions, which
-                * is uri rather than the more specific canonical. */
-                return PrimitiveTypeReference.GetTypeReference("uri");
-            }
+                // If the element has a type change, we need to use DataType, to make
+                // sure the property can capture all the types.
+                if(changes.All(c => c.DeclaredType is PrimitiveTypeReference))
+                {
+                    return PrimitiveTypeReference.PrimitiveType;
+                }
 
-            if (element.Path is "Attachment.url")
-            {
-                /* we want to share Attachment across different FHIR versions,
-                * so we use the "most common" type to the versions, which
-                * is uri rather than the more specific url. */
-                return PrimitiveTypeReference.GetTypeReference("uri");
+                return ComplexTypeReference.DataTypeReference;
             }
 
             if (element.Path is "Element.id" or "Extension.url")
@@ -3431,7 +3421,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         );
     }
 
-    private void writeElementGettersAndSetters(ElementDefinition element, WrittenElementInfo ei)
+    private void WriteElementGettersAndSetters(ElementDefinition element, WrittenElementInfo ei)
     {
         _writer.WriteLineIndented("[DataMember]");
 
@@ -3465,62 +3455,83 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             PrimitiveTypeReference or
             ListTypeReference { Element: PrimitiveTypeReference };
 
-        if (!needsPrimitiveProperty)
+        if (needsPrimitiveProperty)
         {
-            return;
-        }
+            if(_elementTypeChanges.TryGetValue(element.Path, out ElementTypeChange[]? changes))
+            {
+                var newest = changes.Select(c => c.Since).OrderDescending().First();
 
+                foreach(ElementTypeChange change in changes)
+                {
+                    WritePrimitiveHelperProperty(element, ei, change.DeclaredType, change.Since, usePrimaryName: change.Since == newest);
+                }
+            }
+            else
+            {
+                WritePrimitiveHelperProperty(element, ei);
+            }
+        }
+    }
+
+    private void WritePrimitiveHelperProperty(ElementDefinition element, WrittenElementInfo ei,
+        TypeReference? propTypeOverride = null, FhirReleases.FhirSequenceCodes? since = null, bool usePrimaryName = true)
+    {
         WriteIndentedComment(element.Short);
         _writer.WriteLineIndented($"/// <remarks>This uses the native .NET datatype, rather than the FHIR equivalent</remarks>");
 
         _writer.WriteLineIndented("[IgnoreDataMember]");
 
-        if (ei.PropertyType is PrimitiveTypeReference ptr)
+        var helperPropName = (usePrimaryName || propTypeOverride is null)
+            ? ei.PrimitiveHelperName : $"{ei.PrimitiveHelperName}_{since}";
+
+        var propType = propTypeOverride ?? ei.PropertyType;
+        switch (propType)
         {
-            _writer.WriteLineIndented($"public {ptr.ConveniencePropertyTypeString} {ei.PrimitiveHelperName}");
+            case PrimitiveTypeReference ptr:
+                _writer.WriteLineIndented($"public {ptr.ConveniencePropertyTypeString} {helperPropName}");
 
-            OpenScope();
-            _writer.WriteLineIndented($"get {{ return {ei.PropertyName} != null ? {ei.PropertyName}.Value : null; }}");
-            _writer.WriteLineIndented("set");
-            OpenScope();
+                OpenScope();
+                _writer.WriteLineIndented($"get {{ return {ei.PropertyName} != null ? {ei.PropertyName}.Value : null; }}");
+                _writer.WriteLineIndented("set");
+                OpenScope();
 
-            _writer.WriteLineIndented($"if (value == null)");
+                _writer.WriteLineIndented($"if (value == null)");
 
-            _writer.IncreaseIndent();
-            _writer.WriteLineIndented($"{ei.PropertyName} = null;");
-            _writer.DecreaseIndent();
-            _writer.WriteLineIndented("else");
-            _writer.IncreaseIndent();
-            _writer.WriteLineIndented($"{ei.PropertyName} = new {ei.PropertyType.PropertyTypeString}(value);");
-            _writer.DecreaseIndent();
-            _writer.WriteLineIndented($"OnPropertyChanged(\"{ei.PrimitiveHelperName}\");");
-            CloseScope(suppressNewline: true);
-            CloseScope();
-        }
-        else if (ei.PropertyType is ListTypeReference { Element: PrimitiveTypeReference lptr })
-        {
-            _writer.WriteLineIndented($"public IEnumerable<{lptr.ConveniencePropertyTypeString}> {ei.PrimitiveHelperName}");
+                _writer.IncreaseIndent();
+                _writer.WriteLineIndented($"{ei.PropertyName} = null;");
+                _writer.DecreaseIndent();
+                _writer.WriteLineIndented("else");
+                _writer.IncreaseIndent();
+                _writer.WriteLineIndented($"{ei.PropertyName} = new {ptr.PropertyTypeString}(value);");
+                _writer.DecreaseIndent();
+                _writer.WriteLineIndented($"OnPropertyChanged(\"{helperPropName}\");");
+                CloseScope(suppressNewline: true);
+                CloseScope();
+                break;
+            case ListTypeReference { Element: PrimitiveTypeReference lptr }:
+                _writer.WriteLineIndented($"public IEnumerable<{lptr.ConveniencePropertyTypeString}> {helperPropName}");
 
-            OpenScope();
-            _writer.WriteLineIndented($"get {{ return {ei.PropertyName} != null ? {ei.PropertyName}.Select(elem => elem.Value) : null; }}");
-            _writer.WriteLineIndented("set");
-            OpenScope();
+                OpenScope();
+                _writer.WriteLineIndented($"get {{ return {ei.PropertyName} != null ? {ei.PropertyName}.Select(elem => elem.Value) : null; }}");
+                _writer.WriteLineIndented("set");
+                OpenScope();
 
-            _writer.WriteLineIndented($"if (value == null)");
+                _writer.WriteLineIndented($"if (value == null)");
 
-            _writer.IncreaseIndent();
-            _writer.WriteLineIndented($"{ei.PropertyName} = null;");
-            _writer.DecreaseIndent();
-            _writer.WriteLineIndented("else");
-            _writer.IncreaseIndent();
-            _writer.WriteLineIndented($"{ei.PropertyName} = " +
-                                      $"new {ei.PropertyType.PropertyTypeString}" +
-                                      $"(value.Select(elem=>new {lptr.PropertyTypeString}(elem)));");
-            _writer.DecreaseIndent();
+                _writer.IncreaseIndent();
+                _writer.WriteLineIndented($"{ei.PropertyName} = null;");
+                _writer.DecreaseIndent();
+                _writer.WriteLineIndented("else");
+                _writer.IncreaseIndent();
+                _writer.WriteLineIndented($"{ei.PropertyName} = " +
+                                          $"new {ei.PropertyType.PropertyTypeString}" +
+                                          $"(value.Select(elem=>new {lptr.PropertyTypeString}(elem)));");
+                _writer.DecreaseIndent();
 
-            _writer.WriteLineIndented($"OnPropertyChanged(\"{ei.PrimitiveHelperName}\");");
-            CloseScope(suppressNewline: true);
-            CloseScope();
+                _writer.WriteLineIndented($"OnPropertyChanged(\"{helperPropName}\");");
+                CloseScope(suppressNewline: true);
+                CloseScope();
+                break;
         }
     }
 

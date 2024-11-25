@@ -2159,9 +2159,9 @@ public partial class FirelyNetIG : ILanguage
                                 break;
                                 //throw new Exception($"Found multiple discriminators for {id}");
                             }
- 
+
                             if (discriminators.Length == 1)
-                            { 
+                            {
                                 discriminator = discriminators[0];
 
                                 bool isExtensionSlice = _findExtensionPathRegex.IsMatch(discriminator.Path);
@@ -3361,7 +3361,7 @@ public partial class FirelyNetIG : ILanguage
             remarks = (remarks == null ? string.Empty : remarks + "\n") +
                 $"Structure Definition Name: {cd.Structure.Name}";
         }
-  
+
         string directive;
         if (_info.TryGetPackageSource(cd.Structure, out string packageId, out string packageVersion))
         {
