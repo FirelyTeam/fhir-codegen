@@ -2013,10 +2013,10 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
         WriteMatches(exportName, exportedElements);
         WriteIsExactly(exportName, exportedElements);
-        WriteChildren(exportName, exportedElements);
-        WriteNamedChildren(exportName, exportedElements);
+      // WriteChildren(exportName, exportedElements);
+      //  WriteNamedChildren(exportName, exportedElements);
 
-        WriteIDictionarySupport(exportName, exportedElements);
+        WriteDictionarySupport(exportName, exportedElements);
 
         // close class
         CloseScope();
@@ -2073,7 +2073,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         return baseTypeName;
     }
 
-    private void WriteIDictionarySupport(string exportName, List<WrittenElementInfo> exportedElements)
+    private void WriteDictionarySupport(string exportName, List<WrittenElementInfo> exportedElements)
     {
         WriteDictionaryTryGetValue(exportName, exportedElements);
         WriteDictionaryTrySetValue(exportName, exportedElements);
@@ -2096,7 +2096,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             return;
         }
 
-        _writer.WriteLineIndented("protected override IEnumerable<KeyValuePair<string, object>> GetElementPairs()");
+        _writer.WriteLineIndented("internal protected override IEnumerable<KeyValuePair<string, object>> GetElementPairs()");
         OpenScope();
         _writer.WriteLineIndented("foreach (var kvp in base.GetElementPairs()) yield return kvp;");
 
@@ -2112,7 +2112,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
     private void WriteDictionaryTryGetValue(string exportName, List<WrittenElementInfo> exportedElements)
     {
-       // Base implementation differs from subclasses and is hand-written code in a separate partical class
+       // Base implementation differs from subclasses and is hand-written code in a separate partial class
        if (exportName == "Base")
        {
            return;
@@ -2124,7 +2124,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             return;
         }
 
-        _writer.WriteLineIndented("protected override bool TryGetValue(string key, out object value)");
+        _writer.WriteLineIndented("internal protected override bool TryGetValue(string key, out object value)");
         OpenScope();
 
         // switch
@@ -2176,7 +2176,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             return;
         }
 
-        _writer.WriteLineIndented("protected override Base SetValue(string key, object value)");
+        _writer.WriteLineIndented("internal protected override Base SetValue(string key, object value)");
         OpenScope();
 
         // switch
@@ -2232,135 +2232,135 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
     /// <summary>Writes the children of this item.</summary>
     /// <param name="exportName">Name of the exported class.</param>
     /// <param name="exportedElements">The exported elements.</param>
-    private void WriteNamedChildren(string exportName,
-        List<WrittenElementInfo> exportedElements)
-    {
-        // Base implementation differs from subclasses.
-        if (exportName == "Base")
-        {
-            _writer.WriteIndentedComment("""
-                                         Enumerate all child nodes.
-                                         Return a sequence of child elements, components and/or properties.
-                                         Child nodes are returned as tuples with the name and the node itself, in the order defined
-                                         by the FHIR specification.
-                                         First returns child nodes inherited from any base class(es), recursively.
-                                         Finally returns child nodes defined by the current class.
-                                         """);
-            _writer.WriteLineIndented("[IgnoreDataMember]");
-            _writer.WriteLineIndented("public virtual IEnumerable<ElementValue> NamedChildren => Enumerable.Empty<ElementValue>();");
-            _writer.WriteLine(string.Empty);
-            return;
-        }
-
-        // Don't override anything if there are no additional elements.
-        if (!exportedElements.Any())
-        {
-            return;
-        }
-
-        _writer.WriteLineIndented("[IgnoreDataMember]");
-        _writer.WriteLineIndented("public override IEnumerable<ElementValue> NamedChildren");
-
-        OpenScope();
-        _writer.WriteLineIndented("get");
-        OpenScope();
-        _writer.WriteLineIndented($"foreach (var item in base.NamedChildren) yield return item;");
-
-        foreach (WrittenElementInfo info in exportedElements)
-        {
-            if (info.PropertyType is ListTypeReference)
-            {
-                _writer.WriteLineIndented(
-                    $"foreach (var elem in {info.PropertyName})" +
-                        $" {{ if (elem != null)" +
-                        $" yield return new ElementValue(\"{info.FhirElementName}\", elem);" +
-                        $" }}");
-            }
-            else
-            {
-                string yr = NamedChildrenFhirTypeWrapper(info);
-
-                _writer.WriteLineIndented(
-                    $"if ({info.PropertyName} != null)" +
-                        $" yield return new ElementValue(\"{info.FhirElementName}\", {yr});");
-            }
-        }
-
-        CloseScope(suppressNewline: true);
-        CloseScope();
-    }
+    // private void WriteNamedChildren(string exportName,
+    //     List<WrittenElementInfo> exportedElements)
+    // {
+    //     // Base implementation differs from subclasses.
+    //     if (exportName == "Base")
+    //     {
+    //         _writer.WriteIndentedComment("""
+    //                                      Enumerate all child nodes.
+    //                                      Return a sequence of child elements, components and/or properties.
+    //                                      Child nodes are returned as tuples with the name and the node itself, in the order defined
+    //                                      by the FHIR specification.
+    //                                      First returns child nodes inherited from any base class(es), recursively.
+    //                                      Finally returns child nodes defined by the current class.
+    //                                      """);
+    //         _writer.WriteLineIndented("[IgnoreDataMember]");
+    //         _writer.WriteLineIndented("public virtual IEnumerable<ElementValue> NamedChildren => Enumerable.Empty<ElementValue>();");
+    //         _writer.WriteLine(string.Empty);
+    //         return;
+    //     }
+    //
+    //     // Don't override anything if there are no additional elements.
+    //     if (!exportedElements.Any())
+    //     {
+    //         return;
+    //     }
+    //
+    //     _writer.WriteLineIndented("[IgnoreDataMember]");
+    //     _writer.WriteLineIndented("public override IEnumerable<ElementValue> NamedChildren");
+    //
+    //     OpenScope();
+    //     _writer.WriteLineIndented("get");
+    //     OpenScope();
+    //     _writer.WriteLineIndented($"foreach (var item in base.NamedChildren) yield return item;");
+    //
+    //     foreach (WrittenElementInfo info in exportedElements)
+    //     {
+    //         if (info.PropertyType is ListTypeReference)
+    //         {
+    //             _writer.WriteLineIndented(
+    //                 $"foreach (var elem in {info.PropertyName})" +
+    //                     $" {{ if (elem != null)" +
+    //                     $" yield return new ElementValue(\"{info.FhirElementName}\", elem);" +
+    //                     $" }}");
+    //         }
+    //         else
+    //         {
+    //             string yr = NamedChildrenFhirTypeWrapper(info);
+    //
+    //             _writer.WriteLineIndented(
+    //                 $"if ({info.PropertyName} != null)" +
+    //                     $" yield return new ElementValue(\"{info.FhirElementName}\", {yr});");
+    //         }
+    //     }
+    //
+    //     CloseScope(suppressNewline: true);
+    //     CloseScope();
+    // }
 
     // For a limited set of exceptional elements, the Children functions return a
     // complex FHIR type wrapper.
-    private static string NamedChildrenFhirTypeWrapper(WrittenElementInfo info)
-    {
-
-        return info.FhirElementPath switch
-        {
-            "Narrative.div" => $"new FhirString({info.PropertyName}.Value)",
-        //    "Element.id" => $"new FhirString({info.PropertyName})",
-        //    "Extension.url" => $"new FhirUri({info.PropertyName})",
-            _ => $"{info.PropertyName}"
-        };
-    }
+    // private static string NamedChildrenFhirTypeWrapper(WrittenElementInfo info)
+    // {
+    //
+    //     return info.FhirElementPath switch
+    //     {
+    //         "Narrative.div" => $"new FhirString({info.PropertyName}.Value)",
+    //         "Element.id" => $"new FhirString({info.PropertyName})",
+    //         "Extension.url" => $"new FhirUri({info.PropertyName})",
+    //         _ => $"{info.PropertyName}"
+    //     };
+    // }
 
     /// <summary>Writes the children of this item.</summary>
     /// <param name="exportName">Name of the exported class.</param>
     /// <param name="exportedElements">The exported elements.</param>
-    private void WriteChildren(string exportName,
-        List<WrittenElementInfo> exportedElements)
-    {
-        // Base implementation differs from subclasses.
-        if (exportName == "Base")
-        {
-            _writer.WriteIndentedComment(
-                                      """
-                                      Enumerate all child nodes.
-                                      Return a sequence of child elements, components and/or properties.
-                                      Child nodes are returned in the order defined by the FHIR specification.
-                                      First returns child nodes inherited from any base class(es), recursively.
-                                      Finally returns child nodes defined by the current class.
-                                      """);
-            _writer.WriteLineIndented("[IgnoreDataMember]");
-            _writer.WriteLineIndented("public virtual IEnumerable<Base> Children => Enumerable.Empty<Base>();");
-            _writer.WriteLine(string.Empty);
-            return;
-        }
-
-        // Don't override anything if there are no additional elements.
-        if (!exportedElements.Any())
-        {
-            return;
-        }
-
-        _writer.WriteLineIndented("[IgnoreDataMember]");
-        _writer.WriteLineIndented("public override IEnumerable<Base> Children");
-
-        OpenScope();
-        _writer.WriteLineIndented("get");
-        OpenScope();
-        _writer.WriteLineIndented($"foreach (var item in base.Children) yield return item;");
-
-        foreach (WrittenElementInfo info in exportedElements)
-        {
-            if (info.PropertyType is ListTypeReference)
-            {
-                _writer.WriteLineIndented(
-                    $"foreach (var elem in {info.PropertyName})" +
-                        $" {{ if (elem != null) yield return elem; }}");
-            }
-            else
-            {
-                string yr = NamedChildrenFhirTypeWrapper(info);
-                _writer.WriteLineIndented(
-                    $"if ({info.PropertyName} != null)" +
-                        $" yield return {yr};");
-            }
-        }
-
-        CloseScope(suppressNewline: true);
-        CloseScope();
-    }
+    // private void WriteChildren(string exportName,
+    //     List<WrittenElementInfo> exportedElements)
+    // {
+    //     // Base implementation differs from subclasses.
+    //     if (exportName == "Base")
+    //     {
+    //         _writer.WriteIndentedComment(
+    //                                   """
+    //                                   Enumerate all child nodes.
+    //                                   Return a sequence of child elements, components and/or properties.
+    //                                   Child nodes are returned in the order defined by the FHIR specification.
+    //                                   First returns child nodes inherited from any base class(es), recursively.
+    //                                   Finally returns child nodes defined by the current class.
+    //                                   """);
+    //         _writer.WriteLineIndented("[IgnoreDataMember]");
+    //         _writer.WriteLineIndented("public virtual IEnumerable<Base> Children => Enumerable.Empty<Base>();");
+    //         _writer.WriteLine(string.Empty);
+    //         return;
+    //     }
+    //
+    //     // Don't override anything if there are no additional elements.
+    //     if (!exportedElements.Any())
+    //     {
+    //         return;
+    //     }
+    //
+    //     _writer.WriteLineIndented("[IgnoreDataMember]");
+    //     _writer.WriteLineIndented("public override IEnumerable<Base> Children");
+    //
+    //     OpenScope();
+    //     _writer.WriteLineIndented("get");
+    //     OpenScope();
+    //     _writer.WriteLineIndented($"foreach (var item in base.Children) yield return item;");
+    //
+    //     foreach (WrittenElementInfo info in exportedElements)
+    //     {
+    //         if (info.PropertyType is ListTypeReference)
+    //         {
+    //             _writer.WriteLineIndented(
+    //                 $"foreach (var elem in {info.PropertyName})" +
+    //                     $" {{ if (elem != null) yield return elem; }}");
+    //         }
+    //         else
+    //         {
+    //             string yr = NamedChildrenFhirTypeWrapper(info);
+    //             _writer.WriteLineIndented(
+    //                 $"if ({info.PropertyName} != null)" +
+    //                     $" yield return {yr};");
+    //         }
+    //     }
+    //
+    //     CloseScope(suppressNewline: true);
+    //     CloseScope();
+    // }
 
     /// <summary>Writes the matches.</summary>
     /// <param name="exportName">Name of the exported class.</param>
@@ -2664,9 +2664,9 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         {
             WriteMatches(exportName, exportedElements);
             WriteIsExactly(exportName, exportedElements);
-            WriteChildren(exportName, exportedElements);
-            WriteNamedChildren(exportName, exportedElements);
-            WriteIDictionarySupport(exportName, exportedElements);
+            //WriteChildren(exportName, exportedElements);
+            //WriteNamedChildren(exportName, exportedElements);
+            WriteDictionarySupport(exportName, exportedElements);
         }
 
         // close class
