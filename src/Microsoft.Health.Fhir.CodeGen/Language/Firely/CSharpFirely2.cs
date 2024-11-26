@@ -3392,17 +3392,8 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
                 OpenScope();
                 _writer.WriteIndented($"get {{ return {ei.PropertyName} != null ? ");
                 string propAccess = versionsRemark is not null
-                    ? $"(({mostGeneralValueAccessorType(ptr)}){ei.PropertyName})"
+                    ? $"(({MostGeneralValueAccessorType(ptr)}){ei.PropertyName})"
                     : ei.PropertyName;
-
-                static string mostGeneralValueAccessorType(PrimitiveTypeReference ptr)
-                {
-                    return ptr.ConveniencePropertyTypeString switch
-                    {
-                        "string" => "IValue<string>",
-                        _ => ptr.PropertyTypeString
-                    };
-                }
 
                 _writer.WriteLine($"{propAccess}.Value : null; }}");
                 _writer.WriteLineIndented("set");
@@ -3428,7 +3419,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
                 _writer.WriteIndented($"get {{ return {ei.PropertyName} != null ? {ei.PropertyName}");
                 if(versionsRemark is not null)
-                    _writer.Write($".Cast<{lptr.PropertyTypeString}>()");
+                    _writer.Write($".Cast<{MostGeneralValueAccessorType(lptr)}>()");
                 _writer.WriteLine($".Select(elem => elem.Value) : null; }}");
 
                 _writer.WriteLineIndented("set");
@@ -3452,6 +3443,16 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
                 break;
         }
     }
+
+    private static string MostGeneralValueAccessorType(PrimitiveTypeReference ptr)
+    {
+        return ptr.ConveniencePropertyTypeString switch
+        {
+            "string" => "IValue<string>",
+            _ => ptr.PropertyTypeString
+        };
+    }
+
 
     /// <summary>
     /// Determine the type name for an element that has child elements, based on the definition and
