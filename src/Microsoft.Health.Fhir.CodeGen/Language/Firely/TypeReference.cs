@@ -5,6 +5,19 @@ namespace Microsoft.Health.Fhir.CodeGen.Language.Firely;
 
 public abstract record TypeReference(string Name)
 {
+    public static TypeReference BuildFromFhirTypeName(string name, string? vsName=null, string? vsClass=null)
+    {
+        // Elements of type Code or Code<T> have their own naming/types, so handle those separately.
+        if (name == "code" && vsName is not null)
+            return new CodedTypeReference(vsName, vsClass);
+
+        if (PrimitiveTypeReference.IsFhirPrimitiveType(name))
+            return PrimitiveTypeReference.GetTypeReference(name);
+
+        // Otherwise, this is a "normal" name for a complex type.
+        return new ComplexTypeReference(name, MapTypeName(name));
+    }
+
     public abstract string PropertyTypeString { get; }
 
     internal static string MapTypeName(string name)
@@ -102,8 +115,6 @@ public record ComplexTypeReference(string Name, string PocoTypeName) : TypeRefer
 
     public static readonly ComplexTypeReference DataTypeReference = new("DataType");
 }
-
-public record ChoiceTypeReference() : ComplexTypeReference("DataType");
 
 public record CodedTypeReference(string EnumName, string? EnumClassName)
     : PrimitiveTypeReference("code", EnumName, typeof(Enum))

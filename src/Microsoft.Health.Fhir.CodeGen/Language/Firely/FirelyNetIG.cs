@@ -3567,7 +3567,7 @@ public partial class FirelyNetIG : ILanguage
                         Expression = "DataType",
                     },
                     ContextTarget = null,
-                    ContextElementInfo = new("", "", "", new ChoiceTypeReference(), null),
+                    ContextElementInfo = new("", "", "", ComplexTypeReference.DataTypeReference, null),
                     //ContextElementInfo = new CSharpFirely2.WrittenElementInfo()
                     //{
                     //    ElementType = "Hl7.Fhir.Model.DataType",

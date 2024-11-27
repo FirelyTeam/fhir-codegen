@@ -3,9 +3,7 @@
 //     Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // </copyright>
 
-using System.Collections;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
 using Hl7.Fhir.Model;
 using Hl7.Fhir.Utility;
 using Microsoft.Health.Fhir.CodeGen.FhirExtensions;
@@ -2968,7 +2966,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
                 orderOffset);
         }
     }
-    private void BuildFhirElementAttribute(string name, string summary, string? isModifier, ElementDefinition element, int orderOffset, string choice, string fiveWs, string? since = null, (string, string)? until = null, string? xmlSerialization = null)
+    private void WriteFhirElementAttribute(string name, string summary, string? isModifier, ElementDefinition element, int orderOffset, string choice, string fiveWs, string? since = null, (string, string)? until = null, string? xmlSerialization = null)
     {
         var xmlser = xmlSerialization is null ? null : $", XmlSerialization = XmlRepresentation.{xmlSerialization}";
         string attributeText = $"[FhirElement(\"{name}\"{xmlser}{summary}{isModifier}, Order={GetOrder(element)}{choice}{fiveWs}";
@@ -3046,18 +3044,18 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
         if (path == "OperationOutcome.issue.severity")
         {
-            BuildFhirElementAttribute(name, summary, ", IsModifier=true", element, orderOffset, choice, fiveWs);
-            BuildFhirElementAttribute(name, summary, null, element, orderOffset, choice, fiveWs, since: "R4");
+            WriteFhirElementAttribute(name, summary, ", IsModifier=true", element, orderOffset, choice, fiveWs);
+            WriteFhirElementAttribute(name, summary, null, element, orderOffset, choice, fiveWs, since: "R4");
         }
         else if (path is "Signature.who" or "Signature.onBehalfOf")
         {
-            BuildFhirElementAttribute(name, summary, isModifier, element, orderOffset, ", Choice = ChoiceType.DatatypeChoice", fiveWs);
-            BuildFhirElementAttribute(name, summary, isModifier, element, orderOffset, "", fiveWs, since: since);
+            WriteFhirElementAttribute(name, summary, isModifier, element, orderOffset, ", Choice = ChoiceType.DatatypeChoice", fiveWs);
+            WriteFhirElementAttribute(name, summary, isModifier, element, orderOffset, "", fiveWs, since: since);
             _writer.WriteLineIndented($"[DeclaredType(Type = typeof(ResourceReference), Since = FhirRelease.R4)]");
         }
         else
         {
-            BuildFhirElementAttribute(name, summary, isModifier, element, orderOffset, choice, fiveWs, since, until, xmlSerialization);
+            WriteFhirElementAttribute(name, summary, isModifier, element, orderOffset, choice, fiveWs, since, until, xmlSerialization);
         }
 
         if (ei.PropertyType is CqlTypeReference ctr)
@@ -3077,6 +3075,22 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
         if (_elementTypeChanges.TryGetValue(path, out ElementTypeChange[]? changes))
         {
+            IEnumerable<TypeReference>? ats = changes.Select(c => c.DeclaredTypeReference);
+            _writer.WriteLineIndented("[CLSCompliant(false)]");
+            _writer.WriteLineIndented(BuildAllowedTypesAttribute(ats, null));
+
+            // Write comments for future improved AllowedTypesAttribute, with a Since
+            _writer.WriteIndentedComment(
+                "Attribute validation is not sensitive to FHIR version, so the next, more precise validations, will not work yet.",
+                isSummary: false, singleLine: true);
+            foreach(ElementTypeChange change in changes)
+            {
+                string allowedType = BuildAllowedTypesAttribute([change.DeclaredTypeReference], change.Since);
+               _writer.WriteIndentedComment(allowedType, isSummary: false, singleLine: true);
+            }
+
+            // Write the DeclaredTypes with the since, that will at least make sure
+            // the metadata for the property is correct for each version.
             foreach(ElementTypeChange change in changes)
             {
                 _writer.WriteIndented($"[DeclaredType(Type = typeof({change.DeclaredTypeReference.PropertyTypeString})");
@@ -3084,9 +3098,6 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
                 _writer.WriteLine(")]");
             }
         }
-
-        //if (element.cgIsSimple() && element.Type.Count == 1 && element.Type.Single().cgName() == "uri")
-        //    _writer.WriteLineIndented("[UriPattern]");
 
         bool notClsCompliant = !string.IsNullOrEmpty(allowedTypes) ||
             !string.IsNullOrEmpty(resourceReferences);
@@ -3160,7 +3171,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         return $"{baseDescription}. {changedDescription}";
     }
 
-    private static PrimitiveTypeReference BuildTypeReferenceForCode(DefinitionCollection info, ElementDefinition element, Dictionary<string, WrittenValueSetInfo> writtenValueSets)
+    private static (string? enumName, string? enumClass) GetVsInfoForCodedElement(DefinitionCollection info, ElementDefinition element, Dictionary<string, WrittenValueSetInfo> writtenValueSets)
     {
         if ((element.Binding?.Strength != Hl7.Fhir.Model.BindingStrength.Required) ||
             (!info.TryExpandVs(element.Binding.ValueSet, out ValueSet? vs)) ||
@@ -3168,7 +3179,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             (_codedElementOverrides.Contains(element.Path) && info.FhirSequence >= FhirReleases.FhirSequenceCodes.R4) ||
             !writtenValueSets.TryGetValue(vs.Url, out WrittenValueSetInfo vsInfo))
         {
-            return PrimitiveTypeReference.GetTypeReference("code");
+            return (null, null);
         }
 
         string vsClass = vsInfo.ClassName;
@@ -3176,7 +3187,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
         if (string.IsNullOrEmpty(vsClass))
         {
-            return new CodedTypeReference(vsName, null);
+            return (vsName, null);
         }
 
         string pascal = element.cgName().ToPascalCase();
@@ -3187,7 +3198,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
                 $"Change the name of the valueset '{vs.Url}' by adapting the _enumNamesOverride variable in the generator and rerun.");
         }
 
-        return new CodedTypeReference(vsName, vsClass);
+        return (vsName, vsClass);
     }
 
     private static TypeReference DetermineTypeReferenceForFhirElement(
@@ -3216,21 +3227,12 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
             string initialTypeName = getTypeNameFromElement();
 
-            // Elements that use multiple datatypes are of type DataType
-            // TODO: Probably need the list of types later to be able to render the
-            // AllowedTypes.
-            if (initialTypeName == "DataType")
-                return new ChoiceTypeReference();
-
             // Elements of type Code or Code<T> have their own naming/types, so handle those separately.
-            if (initialTypeName == "code")
-                return BuildTypeReferenceForCode(info, element, writtenValueSets);
+            var (vsName,vsClass) = initialTypeName == "code"
+                ? GetVsInfoForCodedElement(info, element, writtenValueSets)
+                : (null,null);
 
-            if (PrimitiveTypeReference.IsFhirPrimitiveType(initialTypeName))
-                return PrimitiveTypeReference.GetTypeReference(initialTypeName);
-
-            // Otherwise, this is a "normal" name for a complex type.
-            return new ComplexTypeReference(initialTypeName, getPocoNameForComplexTypeReference(initialTypeName));
+            return TypeReference.BuildFromFhirTypeName(initialTypeName, vsName, vsClass);
 
             string getTypeNameFromElement()
             {
@@ -3239,7 +3241,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
                 {
                     // TODO(ginoc): this should move into cgBaseTypeName();
                     // check to see if the referenced element has an explicit name
-                    if (info.TryFindElementByPath(btn, out StructureDefinition? targetSd, out ElementDefinition? targetEd))
+                    if (info.TryFindElementByPath(btn, out StructureDefinition? _, out ElementDefinition? targetEd))
                     {
                         return BuildTypeNameForNestedComplexType(targetEd, btn);
                     }
@@ -3250,13 +3252,6 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
                 return element.Type.Count == 1
                     ? element.Type.First().cgName()
                     : "DataType";
-            }
-
-            string getPocoNameForComplexTypeReference(string name)
-            {
-                return name.Contains('.')
-                    ? BuildTypeNameForNestedComplexType(element, name)
-                    : TypeReference.MapTypeName(name);
             }
         }
     }
@@ -3463,22 +3458,6 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
     /// <returns>A string.</returns>
     private static string BuildTypeNameForNestedComplexType(ElementDefinition ed, string type)
     {
-        // ginoc 2024.03.12: Release has happened and these are no longer needed - leaving here but commented out until confirmed
-        /*
-        // TODO: the following renames (repairs) should be removed when release 4B is official and there is an
-        //   explicit name in the definition for attributes:
-        //   - Statistic.attributeEstimate.attributeEstimate
-        //   - Citation.contributorship.summary
-
-        if (type.StartsWith("Citation") || type.StartsWith("Statistic") || type.StartsWith("DeviceDefinition"))
-        {
-            string parentName = type.Substring(0, type.IndexOf('.'));
-            var sillyBackboneName = type.Substring(parentName.Length);
-            type = parentName + "." + capitalizeThoseSillyBackboneNames(sillyBackboneName) + "Component";
-        }
-        // end of repair
-        */
-
         string explicitTypeName = ed.cgExplicitName();
 
         if (!string.IsNullOrEmpty(explicitTypeName))
@@ -3602,7 +3581,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
                 // present in the current version of the standard. So, in principle, we don't generate
                 // this attribute in the base subset, unless all types mentioned are present in the
                 // exception list above.
-                bool isPrimitive(string name) => char.IsLower(name[0]);
+                static bool isPrimitive(string name) => char.IsLower(name[0]);
                 bool allTypesAvailable =
                     elementTypes.Keys.All(en =>
                         isPrimitive(en) // primitives are available everywhere
@@ -3613,44 +3592,15 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
                 if (allTypesAvailable)
                 {
-                    StringBuilder sb = new();
-                    sb.Append("[AllowedTypes(");
-
-                    bool needsSep = false;
-                    foreach ((string etName, ElementDefinition.TypeRefComponent _) in elementTypes)
-                    {
-                        if (needsSep)
-                        {
-                            sb.Append(',');
-                        }
-
-                        needsSep = true;
-
-                        sb.Append("typeof(");
-                        sb.Append(Namespace);
-                        sb.Append('.');
-
-                        if (TypeNameMappings.TryGetValue(etName, out string? tmValue))
-                        {
-                            sb.Append(tmValue);
-                        }
-                        else
-                        {
-                            sb.Append(FhirSanitizationUtils.SanitizedToConvention(etName, NamingConvention.PascalCase));
-                        }
-
-                        sb.Append(')');
-                    }
-
-                    sb.Append(")]");
-                    allowedTypes = sb.ToString();
+                    IEnumerable<TypeReference> typeRefs = elementTypes.Values.Select(v => TypeReference.BuildFromFhirTypeName(v.Code));
+                    allowedTypes = BuildAllowedTypesAttribute(typeRefs, null);
                 }
             }
         }
 
         if (elementTypes.Any())
         {
-            foreach ((string etName, ElementDefinition.TypeRefComponent elementType) in elementTypes.Where(kvp => (kvp.Key == "Reference") && kvp.Value.TargetProfile.Any()))
+            foreach ((string _, ElementDefinition.TypeRefComponent elementType) in elementTypes.Where(kvp => (kvp.Key == "Reference") && kvp.Value.TargetProfile.Any()))
             {
                 resourceReferences = "[References(" +
                     string.Join(",", elementType.cgTargetProfiles().Keys.Select(name => "\"" + name + "\"")) +

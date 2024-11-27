@@ -4,8 +4,12 @@
 // </copyright>
 
 using System.ComponentModel;
+using System.Text;
 using Hl7.Fhir.Model;
 using Microsoft.Health.Fhir.CodeGen.FhirExtensions;
+using Microsoft.Health.Fhir.CodeGenCommon.Extensions;
+using Microsoft.Health.Fhir.CodeGenCommon.Packaging;
+using Microsoft.Health.Fhir.CodeGenCommon.Utils;
 
 #if NETSTANDARD2_0
 using Microsoft.Health.Fhir.CodeGenCommon.Polyfill;
@@ -250,6 +254,21 @@ public static class CSharpFirelyCommon
     public static int GetOrder(int relativeOrder)
     {
         return (relativeOrder * 10) + 10;
+    }
+
+    public static string BuildAllowedTypesAttribute(IEnumerable<TypeReference> types, FhirReleases.FhirSequenceCodes? since)
+    {
+        StringBuilder sb = new();
+        sb.Append("[AllowedTypes(");
+
+        string typesList = string.Join(",",
+            types.Select(t => $"typeof({t.PropertyTypeString})"));
+
+        sb.Append(typesList);
+        if (since is not null)
+            sb.Append($", Since = FhirRelease.{since}");
+        sb.Append(")]");
+        return sb.ToString();
     }
 }
 
