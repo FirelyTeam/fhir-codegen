@@ -43,9 +43,6 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
     public Type ConfigType => typeof(FirelyGenOptions);
 
-    /// <summary>Gets the FHIR primitive type map.</summary>
-    public Dictionary<string, string> FhirPrimitiveTypeMap => CSharpFirelyCommon.PrimitiveTypeMap;
-
     /// <summary>Gets a value indicating whether this language is idempotent.</summary>
     public bool IsIdempotent => false;
 
@@ -74,7 +71,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
     private string _exportDirectory = string.Empty;
 
     /// <summary>Structures to skip generating.</summary>
-    internal static readonly HashSet<string> _exclusionSet =
+    internal static readonly HashSet<string> ExclusionSet =
     [
         /* These two types are generated as interfaces, so require special handling and
          * are not to be treated as normal resources. */
@@ -103,12 +100,12 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
     /// <summary>
     /// List of types introduced in R5 that are retrospectively introduced in R3 and R4.
     /// </summary>
-    internal static readonly List<WrittenModelInfo> _sharedR5DataTypes =
+    internal static readonly List<WrittenModelInfo> SharedR5DataTypes =
     [
-        new WrittenModelInfo { CsName = "BackboneType", FhirName = "BackboneType", IsAbstract = true },
-        new WrittenModelInfo { CsName = "Base", FhirName = "Base", IsAbstract = true },
-        new WrittenModelInfo { CsName = "DataType", FhirName = "DataType", IsAbstract = true },
-        new WrittenModelInfo { CsName = "PrimitiveType", FhirName = "PrimitiveType", IsAbstract = true },
+        new("BackboneType", "BackboneType", true),
+        new("Base", "Base",true),
+        new("DataType", "DataType", true),
+        new("PrimitiveType", "PrimitiveType", true),
     ];
 
     /// <summary>
@@ -213,37 +210,9 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
     ];
 
     /// <summary>
-    /// Information about special handling for specific value sets (for backwards compatibility of
-    /// generated code)
-    /// </summary>
-    internal record class ValueSetBehaviorOverrides
-    {
-        public required bool AllowShared { get; init; }
-        public required bool AllowInClasses { get; init; }
-        public HashSet<string> ForceInClasses { get; init; } = [];
-    }
-
-    /// <summary>
-    /// (Immutable) ValueSets that need special handling for backwards compatibility
-    /// </summary>
-    /// <remarks>
-    /// Plan to remove in SDK v6.0
-    /// </remarks>
-    private static readonly Dictionary<string, ValueSetBehaviorOverrides> _valueSetBehaviorOverrides = new()
-    {
-        { "http://hl7.org/fhir/ValueSet/consent-data-meaning", new ValueSetBehaviorOverrides() { AllowShared = true, AllowInClasses = true, } },
-        { "http://hl7.org/fhir/ValueSet/consent-provision-type", new ValueSetBehaviorOverrides() { AllowShared = true, AllowInClasses = true, }},
-        { "http://hl7.org/fhir/ValueSet/encounter-status", new ValueSetBehaviorOverrides() { AllowShared = true, AllowInClasses = true, }},
-        { "http://hl7.org/fhir/ValueSet/list-mode", new ValueSetBehaviorOverrides() { AllowShared = true, AllowInClasses = true, }},
-        { "http://hl7.org/fhir/ValueSet/color-codes", new ValueSetBehaviorOverrides() { AllowShared = false, AllowInClasses = false, }},
-        //{ "http://hl7.org/fhir/ValueSet/timezones", new ValueSetBehaviorOverrides() { AllowShared = true, ForceInClasses = ["Appointment"] }},
-        //{ "http://hl7.org/fhir/ValueSet/timezones", new ValueSetBehaviorOverrides() { AllowShared = true, ForceInClasses = ["Appointment"] }},
-    };
-
-    /// <summary>
     ///  List of all valuesets that we should publish as a shared Enum although there is only 1 reference to it.
     /// </summary>
-    internal static readonly List<(string, string)> _explicitSharedValueSets =
+    internal static readonly List<(string, string)> ExplicitSharedValueSets =
     [
         // This enum should go to Template-binding.cs because otherwise it will introduce a breaking change.
         ("R4", "http://hl7.org/fhir/ValueSet/messageheader-response-request"),
@@ -253,14 +222,13 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         ("R5", "http://hl7.org/fhir/ValueSet/constraint-severity"),
     ];
 
-
     /// <summary>Gets the reserved words.</summary>
     /// <value>The reserved words.</value>
     private static readonly HashSet<string> _reservedWords = [];
 
-    private static readonly Func<WrittenModelInfo, bool> SupportedResourcesFilter = wmi => !wmi.IsAbstract;
-    private static readonly Func<WrittenModelInfo, bool> FhirToCsFilter = wmi => !_excludeFromCsToFhir!.Contains(wmi.FhirName);
-    private static readonly Func<WrittenModelInfo, bool> CsToStringFilter = FhirToCsFilter;
+    private static readonly Func<WrittenModelInfo, bool> _supportedResourcesFilter = wmi => !wmi.IsAbstract;
+    private static readonly Func<WrittenModelInfo, bool> _fhirToCsFilter = wmi => !_excludeFromCsToFhir!.Contains(wmi.FhirName);
+    private static readonly Func<WrittenModelInfo, bool> _csToStringFilter = _fhirToCsFilter;
 
     private static readonly string[] _excludeFromCsToFhir =
     [
@@ -281,7 +249,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
     /// Some valuesets have names that are the same as element names or are just not nice - use this collection
     /// to change the name of the generated enum as required.
     /// </summary>
-    internal static readonly Dictionary<string, string> _enumNamesOverride = new()
+    internal static readonly Dictionary<string, string> EnumNamesOverride = new()
     {
         ["http://hl7.org/fhir/ValueSet/characteristic-combination"] = "CharacteristicCombinationCode",
         ["http://hl7.org/fhir/ValueSet/claim-use"] = "ClaimUseCode",
@@ -298,7 +266,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
     private record ElementTypeChange(FhirReleases.FhirSequenceCodes Since,
         TypeReference DeclaredTypeReference);
 
-    private static readonly ElementTypeChange[] stringToMarkdown =
+    private static readonly ElementTypeChange[] _stringToMarkdown =
     [
         new(FhirReleases.FhirSequenceCodes.STU3, PrimitiveTypeReference.String),
         new(FhirReleases.FhirSequenceCodes.R5, PrimitiveTypeReference.Markdown)
@@ -358,10 +326,10 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             new(FhirReleases.FhirSequenceCodes.R5, PrimitiveTypeReference.Code)
         ],
 
-        ["ElementDefinition.constraint.requirements"] = stringToMarkdown,
-        ["ElementDefinition.binding.description"] = stringToMarkdown,
-        ["ElementDefinition.mapping.comment"] = stringToMarkdown,
-        ["CapabilityStatement.implementation.description"] = stringToMarkdown,
+        ["ElementDefinition.constraint.requirements"] = _stringToMarkdown,
+        ["ElementDefinition.binding.description"] = _stringToMarkdown,
+        ["ElementDefinition.mapping.comment"] = _stringToMarkdown,
+        ["CapabilityStatement.implementation.description"] = _stringToMarkdown,
      };
     // ReSharper restore ArrangeObjectCreationWhenTypeNotEvident
 
@@ -468,10 +436,8 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
     private IDictionary<string, Ncqa.Cql.Model.ClassInfo>? _cqlModelClassInfo = null;
 
     /// <summary>Export the passed FHIR version into the specified directory.</summary>
+    /// <param name="untypedOptions"></param>
     /// <param name="info">           The information.</param>
-    /// <param name="serverInfo">     Information describing the server.</param>
-    /// <param name="options">        Options for controlling the operation.</param>
-    /// <param name="exportDirectory">Directory to write files.</param>
     public void Export(object untypedOptions, DefinitionCollection info)
     {
         if (untypedOptions is not FirelyGenOptions options)
@@ -578,7 +544,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         }
 
         AddModels(allComplexTypes, _info.ComplexTypesByName.Values);
-        AddModels(allComplexTypes, _sharedR5DataTypes);
+        AddModels(allComplexTypes, SharedR5DataTypes);
 
         if (options.ExportStructures.Contains(FhirArtifactClassEnum.Resource))
         {
@@ -632,15 +598,9 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
                 // update the copied element to be the content element
                 edContent.ElementId = "Binary.content";
                 edContent.Path = "Binary.content";
-                edContent.Base = new() { Path = "Binary.content", Min = 0, Max = "1" };
+                edContent.Base = new ElementDefinition.BaseComponent { Path = "Binary.content", Min = 0, Max = "1" };
 
                 edContent.cgSetFieldOrder(edData.cgFieldOrder(), edData.cgComponentFieldOrder());
-
-                //edContent.RemoveExtension(CommonDefinitions.ExtUrlEdFieldOrder);
-                //edContent.RemoveExtension(CommonDefinitions.ExtUrlEdComponentFieldOrder);
-
-                //edContent.AddExtension(CommonDefinitions.ExtUrlEdFieldOrder, new Integer(edData.cgFieldOrder()));
-                //edContent.AddExtension(CommonDefinitions.ExtUrlEdComponentFieldOrder, new Integer(edData.cgComponentFieldOrder()));
 
                 // add our element and track info, note that we are not increasing
                 // the orders since they are duplicate elements from different versions
@@ -714,12 +674,6 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
                 edContentType.cgSetFieldOrder(7, 6);
 
-                //edContentType.RemoveExtension(CommonDefinitions.ExtUrlEdFieldOrder);
-                //edContentType.RemoveExtension(CommonDefinitions.ExtUrlEdComponentFieldOrder);
-
-                //edContentType.AddExtension(CommonDefinitions.ExtUrlEdFieldOrder, new Integer(6), true);
-                //edContentType.AddExtension(CommonDefinitions.ExtUrlEdComponentFieldOrder, new Integer(6), true);
-
                 // add our element and track info
                 _ = _info.TryInsertElement(sdSignature, edContentType, false);
             }
@@ -787,12 +741,6 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
             edFocus.cgSetFieldOrder(123, 3);
 
-            //edFocus.RemoveExtension(CommonDefinitions.ExtUrlEdFieldOrder);
-            //edFocus.RemoveExtension(CommonDefinitions.ExtUrlEdComponentFieldOrder);
-
-            //edFocus.AddExtension(CommonDefinitions.ExtUrlEdFieldOrder, new Integer(123), true);
-            //edFocus.AddExtension(CommonDefinitions.ExtUrlEdComponentFieldOrder, new Integer(3), true);
-
             // TODO(ginoc): This insertion is currently pushing exclusionCriteria to Order=60 in file (componentOrder 5) - it should not
             // add our element and track info
             _ = _info.TryInsertElement(sdValueSet, edFocus, true);
@@ -838,12 +786,6 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
                 edXPath.cgSetFieldOrder(66, 8);
             }
 
-            //edXPath.RemoveExtension(CommonDefinitions.ExtUrlEdFieldOrder);
-            //edXPath.RemoveExtension(CommonDefinitions.ExtUrlEdComponentFieldOrder);
-
-            //edXPath.AddExtension(CommonDefinitions.ExtUrlEdFieldOrder, new Integer(65), true);
-            //edXPath.AddExtension(CommonDefinitions.ExtUrlEdComponentFieldOrder, new Integer(7), true);
-
             // add our element and track info
             _ = _info.TryInsertElement(sdElementDefinition, edXPath, true);
         }
@@ -872,20 +814,6 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
             // add our element and track info
             _ = _info.TryInsertElement(sdRelatedArtifact, edUrl, true);
-        }
-
-        // need to modify the summary status of narrative elements - remove this for SDK 6.0
-        if (_info.ComplexTypesByName.TryGetValue("Narrative", out StructureDefinition? sdNarrative))
-        {
-            if (sdNarrative.cgTryGetElementById("Narrative.status", out ElementDefinition? edStatus))
-            {
-                edStatus.IsSummary = true;
-            }
-
-            if (sdNarrative.cgTryGetElementById("Narrative.div", out ElementDefinition? edDiv))
-            {
-                edDiv.IsSummary = true;
-            }
         }
 
         // correct issues in FHIR 6.0.0-ballot2
@@ -958,12 +886,12 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         // open class
         OpenScope();
 
-        WriteSupportedResources(writtenResources.Values.Where(SupportedResourcesFilter));
+        WriteSupportedResources(writtenResources.Values.Where(_supportedResourcesFilter));
 
         WriteFhirVersion();
 
-        WriteFhirToCs(writtenPrimitives.Values.Where(FhirToCsFilter), writtenComplexTypes.Values.Where(FhirToCsFilter), writtenResources.Values.Where(FhirToCsFilter));
-        WriteCsToString(writtenPrimitives.Values.Where(CsToStringFilter), writtenComplexTypes.Values.Where(CsToStringFilter), writtenResources.Values.Where(CsToStringFilter));
+        WriteFhirToCs(writtenPrimitives.Values.Where(_fhirToCsFilter), writtenComplexTypes.Values.Where(_fhirToCsFilter), writtenResources.Values.Where(_fhirToCsFilter));
+        WriteCsToString(writtenPrimitives.Values.Where(_csToStringFilter), writtenComplexTypes.Values.Where(_csToStringFilter), writtenResources.Values.Where(_csToStringFilter));
 
         WriteSearchParameters();
 
@@ -1231,8 +1159,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         // traverse all versions of all value sets
         foreach ((string unversionedUrl, string[] versions) in _info.ValueSetVersions.OrderBy(kvp => kvp.Key))
         {
-            if (_exclusionSet.Contains(unversionedUrl) ||
-                (_valueSetBehaviorOverrides.TryGetValue(unversionedUrl, out ValueSetBehaviorOverrides? oddInfo) && (oddInfo.AllowShared == false)))
+            if (ExclusionSet.Contains(unversionedUrl))
             {
                 continue;
             }
@@ -1245,13 +1172,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
                     continue;
                 }
 
-                // we never want to write limited expansions
-                //if (vs.IsLimitedExpansion())
-                //{
-                //    continue;
-                //}
-
-                IEnumerable<StructureElementCollection> coreBindings = _info.CoreBindingsForVs(vs.Url);
+                IEnumerable<StructureElementCollection> coreBindings = _info.CoreBindingsForVs(vs.Url).ToList();
                 Hl7.Fhir.Model.BindingStrength? strongestBinding = _info.StrongestBinding(coreBindings);
 
                 if (strongestBinding != Hl7.Fhir.Model.BindingStrength.Required)
@@ -1266,7 +1187,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
                 IEnumerable<string> referencedBy = coreBindings.cgExtractBaseTypes(_info);
 
-                if ((referencedBy.Count() < 2) && !_explicitSharedValueSets.Contains((_info.FhirSequence.ToString(), vs.Url)))
+                if ((referencedBy.Count() < 2) && !ExplicitSharedValueSets.Contains((_info.FhirSequence.ToString(), vs.Url)))
                 {
                     /* ValueSets that are used in a single POCO are generated as a nested enum inside that
                         * POCO, not here in the shared valuesets */
@@ -1417,7 +1338,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
     {
         foreach (StructureDefinition complex in complexes.OrderBy(c => c.Name))
         {
-            if (_exclusionSet.Contains(complex.Name))
+            if (ExclusionSet.Contains(complex.Name))
             {
                 continue;
             }
@@ -1444,12 +1365,8 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
         writtenModels.Add(
             complex.Name,
-            new WrittenModelInfo()
-            {
-                FhirName = complex.Name,
-                CsName = $"{Namespace}.{exportName}",
-                IsAbstract = complex.Abstract == true,
-            });
+            new WrittenModelInfo(FhirName: complex.Name, CsName: $"{Namespace}.{exportName}",
+                IsAbstract: complex.Abstract == true));
 
         string filename = Path.Combine(_exportDirectory, "Generated", $"{exportName}.cs");
 
@@ -1505,7 +1422,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
     {
         foreach (StructureDefinition complex in complexes.OrderBy(c => c.Name))
         {
-            if (_exclusionSet.Contains(complex.Name))
+            if (ExclusionSet.Contains(complex.Name))
             {
                 continue;
             }
@@ -1537,12 +1454,8 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
         writtenModels.Add(
             complex.Name,
-            new WrittenModelInfo()
-            {
-                FhirName = complex.Name,
-                CsName = $"{Namespace}.{exportName}",
-                IsAbstract = complex.Abstract == true,
-            });
+            new WrittenModelInfo(FhirName: complex.Name, CsName: $"{Namespace}.{exportName}",
+                IsAbstract: complex.Abstract == true));
 
         string filename = Path.Combine(_exportDirectory, "Generated", $"{exportName}.cs");
 
@@ -2522,39 +2435,6 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
         WriteComponentComment(complex);
 
-        string explicitName = complex.cgExplicitName();
-
-        /* TODO(ginoc): 2024.06.28 - Special cases to remove in SDK 6.0
-         * - Evidence.statistic.attributeEstimate.attributeEstimate the explicit name is duplicative and was not passed through.
-         * - Citation.citedArtifact.contributorship.summary had a generator prefix.
-         */
-        switch (explicitName)
-        {
-            case "AttributeEstimateAttributeEstimate":
-                explicitName = "AttributeEstimate";
-                break;
-            case "ContributorshipSummary":
-                explicitName = "CitedArtifactContributorshipSummary";
-                break;
-        }
-
-        // ginoc 2024.03.12: Release has happened and these are no longer needed - leaving here but commented out until confirmed
-        /*
-        // TODO: the following renames (repairs) should be removed when release 4B is official and there is an
-        //   explicit name in the definition for attributes:
-        //   - Statistic.attributeEstimate.attributeEstimate
-        //   - Citation.contributorship.summary
-
-        if (complex.Id.StartsWith("Citation") || complex.Id.StartsWith("Statistic") || complex.Id.StartsWith("DeviceDefinition"))
-        {
-            string parentName = complex.Id.Substring(0, complex.Id.IndexOf('.'));
-            var sillyBackboneName = complex.Id.Substring(parentName.Length);
-            explicitName = capitalizeThoseSillyBackboneNames(sillyBackboneName);
-            exportName = explicitName + "Component";
-        }
-        // end of repair
-        */
-
         bool useConcatenationInName = complex.Structure.Name == "Citation";
         string componentName = complex.Element.Path;
 
@@ -2585,8 +2465,6 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         {
             WriteMatches(exportName, exportedElements);
             WriteIsExactly(exportName, exportedElements);
-            //WriteChildren(exportName, exportedElements);
-            //WriteNamedChildren(exportName, exportedElements);
             WriteDictionarySupport(exportName, exportedElements);
         }
 
@@ -2596,55 +2474,10 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         // check for nested components
         foreach (ComponentDefinition component in complex.cgChildComponents(_info))
         {
-            string componentExportName;
             string componentExplicitName = component.cgExplicitName();
-
-            if (string.IsNullOrEmpty(componentExplicitName))
-            {
-                componentExportName =
-                    $"{component.cgName(NamingConvention.PascalCase, useConcatenationInName, useConcatenationInName)}Component";
-            }
-            else
-            {
-                /* TODO(ginoc): 2024.06.28 - Special cases to remove in SDK 6.0
-                 * - Evidence.statistic.attributeEstimate.attributeEstimate the explicit name is duplicative and was not passed through.
-                 * - Citation.citedArtifact.contributorship.summary had a generator prefix.
-                 */
-
-                switch (componentExplicitName)
-                {
-                    case "AttributeEstimateAttributeEstimate":
-                        componentExportName = "AttributeEstimateComponent";
-                        break;
-                    case "ContributorshipSummary":
-                        componentExportName = "CitedArtifactContributorshipSummaryComponent";
-                        break;
-                    default:
-                        // Consent.provisionActorComponent is explicit lower case...
-                        componentExportName = $"{component.cgExplicitName()}Component";
-                        break;
-                }
-
-                ///* TODO(ginoc): 2024.06.28 - Special cases to remove in SDK 6.0
-                // * - Consent.provision is explicit lower case in R4B and earlier
-                // * - Consent.provision.actor is explicit lower case in R4B and earlier
-                // */
-                //if (_info.FhirSequence < FhirReleases.FhirSequenceCodes.R5)
-                //{
-                //    switch (complex.Element.Path)
-                //    {
-                //        case "Consent.provision":
-                //            componentExportName = "provisionComponent";
-                //            break;
-                //        case "Consent.provision.actor":
-                //            componentExportName = "provisionActorComponent";
-                //            break;
-                //        case "Consent.provision.data":
-                //            componentExportName = "provisionDataComponent";
-                //            break;
-                //    }
-                //}
-            }
+            string componentExportName = string.IsNullOrEmpty(componentExplicitName) ?
+                $"{component.cgName(NamingConvention.PascalCase, useConcatenationInName, useConcatenationInName)}Component"
+                : $"{component.cgExplicitName()}Component";
 
             WriteBackboneComponent(
                 component,
@@ -2689,16 +2522,6 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             WriteEnums(component, className, usedEnumNames, processedValueSets);
         }
 
-        // after processing, we need to look for value sets we are forcing in
-        foreach ((string url, ValueSetBehaviorOverrides behaviors) in _valueSetBehaviorOverrides)
-        {
-            if (behaviors.ForceInClasses.Contains(className) &&
-                _info.TryExpandVs(url, out ValueSet? vs) &&
-                !processedValueSets.Contains(vs.Url))
-            {
-                WriteEnum(vs, className, usedEnumNames);
-            }
-        }
     }
 
     /// <summary>Writes a value set as an enum.</summary>
@@ -2712,27 +2535,12 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         HashSet<string> usedEnumNames,
         bool silent = false)
     {
-        bool passes = false;
-
-        if (_valueSetBehaviorOverrides.TryGetValue(vs.Url, out ValueSetBehaviorOverrides? behaviors))
-        {
-            if (behaviors.ForceInClasses.Contains(className))
-            {
-                // skip other checks
-                passes = true;
-            }
-            else if (behaviors.AllowInClasses == false)
-            {
-                return false;
-            }
-        }
-
-        if (passes || _writtenValueSets.ContainsKey(vs.Url))
+        if (_writtenValueSets.ContainsKey(vs.Url))
         {
             return true;
         }
 
-        if (passes || _exclusionSet.Contains(vs.Url))
+        if (ExclusionSet.Contains(vs.Url))
         {
             return false;
         }
@@ -2754,7 +2562,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
         // Enums and their containing classes cannot have the same name,
         // so we have to correct these here
-        if (_enumNamesOverride.TryGetValue(vs.Url, out var replacementName))
+        if (EnumNamesOverride.TryGetValue(vs.Url, out var replacementName))
         {
             nameSanitized = replacementName;
         }
@@ -2770,16 +2578,12 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         {
             _writtenValueSets.Add(
                 vs.Url,
-                new WrittenValueSetInfo()
-                {
-                    ClassName = className,
-                    ValueSetName = nameSanitized,
-                });
+                new WrittenValueSetInfo(className, nameSanitized));
 
             return true;
         }
 
-        IEnumerable<string> referencedCodeSystems = vs.cgReferencedCodeSystems();
+        IEnumerable<string> referencedCodeSystems = vs.cgReferencedCodeSystems().ToList();
 
         if (referencedCodeSystems.Count() == 1)
         {
@@ -2796,56 +2600,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
                 $"(systems: {referencedCodeSystems.Count()})");
         }
 
-        /* TODO(ginoc): 2024.07.01 - Special cases to remove in SDK 6.0
-         * - ValueSet http://hl7.org/fhir/ValueSet/item-type used to enumerate non-selectable: 'question'
-         * - ValueSet http://hl7.org/fhir/ValueSet/v3-ActInvoiceGroupCode in STU3 used to enumerate non-selectable: '_ActInvoiceInterGroupCode' and '_ActInvoiceRootGroupCode'
-         */
-        switch (vs.Url)
-        {
-            case "http://hl7.org/fhir/ValueSet/item-type":
-                {
-                    if (!vs.Expansion.Contains.Any(vsContains => vsContains.Code == "question"))
-                    {
-                        vs.Expansion.Contains.Insert(2, new ValueSet.ContainsComponent()
-                        {
-                            System = "http://hl7.org/fhir/item-type",
-                            Code = "question",
-                            Display = "Question",
-                        });
-                    }
-                }
-                break;
-
-            case "http://hl7.org/fhir/ValueSet/v3-ActInvoiceGroupCode":
-                {
-                    // only care about the version present in STU3
-                    if (vs.Version == "2014-03-26")
-                    {
-                        if (!vs.Expansion.Contains.Any(vsContains => vsContains.Code == "_ActInvoiceInterGroupCode"))
-                        {
-                            vs.Expansion.Contains.Insert(0, new ValueSet.ContainsComponent()
-                            {
-                                System = "http://hl7.org/fhir/v3/ActCode",
-                                Code = "_ActInvoiceInterGroupCode",
-                                Display = "ActInvoiceInterGroupCode",
-                            });
-                        }
-
-                        if (!vs.Expansion.Contains.Any(vsContains => vsContains.Code == "_ActInvoiceRootGroupCode"))
-                        {
-                            vs.Expansion.Contains.Insert(8, new ValueSet.ContainsComponent()
-                            {
-                                System = "http://hl7.org/fhir/v3/ActCode",
-                                Code = "_ActInvoiceRootGroupCode",
-                                Display = "ActInvoiceRootGroupCode",
-                            });
-                        }
-                    }
-                }
-                break;
-        }
-
-        var defaultSystem = GetDefaultCodeSystem(concepts);
+        string defaultSystem = GetDefaultCodeSystem(concepts);
 
         _writer.WriteLineIndented($"[FhirEnumeration(\"{name}\", \"{vs.Url}\", \"{defaultSystem}\")]");
 
@@ -2905,11 +2660,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
         _writtenValueSets.Add(
             vs.Url,
-            new WrittenValueSetInfo()
-            {
-                ClassName = className,
-                ValueSetName = nameSanitized,
-            });
+            new WrittenValueSetInfo(className, nameSanitized));
 
         return true;
     }
@@ -3161,23 +2912,20 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             return baseDescription;
         }
 
-        var changedDescription = $"The type of this element has changed over time. Make sure to use "
-               + string.Join(", ",
-                   changes.Select(change => $"{change.DeclaredTypeReference.PropertyTypeString} {VersionChangeMessage(changes, change, false)}")) + ".";
+        string changedDescription = $"The type of this element has changed over time. Make sure to use "
+                                    + string.Join(", ",
+                                        changes.Select(change => $"{change.DeclaredTypeReference.PropertyTypeString} {VersionChangeMessage(changes, change, false)}")) + ".";
 
-        if (baseDescription is null)
-            return changedDescription;
-
-        return $"{baseDescription}. {changedDescription}";
+        return baseDescription is null ? changedDescription : $"{baseDescription}. {changedDescription}";
     }
 
     private static (string? enumName, string? enumClass) GetVsInfoForCodedElement(DefinitionCollection info, ElementDefinition element, Dictionary<string, WrittenValueSetInfo> writtenValueSets)
     {
         if ((element.Binding?.Strength != Hl7.Fhir.Model.BindingStrength.Required) ||
             (!info.TryExpandVs(element.Binding.ValueSet, out ValueSet? vs)) ||
-            _exclusionSet.Contains(vs.Url) ||
+            ExclusionSet.Contains(vs.Url) ||
             (_codedElementOverrides.Contains(element.Path) && info.FhirSequence >= FhirReleases.FhirSequenceCodes.R4) ||
-            !writtenValueSets.TryGetValue(vs.Url, out WrittenValueSetInfo vsInfo))
+            !writtenValueSets.TryGetValue(vs.Url, out WrittenValueSetInfo? vsInfo))
         {
             return (null, null);
         }
@@ -3462,21 +3210,6 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
         if (!string.IsNullOrEmpty(explicitTypeName))
         {
-            /* TODO(ginoc): 2024.06.28 - Special cases to remove in SDK 6.0
-             * - Evidence.statistic.attributeEstimate.attributeEstimate the explicit name is duplicative and was not passed through.
-             * - Citation.citedArtifact.contributorship.summary had a generator prefix.
-             */
-
-            switch (explicitTypeName)
-            {
-                case "AttributeEstimateAttributeEstimate":
-                    explicitTypeName = "AttributeEstimate";
-                    break;
-                case "ContributorshipSummary":
-                    explicitTypeName = "CitedArtifactContributorshipSummary";
-                    break;
-            }
-
             string parentName = type.Substring(0, type.IndexOf('.'));
             return $"{parentName}" +
                 $".{explicitTypeName}" +
@@ -3635,7 +3368,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
         foreach (StructureDefinition primitive in primitives.OrderBy(sd => sd.Name))
         {
-            if (_exclusionSet.Contains(primitive.Name))
+            if (ExclusionSet.Contains(primitive.Name))
             {
                 continue;
             }
@@ -3674,12 +3407,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
         writtenModels.Add(
             primitive.Name,
-            new WrittenModelInfo()
-            {
-                FhirName = primitive.Name,
-                CsName = $"{Namespace}.{exportName}",
-                IsAbstract = false,   // no abstract primitives
-            });
+            new WrittenModelInfo(FhirName: primitive.Name, CsName: $"{Namespace}.{exportName}", IsAbstract: false));
 
         string filename = Path.Combine(_exportDirectory, "Generated", $"{exportName}.cs");
 
@@ -4028,21 +3756,12 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
                 exportName = t.Name.ToPascalCase();
             }
 
-            return new WrittenModelInfo()
-            {
-                FhirName = t.Name,
-                CsName = $"{Namespace}.{exportName}",
-                IsAbstract = t.Abstract == true,
-            };
+            return new WrittenModelInfo(FhirName: t.Name, CsName: $"{Namespace}.{exportName}", IsAbstract: t.Abstract == true);
         }
     }
 
     /// <summary>Information about a written value set.</summary>
-    internal struct WrittenValueSetInfo
-    {
-        internal string ClassName;
-        internal string ValueSetName;
-    }
+    internal record WrittenValueSetInfo(string ClassName, string ValueSetName);
 
     /// <summary>Information about the written element.</summary>
     internal record WrittenElementInfo(
@@ -4050,16 +3769,8 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         string FhirElementPath,
         string PropertyName,
         TypeReference PropertyType,
-        string? PrimitiveHelperName)
-    {
-        //public string FhirElementName => FhirElementPath.Split('.').Last();
-    }
+        string? PrimitiveHelperName);
 
     /// <summary>Information about the written model.</summary>
-    internal struct WrittenModelInfo
-    {
-        internal string FhirName;
-        internal string CsName;
-        internal bool IsAbstract;
-    }
+    internal record WrittenModelInfo(string FhirName, string CsName, bool IsAbstract);
 }
