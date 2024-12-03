@@ -182,10 +182,9 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
     [
         "http://hl7.org/fhir/ValueSet/publication-status",
         "http://hl7.org/fhir/ValueSet/FHIR-version",
-
-        // Doesn't strictly need to be in base (but in conformance),
-        // but we used to generate it for base, so I am keeping it that way.
+        "http://hl7.org/fhir/ValueSet/search-param-type",
         "http://hl7.org/fhir/ValueSet/filter-operator",
+        "http://hl7.org/fhir/ValueSet/version-independent-all-resource-types"
     ];
 
     /// <summary>
@@ -195,7 +194,6 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
     [
         "http://hl7.org/fhir/ValueSet/capability-statement-kind",
         "http://hl7.org/fhir/ValueSet/binding-strength",
-        "http://hl7.org/fhir/ValueSet/search-param-type",
 
         // These are necessary for CapabilityStatement/CapabilityStatement2
         // CapStat2 has disappeared in ballot, if that becomes final,
@@ -1039,7 +1037,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
                         .Split(_splitChars, StringSplitOptions.RemoveEmptyEntries)
                         .Where(s => s.StartsWith(complex.Name + ".", StringComparison.Ordinal));
 
-                    path = "\"" + string.Join("\", \"", split) + "\", ";
+                    path = "\"" + string.Join("\", \"", split) + "\"";
                 }
 
                 string target;
@@ -1054,7 +1052,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
                     foreach (string t in sp.Target.Select(t => t.GetLiteral()!))
                     {
-                        sc.Add("ResourceType." + t);
+                        sc.Add("VersionIndependentResourceTypesAll." + t);
                     }
 
                     // HACK: for http://hl7.org/fhir/SearchParameter/clinical-encounter,
@@ -1083,7 +1081,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
                         }
                     }
 
-                    target = ", Target = new ResourceType[] { " + string.Join(", ", sc) + ", }";
+                    target = $", Target = [{string.Join(", ", sc)}]";
                 }
 
                 string xpath = string.IsNullOrEmpty(sp.cgXPath()) ? string.Empty : ", XPath = \"" + sp.cgXPath() + "\"";
@@ -1103,7 +1101,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
                             $" Description = @\"{SanitizeForMarkdown(description)}\"," :
                             $" Description = new Markdown(@\"{SanitizeForMarkdown(description)}\"),") +
                         $" Type = SearchParamType.{searchType}," +
-                        $" Path = new string[] {{ {path}}}" +
+                        $" Path = [{path}]" +
                         target +
                         xpath +
                         expression +
