@@ -97,6 +97,21 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         "http://hl7.org/fhir/ValueSet/mimetypes",
     ];
 
+    private static readonly Dictionary<(string,string), VersionIndependentResourceTypesAll> _searchParamDefsTargetRemovals = new()
+    {
+        [("DiagnosticReport", "encounter")] = VersionIndependentResourceTypesAll.EpisodeOfCare,
+        [("RiskAssessment", "encounter")] = VersionIndependentResourceTypesAll.EpisodeOfCare,
+        [("List", "encounter")] = VersionIndependentResourceTypesAll.EpisodeOfCare,
+        [("VisionPrescription", "encounter")] = VersionIndependentResourceTypesAll.EpisodeOfCare,
+        [("ServiceRequest", "encounter")] = VersionIndependentResourceTypesAll.EpisodeOfCare,
+        [("Flag", "encounter")] = VersionIndependentResourceTypesAll.EpisodeOfCare,
+        [("Observation", "encounter")] = VersionIndependentResourceTypesAll.EpisodeOfCare,
+        [("NutritionOrder", "encounter")] = VersionIndependentResourceTypesAll.EpisodeOfCare,
+        [("Composition", "encounter")] = VersionIndependentResourceTypesAll.EpisodeOfCare,
+        [("DeviceRequest", "encounter")] = VersionIndependentResourceTypesAll.EpisodeOfCare,
+        [("Procedure", "encounter")] = VersionIndependentResourceTypesAll.EpisodeOfCare,
+    };
+
     /// <summary>
     /// List of types introduced in R5 that are retrospectively introduced in R3 and R4.
     /// </summary>
@@ -179,10 +194,9 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
     [
         "http://hl7.org/fhir/ValueSet/publication-status",
         "http://hl7.org/fhir/ValueSet/FHIR-version",
-
-        // Doesn't strictly need to be in base (but in conformance),
-        // but we used to generate it for base, so I am keeping it that way.
+        "http://hl7.org/fhir/ValueSet/search-param-type",
         "http://hl7.org/fhir/ValueSet/filter-operator",
+        "http://hl7.org/fhir/ValueSet/version-independent-all-resource-types"
     ];
 
     /// <summary>
@@ -192,7 +206,6 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
     [
         "http://hl7.org/fhir/ValueSet/capability-statement-kind",
         "http://hl7.org/fhir/ValueSet/binding-strength",
-        "http://hl7.org/fhir/ValueSet/search-param-type",
 
         // These are necessary for CapabilityStatement/CapabilityStatement2
         // CapStat2 has disappeared in ballot, if that becomes final,
@@ -967,7 +980,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
                         .Split(_splitChars, StringSplitOptions.RemoveEmptyEntries)
                         .Where(s => s.StartsWith(complex.Name + ".", StringComparison.Ordinal));
 
-                    path = "\"" + string.Join("\", \"", split) + "\", ";
+                    path = "\"" + string.Join("\", \"", split) + "\"";
                 }
 
                 string target;
@@ -978,12 +991,8 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
                 }
                 else
                 {
-                    SortedSet<string> sc = [];
-
-                    foreach (string t in sp.Target.Select(t => t.GetLiteral()!))
-                    {
-                        sc.Add("ResourceType." + t);
-                    }
+                    List<VersionIndependentResourceTypesAll> sc =
+                        [..sp.Target.Where(t => t != null).Cast<VersionIndependentResourceTypesAll>()];
 
                     // HACK: for http://hl7.org/fhir/SearchParameter/clinical-encounter,
                     // none of the base resources have EpisodeOfCare as target, except
@@ -999,19 +1008,29 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
                         {
                             if (complex.Name != "Procedure" && complex.Name != "DeviceRequest")
                             {
-                                sc.Remove("ResourceType.EpisodeOfCare");
+                                sc.Remove(VersionIndependentResourceTypesAll.EpisodeOfCare);
                             }
                         }
                         else
                         {
                             if (complex.Name != "DocumentReference")
                             {
-                                sc.Remove("ResourceType.EpisodeOfCare");
+                                sc.Remove(VersionIndependentResourceTypesAll.EpisodeOfCare);
                             }
                         }
                     }
 
-                    target = ", Target = new ResourceType[] { " + string.Join(", ", sc) + ", }";
+                    if (_info.FhirSequence != FhirReleases.FhirSequenceCodes.STU3)
+                    {
+                        if(_searchParamDefsTargetRemovals.TryGetValue((complex.Name,sp.Name), out var targetRemoval))
+                        {
+                            sc.Remove(targetRemoval);
+                        }
+                    }
+
+                    var targetStrings = sc.Select(s => $"VersionIndependentResourceTypesAll.{s.GetLiteral()}")
+                        .Order();
+                    target = $", Target = [{string.Join(", ", targetStrings)}]";
                 }
 
                 string xpath = string.IsNullOrEmpty(sp.cgXPath()) ? string.Empty : ", XPath = \"" + sp.cgXPath() + "\"";
@@ -1031,7 +1050,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
                             $" Description = @\"{SanitizeForMarkdown(description)}\"," :
                             $" Description = new Markdown(@\"{SanitizeForMarkdown(description)}\"),") +
                         $" Type = SearchParamType.{searchType}," +
-                        $" Path = new string[] {{ {path}}}" +
+                        $" Path = [{path}]" +
                         target +
                         xpath +
                         expression +
