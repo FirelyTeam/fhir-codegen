@@ -724,7 +724,7 @@ public partial class FirelyNetIG : ILanguage
         foreach ((string unversionedUrl, string[] versions) in _info.ValueSetVersions.OrderBy(kvp => kvp.Key))
         {
             // check for exclusions
-            if (CSharpFirely2._exclusionSet.Contains(unversionedUrl))
+            if (CSharpFirely2.ExclusionSet.Contains(unversionedUrl))
             {
                 continue;
             }
@@ -808,7 +808,7 @@ public partial class FirelyNetIG : ILanguage
 
         // Enums and their containing classes cannot have the same name,
         // so we have to correct these here
-        if (CSharpFirely2._enumNamesOverride.TryGetValue(vs.Url, out var replacementName))
+        if (CSharpFirely2.EnumNamesOverride.TryGetValue(vs.Url, out var replacementName))
         {
             nameSanitized = replacementName;
         }
