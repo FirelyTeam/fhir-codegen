@@ -2069,8 +2069,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             WriteDeepCopy(exportName);
         }
 
-        WriteMatches(exportName, exportedElements);
-        WriteIsExactly(exportName, exportedElements);
+        WriteCompareChildren(exportName, exportedElements);
         WriteDictionarySupport(exportName, exportedElements);
 
         // close class
@@ -2135,7 +2134,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         WriteDictionaryPairs(exportName, exportedElements);
     }
 
-    private string NullCheck(string propertyName, bool isList) =>
+    private static string NullCheck(string propertyName, bool isList) =>
         propertyName + (isList ? "?.Any() == true" : " is not null");
 
     private void WriteDictionaryPairs(string exportName, List<WrittenElementInfo> exportedElements)
@@ -2151,9 +2150,9 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             return;
         }
 
-        _writer.WriteLineIndented("internal protected override IEnumerable<KeyValuePair<string, object>> GetElementPairs()");
+        _writer.WriteLineIndented("public override IEnumerable<KeyValuePair<string, object>> EnumerateElements()");
         OpenScope();
-        _writer.WriteLineIndented("foreach (var kvp in base.GetElementPairs()) yield return kvp;");
+        _writer.WriteLineIndented("foreach (var kvp in base.EnumerateElements()) yield return kvp;");
 
         foreach (WrittenElementInfo info in exportedElements)
         {
@@ -2179,7 +2178,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             return;
         }
 
-        _writer.WriteLineIndented("internal protected override bool TryGetValue(string key, out object value)");
+        _writer.WriteLineIndented("public override bool TryGetValue(string key, out object value)");
         OpenScope();
 
         // switch
@@ -2231,7 +2230,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             return;
         }
 
-        _writer.WriteLineIndented("internal protected override Base SetValue(string key, object value)");
+        _writer.WriteLineIndented("public override Base SetValue(string key, object value)");
         OpenScope();
 
         // switch
@@ -2283,88 +2282,48 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         void writeBaseTrySetValue() => _writer.WriteLineIndented("return base.SetValue(key, value);");
     }
 
-    /// <summary>Writes the matches.</summary>
-    /// <param name="exportName">Name of the exported class.</param>
+    /// <summary>Writes the PairwiseEquality.</summary>
+    /// <param name="exportName">      Name of the export.</param>
     /// <param name="exportedElements">The exported elements.</param>
-    private void WriteMatches(
+    private void WriteCompareChildren(
         string exportName,
         List<WrittenElementInfo> exportedElements)
     {
-        _writer.WriteLineIndented("///<inheritdoc />");
-
-        // Base implementation differs from subclasses.
+        // Base implementation is hand-written code in a separate partial class.
         if (exportName == "Base")
         {
-            _writer.WriteLineIndented("public virtual bool Matches(IDeepComparable other) => other is Base;");
-            _writer.WriteLine(string.Empty);
             return;
         }
 
-        if (exportName == "PrimitiveType")
-        {
-            _writer.WriteLineIndented("public override bool Matches(IDeepComparable other) => IsExactly(other);");
-            _writer.WriteLine(string.Empty);
-            return;
-        }
+        _writer.WriteLineIndented("public override bool CompareChildren(Base other, IEqualityComparer<Base> comparer)");
 
-        _writer.WriteLineIndented("public override bool Matches(IDeepComparable other)");
         OpenScope();
         _writer.WriteLineIndented($"var otherT = other as {exportName};");
         _writer.WriteLineIndented("if(otherT == null) return false;");
         _writer.WriteLine(string.Empty);
-        _writer.WriteLineIndented("if(!base.Matches(otherT)) return false;");
+
+        _writer.WriteLineIndented("if(!base.CompareChildren(otherT, comparer)) return false;");
 
         foreach (WrittenElementInfo info in exportedElements)
         {
-            if (info.PropertyType is CqlTypeReference)
+            if(info.PropertyType is CqlTypeReference)
             {
                 _writer.WriteLineIndented(
                     $"if( {info.PropertyName} != otherT.{info.PropertyName} )" +
                         $" return false;");
             }
-            else
+            else if (info.PropertyType is ListTypeReference)
+            {
                 _writer.WriteLineIndented(
-                    $"if( !DeepComparable.Matches({info.PropertyName}, otherT.{info.PropertyName}))" +
-                        $" return false;");
-        }
-
-        _writer.WriteLine(string.Empty);
-        _writer.WriteLineIndented("return true;");
-
-        CloseScope();
-    }
-
-    /// <summary>Writes the is exactly.</summary>
-    /// <param name="exportName">      Name of the export.</param>
-    /// <param name="exportedElements">The exported elements.</param>
-    private void WriteIsExactly(
-        string exportName,
-        List<WrittenElementInfo> exportedElements)
-    {
-        // Base implementation differs from subclasses.
-        if (exportName == "Base")
-        {
-            _writer.WriteLineIndented("public virtual bool IsExactly(IDeepComparable other) => other is Base;");
-            _writer.WriteLine(string.Empty);
-            return;
-        }
-
-        _writer.WriteLineIndented("public override bool IsExactly(IDeepComparable other)");
-
-        OpenScope();
-        _writer.WriteLineIndented($"var otherT = other as {exportName};");
-        _writer.WriteLineIndented("if(otherT == null) return false;");
-        _writer.WriteLine(string.Empty);
-
-        _writer.WriteLineIndented("if(!base.IsExactly(otherT)) return false;");
-
-        foreach (WrittenElementInfo info in exportedElements)
-        {
-            _writer.WriteLineIndented(
-                info.PropertyType is CqlTypeReference
-                    ? $"if({info.PropertyName} != otherT.{info.PropertyName}) return false;"
-                    : $"if( !DeepComparable.IsExactly({info.PropertyName}, otherT.{info.PropertyName}))" +
-                      $" return false;");
+                    $"if(!comparer.ListEquals({info.PropertyName}, otherT.{info.PropertyName}))" +
+                    $" return false;");
+            }
+            else
+            {
+                _writer.WriteLineIndented(
+                    $"if(!comparer.Equals({info.PropertyName}, otherT.{info.PropertyName}))" +
+                    $" return false;");
+            }
         }
 
         _writer.WriteLine(string.Empty);
@@ -2583,8 +2542,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
         if (exportedElements.Count > 0)
         {
-            WriteMatches(exportName, exportedElements);
-            WriteIsExactly(exportName, exportedElements);
+            WriteCompareChildren(exportName, exportedElements);
             //WriteChildren(exportName, exportedElements);
             //WriteNamedChildren(exportName, exportedElements);
             WriteDictionarySupport(exportName, exportedElements);
