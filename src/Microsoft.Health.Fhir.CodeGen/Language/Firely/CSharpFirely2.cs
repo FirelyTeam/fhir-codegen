@@ -2290,7 +2290,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         List<WrittenElementInfo> exportedElements)
     {
         var specifier = exportName == "Base" ? "virtual" : "override";
-        _writer.WriteLineIndented($"public {specifier} IDeepCopyable CopyTo(IDeepCopyable other)");
+        _writer.WriteLineIndented($"protected internal {specifier} void CopyToInternal(Base other)");
         OpenScope();
         _writer.WriteLineIndented($"var dest = other as {exportName};");
         _writer.WriteLine(string.Empty);
@@ -2307,10 +2307,14 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             _writer.WriteLineIndented("dest.annotations.AddRange(annotations);");
             _writer.DecreaseIndent();
             _writer.WriteLine(string.Empty);
+            _writer.WriteLineIndented("if (Overflow.Any())");
+            _writer.IncreaseIndent();
+            _writer.WriteLineIndented("Overflow.CopyToInternal(dest.Overflow);");
+            _writer.DecreaseIndent();
         }
         else
         {
-            _writer.WriteLineIndented("base.CopyTo(dest);");
+            _writer.WriteLineIndented("base.CopyToInternal(dest);");
         }
 
         foreach (WrittenElementInfo info in exportedElements)
@@ -2319,7 +2323,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             {
                 _writer.WriteLineIndented(
                     $"if({info.PropertyName}.Any())" +
-                        $" dest.{info.PropertyName} = new {info.PropertyType.PropertyTypeString}({info.PropertyName}.DeepCopy());");
+                        $" dest.{info.PropertyName} = new {info.PropertyType.PropertyTypeString}({info.PropertyName}.DeepCopyInternal());");
             }
             else
             {
@@ -2327,14 +2331,12 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
                     $"if({info.PropertyName} != null) dest.{info.PropertyName} = " +
                        (info.PropertyType is CqlTypeReference ?
                         $"{info.PropertyName};" :
-                        $"({info.PropertyType.PropertyTypeString}){info.PropertyName}.DeepCopy();"));
+                        $"({info.PropertyType.PropertyTypeString}){info.PropertyName}.DeepCopyInternal();"));
             }
         }
 
         if (exportName == "PrimitiveType")
             _writer.WriteLineIndented("if (ObjectValue != null) dest.ObjectValue = ObjectValue;");
-
-        _writer.WriteLineIndented("return dest;");
 
         CloseScope();
     }
@@ -2347,17 +2349,16 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         // Base implementation differs from subclasses.
         if (exportName == "Base")
         {
-            _writer.WriteLineIndented("public virtual IDeepCopyable DeepCopy() =>");
-            _writer.IncreaseIndent();
-            _writer.WriteLineIndented("CopyTo((IDeepCopyable)Activator.CreateInstance(GetType())!);");
-            _writer.DecreaseIndent();
+            _writer.WriteLineIndented("protected internal abstract Base DeepCopyInternal();");
             _writer.WriteLine(string.Empty);
             return;
         }
 
-        _writer.WriteLineIndented("public override IDeepCopyable DeepCopy()");
+        _writer.WriteLineIndented("protected internal override Base DeepCopyInternal()");
         OpenScope();
-        _writer.WriteLineIndented($"return CopyTo(new {exportName}());");
+        _writer.WriteLineIndented($"var instance = new {exportName}();");
+        _writer.WriteLineIndented("CopyToInternal(instance);");
+        _writer.WriteLineIndented("return instance;");
         CloseScope();
     }
 
@@ -2379,9 +2380,11 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         if(complex.Structure.Abstract != true)
             WritePropertyTypeName(complex.Structure.Name);
 
-        _writer.WriteLineIndented("public override IDeepCopyable DeepCopy()");
+        _writer.WriteLineIndented("protected internal override Base DeepCopyInternal()");
         OpenScope();
-        _writer.WriteLineIndented($"return CopyTo(new {exportName}());");
+        _writer.WriteLineIndented($"var instance = new {exportName}();");
+        _writer.WriteLineIndented("CopyToInternal(instance);");
+        _writer.WriteLineIndented("return instance;");
         CloseScope();
 
         //_writer.WriteLineIndented("// TODO: Add code to enforce these constraints:");
@@ -3494,6 +3497,8 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
         _writer.WriteLineIndented("set { ObjectValue = value; OnPropertyChanged(\"Value\"); }");
         CloseScope();
+
+        WriteDeepCopy(exportName);
 
         // close class
         CloseScope();
