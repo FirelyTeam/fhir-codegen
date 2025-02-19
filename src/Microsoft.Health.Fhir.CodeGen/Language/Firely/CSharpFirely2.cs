@@ -2262,16 +2262,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
         if (exportName == "PrimitiveType")
         {
-            _writer.WriteLineIndented("var otherValue = otherT.ObjectValue;");
-
-            _writer.WriteLineIndented("if (ObjectValue is byte[] bytes && otherValue is byte[] bytesOther)");
-            _writer.IncreaseIndent();
-            _writer.WriteLineIndented("return Enumerable.SequenceEqual(bytes, bytesOther);");
-            _writer.DecreaseIndent();
-            _writer.WriteLineIndented("else");
-            _writer.IncreaseIndent();
             _writer.WriteLineIndented("return Equals(ObjectValue, otherT.ObjectValue);");
-            _writer.DecreaseIndent();
             _writer.WriteLine(string.Empty);
         }
         else
@@ -3431,14 +3422,14 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
         _writer.WriteLineIndented(
             $"public partial class" +
-                $" {exportName}" +
-                $" : PrimitiveType, " +
-                PrimitiveValueInterface(typeName));
+            $" {exportName}" +
+            $" : PrimitiveType, " +
+            PrimitiveValueInterface(typeName));
 
         // open class
         OpenScope();
 
-        if(primitive.Abstract != true)
+        if (primitive.Abstract != true)
             WritePropertyTypeName(primitive.Name);
 
         if (!string.IsNullOrEmpty(primitive.cgpValidationRegEx()))
@@ -3459,44 +3450,31 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         _writer.WriteLineIndented($"public {exportName}(): this(({typeName})null) {{}}");
         _writer.WriteLine(string.Empty);
 
-        WriteIndentedComment("Primitive value of the element");
-
-        _writer.WriteLineIndented("[FhirElement(\"value\", IsPrimitiveValue=true, XmlSerialization=XmlRepresentation.XmlAttr, InSummary=true, Order=30)]");
-        _writer.WriteLineIndented($"[DeclaredType(Type = typeof({getSystemTypeForFhirType(primitive.Name)}))]");
-
-        if (PrimitiveValidationPatterns.TryGetValue(primitive.Name, out string? primitivePattern))
+        // For some primitive pocos, we need a hand-written value propery since we are using
+        // a different value type for JsonValue and Value.
+        if (exportName is not ("Integer64" or "Base64Binary" or "Instant"))
         {
-            _writer.WriteLineIndented($"[{primitivePattern}]");
-        }
+            WriteIndentedComment("Primitive value of the element");
 
-        _writer.WriteLineIndented("[DataMember]");
-        _writer.WriteLineIndented($"public {typeName} Value");
-        OpenScope();
-
-        // A bit of a hack until we have a proper way to handle the primitives
-        // in https://github.com/FirelyTeam/firely-net-sdk/issues/2781
-        if (typeName == "long?")
-        {
             _writer.WriteLineIndented(
-                """
-                get
-                {
-                    return ObjectValue switch
-                    {
-                        null => null,
-                        long l => l,
-                        _ => Convert.ToInt64(ObjectValue)
-                    };
-                }
-                """);
-        }
-        else
-        {
-            _writer.WriteLineIndented($"get {{ return ({typeName})ObjectValue; }}");
-        }
+                "[FhirElement(\"value\", IsPrimitiveValue=true, XmlSerialization=XmlRepresentation.XmlAttr, InSummary=true, Order=30)]");
+            _writer.WriteLineIndented($"[DeclaredType(Type = typeof({getSystemTypeForFhirType(primitive.Name)}))]");
 
-        _writer.WriteLineIndented("set { ObjectValue = value; OnPropertyChanged(\"Value\"); }");
-        CloseScope();
+            if (PrimitiveValidationPatterns.TryGetValue(primitive.Name, out string? primitivePattern))
+            {
+                _writer.WriteLineIndented($"[{primitivePattern}]");
+            }
+
+            _writer.WriteLineIndented("[DataMember]");
+
+            _writer.WriteLineIndented($"public {typeName} Value");
+            OpenScope();
+
+            var typeNameInSwitch = typeName.EndsWith("?") ? typeName[..^1] : typeName;
+            _writer.WriteLineIndented($"get {{ return ObjectValue is {typeNameInSwitch} or null ? ({typeName})ObjectValue : throw COVE.INCORRECT_LITERAL_VALUE_TYPE(null, ObjectValue, this.TypeName); }}");
+            _writer.WriteLineIndented("set { ObjectValue = value; OnPropertyChanged(\"Value\"); }");
+            CloseScope();
+        }
 
         WriteDeepCopy(exportName);
 
@@ -3624,6 +3602,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         _writer.WriteLineIndented("using Hl7.Fhir.Specification;");
         _writer.WriteLineIndented("using Hl7.Fhir.Validation;");
         _writer.WriteLineIndented("using SystemPrimitive = Hl7.Fhir.ElementModel.Types;");
+        _writer.WriteLineIndented("using COVE=Hl7.Fhir.Validation.CodedValidationException;");
         _writer.WriteLine(string.Empty);
 
         WriteCopyright();
