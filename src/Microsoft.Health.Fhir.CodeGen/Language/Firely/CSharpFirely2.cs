@@ -1971,7 +1971,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             if (identifierElement.cgIsArray())
                 _writer.WriteLineIndented("List<Identifier> IIdentifiable<List<Identifier>>.Identifier { get => Identifier; set => Identifier = value; }");
             else
-                _writer.WriteLineIndented("Identifier IIdentifiable<Identifier>.Identifier { get => Identifier; set => Identifier = value; }");
+                _writer.WriteLineIndented("Identifier? IIdentifiable<Identifier>.Identifier { get => Identifier; set => Identifier = value; }");
 
             _writer.WriteLine(string.Empty);
         }
@@ -2089,8 +2089,8 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         foreach (WrittenElementInfo info in exportedElements)
         {
             string elementProp = $"\"{info.FhirElementName}\"";
-            _writer.WriteLineIndented($"if ({NullCheck(info.PropertyName, info.PropertyType is ListTypeReference)}) yield return new " +
-                $"KeyValuePair<string,object>({elementProp},{info.PropertyName});");
+            _writer.WriteLineIndented($"if ({NullCheck("_"+info.PropertyName, info.PropertyType is ListTypeReference)}) yield return new " +
+                $"KeyValuePair<string,object>({elementProp},_{info.PropertyName});");
         }
 
         CloseScope();
@@ -2110,7 +2110,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             return;
         }
 
-        _writer.WriteLineIndented("public override bool TryGetValue(string key, out object value)");
+        _writer.WriteLineIndented("public override bool TryGetValue(string key, [NotNullWhen(true)] out object? value)");
         OpenScope();
 
         // switch
@@ -2127,8 +2127,8 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             _writer.WriteLineIndented($"case \"{key}\":");
             _writer.IncreaseIndent();
 
-            _writer.WriteLineIndented($"value = {propName};");
-            _writer.WriteLineIndented($"return {NullCheck(propName, isList)};");
+            _writer.WriteLineIndented($"value = _{propName};");
+            _writer.WriteLineIndented($"return {NullCheck("_"+propName, isList)};");
 
             _writer.DecreaseIndent();
         }
@@ -2162,7 +2162,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             return;
         }
 
-        _writer.WriteLineIndented("public override Base SetValue(string key, object value)");
+        _writer.WriteLineIndented("public override Base SetValue(string key, object? value)");
         OpenScope();
 
         // switch
@@ -2171,8 +2171,12 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
         foreach (WrittenElementInfo info in exportedElements)
         {
+            // Because our list properties are never null when you get them, but can be set to null,
+            // we need a bang after the assignment here for lists, but not for other elements.
+            var listTrick = info.PropertyType is ListTypeReference ? "!" : "";
+
             writeSetValueCase(info.FhirElementName, null,
-                  $"{info.PropertyName} = ({info.PropertyType.PropertyTypeString})value;");
+                  $"{info.PropertyName} = ({info.PropertyType.PropertyTypeString}?)value{listTrick};");
 
             // if (info.PropertyType is ListTypeReference ltr)
             // {
@@ -2230,34 +2234,37 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         _writer.WriteLineIndented("public override bool CompareChildren(Base other, IEqualityComparer<Base> comparer)");
 
         OpenScope();
-        _writer.WriteLineIndented($"var otherT = other as {exportName};");
-        _writer.WriteLineIndented("if(otherT == null) return false;");
+        _writer.WriteLineIndented($"if(other is not {exportName} otherT) return false;");
         _writer.WriteLine(string.Empty);
 
         _writer.WriteLineIndented("if(!base.CompareChildren(otherT, comparer)) return false;");
+
+        _writer.WriteIndented(
+            "#pragma warning disable CS8604 // Possible null reference argument - netstd2.1 has a wrong nullable signature here");
 
         foreach (WrittenElementInfo info in exportedElements)
         {
             if(info.PropertyType is CqlTypeReference)
             {
                 _writer.WriteLineIndented(
-                    $"if( {info.PropertyName} != otherT.{info.PropertyName} )" +
+                    $"if( _{info.PropertyName} != otherT._{info.PropertyName} )" +
                         $" return false;");
             }
             else if (info.PropertyType is ListTypeReference)
             {
                 _writer.WriteLineIndented(
-                    $"if(!comparer.ListEquals({info.PropertyName}, otherT.{info.PropertyName}))" +
+                    $"if(!comparer.ListEquals(_{info.PropertyName}, otherT._{info.PropertyName}))" +
                     $" return false;");
             }
             else
             {
                 _writer.WriteLineIndented(
-                    $"if(!comparer.Equals({info.PropertyName}, otherT.{info.PropertyName}))" +
+                    $"if(!comparer.Equals(_{info.PropertyName}, otherT._{info.PropertyName}))" +
                     $" return false;");
             }
         }
 
+        _writer.WriteLine("#pragma warning restore CS8604 // Possible null reference argument.");
         _writer.WriteLine(string.Empty);
 
         if (exportName == "PrimitiveType")
@@ -2283,13 +2290,11 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         var specifier = exportName == "Base" ? "virtual" : "override";
         _writer.WriteLineIndented($"protected internal {specifier} void CopyToInternal(Base other)");
         OpenScope();
-        _writer.WriteLineIndented($"var dest = other as {exportName};");
-        _writer.WriteLine(string.Empty);
-
-        _writer.WriteLineIndented("if (dest == null)");
-        OpenScope();
+        _writer.WriteLineIndented($"if(other is not {exportName} dest)");
+        _writer.IncreaseIndent();
         _writer.WriteLineIndented("throw new ArgumentException(\"Can only copy to an object of the same type\", \"other\");");
-        CloseScope();
+        _writer.DecreaseIndent();
+        _writer.WriteLine();
 
         if (exportName == "Base")
         {
@@ -2313,16 +2318,16 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             if (info.PropertyType is ListTypeReference)
             {
                 _writer.WriteLineIndented(
-                    $"if({info.PropertyName}.Any())" +
-                        $" dest.{info.PropertyName} = new {info.PropertyType.PropertyTypeString}({info.PropertyName}.DeepCopyInternal());");
+                    $"if(_{info.PropertyName} is not null)" +
+                        $" dest.{info.PropertyName} = new {info.PropertyType.PropertyTypeString}(_{info.PropertyName}.DeepCopyInternal());");
             }
             else
             {
                 _writer.WriteLineIndented(
-                    $"if({info.PropertyName} != null) dest.{info.PropertyName} = " +
+                    $"if(_{info.PropertyName} is not null) dest.{info.PropertyName} = " +
                        (info.PropertyType is CqlTypeReference ?
-                        $"{info.PropertyName};" :
-                        $"({info.PropertyType.PropertyTypeString}){info.PropertyName}.DeepCopyInternal();"));
+                        $"_{info.PropertyName};" :
+                        $"({info.PropertyType.PropertyTypeString})_{info.PropertyName}.DeepCopyInternal();"));
             }
         }
 
@@ -3032,14 +3037,14 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
         if (ei.PropertyType is not ListTypeReference)
         {
-            _writer.WriteLineIndented($"public {ei.PropertyType.PropertyTypeString} {ei.PropertyName}");
+            _writer.WriteLineIndented($"public {ei.PropertyType.PropertyTypeString}? {ei.PropertyName}");
 
             OpenScope();
             _writer.WriteLineIndented($"get {{ return _{ei.PropertyName}; }}");
             _writer.WriteLineIndented($"set {{ _{ei.PropertyName} = value; OnPropertyChanged(\"{ei.PropertyName}\"); }}");
             CloseScope();
 
-            _writer.WriteLineIndented($"private {ei.PropertyType.PropertyTypeString} _{ei.PropertyName};");
+            _writer.WriteLineIndented($"private {ei.PropertyType.PropertyTypeString}? _{ei.PropertyName};");
             _writer.WriteLine(string.Empty);
         }
         else
@@ -3047,12 +3052,12 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             _writer.WriteLineIndented($"public {ei.PropertyType.PropertyTypeString} {ei.PropertyName}");
 
             OpenScope();
-            _writer.WriteLineIndented($"get {{ if(_{ei.PropertyName}==null) _{ei.PropertyName} =" +
-                                      $" new {ei.PropertyType.PropertyTypeString}(); return _{ei.PropertyName}; }}");
+            _writer.WriteLineIndented($"get => _{ei.PropertyName} ??" +
+                                      $" new {ei.PropertyType.PropertyTypeString}();");
             _writer.WriteLineIndented($"set {{ _{ei.PropertyName} = value; OnPropertyChanged(\"{ei.PropertyName}\"); }}");
             CloseScope();
 
-            _writer.WriteLineIndented($"private {ei.PropertyType.PropertyTypeString} _{ei.PropertyName};");
+            _writer.WriteLineIndented($"private {ei.PropertyType.PropertyTypeString}? _{ei.PropertyName};");
             _writer.WriteLine(string.Empty);
         }
 
@@ -3101,40 +3106,31 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         switch (propType)
         {
             case PrimitiveTypeReference ptr:
-                _writer.WriteLineIndented($"public {ptr.ConveniencePropertyTypeString} {helperPropName}");
+                var nullableType = ptr.ConveniencePropertyTypeString.EndsWith('?') ? ptr.ConveniencePropertyTypeString : ptr.ConveniencePropertyTypeString + '?';
+                _writer.WriteLineIndented($"public {nullableType} {helperPropName}");
 
                 OpenScope();
-                _writer.WriteIndented($"get {{ return {ei.PropertyName} != null ? ");
                 string propAccess = versionsRemark is not null
-                    ? $"(({MostGeneralValueAccessorType(ptr)}){ei.PropertyName})"
-                    : ei.PropertyName;
+                    ? $"(({MostGeneralValueAccessorType(ptr)}?)_{ei.PropertyName})"
+                    : $"_{ei.PropertyName}";
+                _writer.WriteLineIndented($"get => {propAccess}?.Value;");
 
-                _writer.WriteLine($"{propAccess}.Value : null; }}");
                 _writer.WriteLineIndented("set");
                 OpenScope();
-
-                _writer.WriteLineIndented($"if (value == null)");
-
-                _writer.IncreaseIndent();
-                _writer.WriteLineIndented($"{ei.PropertyName} = null;");
-                _writer.DecreaseIndent();
-                _writer.WriteLineIndented("else");
-                _writer.IncreaseIndent();
-                _writer.WriteLineIndented($"{ei.PropertyName} = new {ptr.PropertyTypeString}(value);");
-                _writer.DecreaseIndent();
+                _writer.WriteLineIndented($"{ei.PropertyName} = value is null ? null : new {ptr.PropertyTypeString}(value);");
                 _writer.WriteLineIndented($"OnPropertyChanged(\"{helperPropName}\");");
                 CloseScope(suppressNewline: true);
                 CloseScope();
                 break;
             case ListTypeReference { Element: PrimitiveTypeReference lptr }:
-                _writer.WriteLineIndented($"public IEnumerable<{lptr.ConveniencePropertyTypeString}> {helperPropName}");
+                _writer.WriteLineIndented($"public IEnumerable<{lptr.ConveniencePropertyTypeString}?>? {helperPropName}");
 
                 OpenScope();
 
-                _writer.WriteIndented($"get {{ return {ei.PropertyName} != null ? {ei.PropertyName}");
+                _writer.WriteIndented($"get => _{ei.PropertyName}");
                 if(versionsRemark is not null)
-                    _writer.Write($".Cast<{MostGeneralValueAccessorType(lptr)}>()");
-                _writer.WriteLine($".Select(elem => elem.Value) : null; }}");
+                    _writer.Write($"?.Cast<{MostGeneralValueAccessorType(lptr)}>()");
+                _writer.WriteLine($"?.Select(elem => elem.Value);");
 
                 _writer.WriteLineIndented("set");
                 OpenScope();
@@ -3142,7 +3138,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
                 _writer.WriteLineIndented($"if (value == null)");
 
                 _writer.IncreaseIndent();
-                _writer.WriteLineIndented($"{ei.PropertyName} = null;");
+                _writer.WriteLineIndented($"{ei.PropertyName} = null!;");
                 _writer.DecreaseIndent();
                 _writer.WriteLineIndented("else");
                 _writer.IncreaseIndent();
@@ -3442,12 +3438,14 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             _writer.WriteLine(string.Empty);
         }
 
-        _writer.WriteLineIndented($"public {exportName}({typeName} value)");
+        var nullableTypeName = typeName.EndsWith('?') ? typeName : typeName + '?';
+
+        _writer.WriteLineIndented($"public {exportName}({nullableTypeName} value)");
         OpenScope();
         _writer.WriteLineIndented("Value = value;");
         CloseScope();
 
-        _writer.WriteLineIndented($"public {exportName}(): this(({typeName})null) {{}}");
+        _writer.WriteLineIndented($"public {exportName}(): this(({nullableTypeName})null) {{}}");
         _writer.WriteLine(string.Empty);
 
         // For some primitive pocos, we need a hand-written value propery since we are using
@@ -3467,11 +3465,11 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
             _writer.WriteLineIndented("[DataMember]");
 
-            _writer.WriteLineIndented($"public {typeName} Value");
+            _writer.WriteLineIndented($"public {nullableTypeName} Value");
             OpenScope();
 
             var typeNameInSwitch = typeName.EndsWith("?") ? typeName[..^1] : typeName;
-            _writer.WriteLineIndented($"get {{ return ObjectValue is {typeNameInSwitch} or null ? ({typeName})ObjectValue : throw COVE.INCORRECT_LITERAL_VALUE_TYPE(null, ObjectValue, this.TypeName); }}");
+            _writer.WriteLineIndented($"get {{ return ObjectValue is {typeNameInSwitch} or null ? ({nullableTypeName})ObjectValue : throw COVE.INCORRECT_LITERAL_VALUE_TYPE(null, ObjectValue, this.TypeName); }}");
             _writer.WriteLineIndented("set { ObjectValue = value; OnPropertyChanged(\"Value\"); }");
             CloseScope();
         }
@@ -3579,8 +3577,12 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         _writer.WriteLineIndented("using Hl7.Fhir.Specification;");
         _writer.WriteLineIndented("using Hl7.Fhir.Utility;");
         _writer.WriteLineIndented("using Hl7.Fhir.Validation;");
+        _writer.WriteLineIndented("using System.Diagnostics.CodeAnalysis;");
         _writer.WriteLineIndented("using SystemPrimitive = Hl7.Fhir.ElementModel.Types;");
-        _writer.WriteLine(string.Empty);
+        _writer.WriteLine();
+
+        _writer.WriteLineIndented("#nullable enable");
+        _writer.WriteLine();
 
         WriteCopyright();
 
@@ -3601,9 +3603,13 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         _writer.WriteLineIndented("using Hl7.Fhir.Introspection;");
         _writer.WriteLineIndented("using Hl7.Fhir.Specification;");
         _writer.WriteLineIndented("using Hl7.Fhir.Validation;");
+        _writer.WriteLineIndented("using System.Diagnostics.CodeAnalysis;");
         _writer.WriteLineIndented("using SystemPrimitive = Hl7.Fhir.ElementModel.Types;");
         _writer.WriteLineIndented("using COVE=Hl7.Fhir.Validation.CodedValidationException;");
         _writer.WriteLine(string.Empty);
+
+        _writer.WriteLineIndented("#nullable enable");
+        _writer.WriteLine();
 
         WriteCopyright();
     }
