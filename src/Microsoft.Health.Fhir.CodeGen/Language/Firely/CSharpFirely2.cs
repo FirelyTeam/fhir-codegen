@@ -1607,7 +1607,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
                 string pn = exportName + "." + interfaceEi.PropertyName;
 
                 WrittenElementInfo? resourceEi = null;
-                if (resourceElements.TryGetValue(interfaceEi.FhirElementName ?? string.Empty, out ElementDefinition? resourceEd))
+                if (resourceElements.TryGetValue(interfaceEi.FhirElementName, out ElementDefinition? resourceEd))
                 {
                     resourceEi = BuildElementInfo(resourceExportName, resourceEd);
                 }
@@ -1632,67 +1632,27 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         string interfaceExportName,
         WrittenElementInfo interfaceEi)
     {
-        string pn = interfaceExportName + "." + interfaceEi.PropertyName;
-        string rt = resourceEi?.PropertyType.PropertyTypeString ?? string.Empty;
-        string it = interfaceEi.PropertyType.PropertyTypeString;
+        string pn = interfaceEi.PropertyName;
+        string it = interfaceEi.PropertyType is ListTypeReference ? interfaceEi.PropertyType.PropertyTypeString : WithNullabilityMarking(interfaceEi.PropertyType.PropertyTypeString);
 
         if ((resourceEd == null) || (resourceEi == null))
         {
-            _writer.WriteLineIndented("[IgnoreDataMember]");
-            _writer.WriteLineIndented($"{it} {pn}");
-            OpenScope();
-            _writer.WriteLineIndented($"get {{ return null; }}");
-            _writer.WriteLineIndented($"set {{ throw new NotImplementedException(\"Resource {resourceExportName} does not implement {interfaceExportName}.{interfaceEi.FhirElementName}\");}}");
-            CloseScope();
+            writeEmptyGetterAndSetter(it, pn);
         }
         else if (interfaceEi.PropertyType.PropertyTypeString == resourceEi.PropertyType.PropertyTypeString)
         {
-            _writer.WriteLineIndented("[IgnoreDataMember]");
-            _writer.WriteLineIndented($"{it} {pn}" +
-                $" {{" +
-                $" get => {resourceEi.PropertyName};" +
-                $" set {{ {resourceEi.PropertyName} =  value; }}" +
-                $" }}");
-            _writer.WriteLine();
+            writeOneOnOneGetterAndSetter(it, pn);
         }
+
         // a resource is allowed to have a scalar in place of a list
-        else if ((interfaceEi.PropertyType is ListTypeReference interfaceLTR) &&
-            (interfaceLTR.Element.PropertyTypeString == resourceEi.PropertyType.PropertyTypeString))
+        else if ((interfaceEi.PropertyType is ListTypeReference interfaceLtr) &&
+            (interfaceLtr.Element.PropertyTypeString == resourceEi.PropertyType.PropertyTypeString))
         {
-            _writer.WriteLineIndented("[IgnoreDataMember]");
-            _writer.WriteLineIndented($"{it} {pn}");
-            OpenScope();
-            //_writer.WriteLineIndented($"get {{ return new {it}() {{ {resourceEi.PropertyName} }}; }}");
-            _writer.WriteLineIndented("get");
-            OpenScope();        // getter
-            _writer.WriteLineIndented($"if ({resourceEi.PropertyName} == null) return new {it}();");
-            _writer.WriteLineIndented($"return new {it}() {{ {resourceEi.PropertyName} }};");
-            CloseScope();       // getter
-
-            _writer.WriteLineIndented("set");
-            OpenScope();
-            _writer.WriteLineIndented($"if (value.Count == 0) {{ {resourceEi.PropertyName} = null; }}");
-            _writer.WriteLineIndented($"else if (value.Count == 1) {{ {resourceEi.PropertyName} = value.First(); }}");
-            _writer.WriteLineIndented($"else {{ throw new NotImplementedException(\"Resource {resourceExportName} can only have a single {pn} value\"); }}");
-            CloseScope();
-
-            CloseScope();
+            writeSingleToListGetterAndSetter(it, pn);
         }
         else
         {
-            WriteIndentedComment(
-                $"{resourceExportName}.{resourceEi.PropertyName} ({resourceEi.PropertyType.PropertyTypeString}) is incompatible with\n" +
-                $"{interfaceExportName}.{interfaceEi.FhirElementName} ({interfaceEi.PropertyType.PropertyTypeString})",
-                isSummary: false,
-                isRemarks: true);
-            _writer.WriteLineIndented("[IgnoreDataMember]");
-            _writer.WriteLineIndented($"{it} {pn}");
-            OpenScope();
-            _writer.WriteLineIndented($"get {{ return null; }}");
-            _writer.WriteLineIndented($"set {{ throw new NotImplementedException(\"{resourceExportName}.{resourceEi.PropertyName} " +
-                                      $"({resourceEi.PropertyType.PropertyTypeString}) is incompatible with" +
-                                      $" {interfaceExportName}.{interfaceEi.FhirElementName} ({interfaceEi.PropertyType.PropertyTypeString})\");}}");
-            CloseScope();
+            writeIncompatibleGetterSetter(it, pn);
         }
 
         if (!TryGetPrimitiveType(interfaceEi.PropertyType, out PrimitiveTypeReference? interfacePtr))
@@ -1700,58 +1660,87 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             return;
         }
 
-        string ppn = interfaceExportName + "." + interfaceEi.PrimitiveHelperName;
-        string prt = (resourceEi?.PropertyType is PrimitiveTypeReference rPTR) ? rPTR.ConveniencePropertyTypeString : string.Empty;
-        string pit = interfacePtr.ConveniencePropertyTypeString;
+        string ppn = interfaceEi.PrimitiveHelperName!;
+        string pit = interfaceEi.PropertyType is ListTypeReference ? interfacePtr.ConveniencePropertyTypeString : WithNullabilityMarking(interfacePtr.ConveniencePropertyTypeString);
 
         if ((resourceEd == null) || (resourceEi == null))
         {
-            _writer.WriteLineIndented("[IgnoreDataMember]");
-            _writer.WriteLineIndented($"{pit} {ppn}");
-            OpenScope();
-            _writer.WriteLineIndented($"get {{ return null; }}");
-            _writer.WriteLineIndented($"set {{ throw new NotImplementedException(\"Resource {resourceExportName}" +
-                                      $" does not implement {interfaceExportName}.{interfaceEi.FhirElementName}\");}}");
-            CloseScope();
+            writeEmptyGetterAndSetter(pit, ppn);
         }
         else if (interfaceEi.PropertyType == resourceEi.PropertyType)
         {
-            _writer.WriteLineIndented("[IgnoreDataMember]");
-            _writer.WriteLineIndented($"{pit} {ppn}" +
-                $" {{" +
-                $" get => {resourceEi.PrimitiveHelperName};" +
-                $" set {{ {resourceEi.PrimitiveHelperName} =  value; }}" +
-                $" }}");
-            _writer.WriteLine();
-        }
-        // a resource is allowed to have a scalar in place of a list
-        //else if (interfaceEi.PropertyType == "List<" + resourceEi.PropertyType + ">")
-        else if (interfaceEi.PropertyType is ListTypeReference)
-        {
-            _writer.WriteLineIndented("[IgnoreDataMember]");
-            _writer.WriteLineIndented($"{pit} {ppn}");
-            OpenScope();
-            _writer.WriteLineIndented($"get {{ return new {pit}() {{ {resourceEi.PropertyType.PropertyTypeString} }}; }}");
-
-            _writer.WriteLineIndented("set");
-            OpenScope();
-            _writer.WriteLineIndented($"if (value.Count == 1) {{ {resourceEi.PrimitiveHelperName} = value.First(); }}");
-            _writer.WriteLineIndented($"else {{ throw new NotImplementedException(\"Resource {resourceExportName} can only have a single {ppn} value\"); }}");
-            CloseScope();
-
-            CloseScope();
+            writeOneOnOneGetterAndSetter(pit, ppn);
         }
         else
         {
-            _writer.WriteLineIndented($"// {resourceExportName}.{resourceEi.PropertyName} ({prt}) is incompatible with {interfaceExportName}.{interfaceEi.FhirElementName} ({pit})");
+            writeIncompatibleGetterSetter(pit, ppn);
+        }
+
+        return;
+
+        void writeOneOnOneGetterAndSetter(string propertyType, string propertyName)
+        {
             _writer.WriteLineIndented("[IgnoreDataMember]");
-            _writer.WriteLineIndented($" {pit} {ppn}");
+            _writer.WriteLineIndented($"{propertyType} {interfaceExportName}.{propertyName}");
             OpenScope();
-            _writer.WriteLineIndented($"get {{ return null; }}");
-            _writer.WriteLineIndented($"set {{ throw new NotImplementedException(\"{resourceExportName}.{resourceEi.PropertyName} ({resourceEi.PropertyType.PropertyTypeString}) is incompatible with {interfaceExportName}.{interfaceEi.FhirElementName} ({interfaceEi.PropertyType.PropertyTypeString})\");}}");
+            _writer.WriteLineIndented($"get => {propertyName};");
+            _writer.WriteLineIndented($"set => {propertyName} = value;");
+            CloseScope();
+        }
+
+        void writeSingleToListGetterAndSetter(string propertyType, string propertyName)
+        {
+            _writer.WriteLineIndented("[IgnoreDataMember]");
+            _writer.WriteLineIndented($"{propertyType} {interfaceExportName}.{propertyName}");
+            OpenScope();
+
+            _writer.WriteLineIndented($"get => {propertyName} is null ? [] : [{propertyName}];");
+
+            _writer.WriteLineIndented("set");
+            OpenScope();
+            _writer.WriteLineIndented($"{propertyName} = value switch");
+
+            OpenScope();
+            _writer.WriteLineIndented($"{{ Count: 0 }} => null,");
+            _writer.WriteLineIndented($"{{ Count: 1 }} => value.First(),");
+            _writer.WriteLineIndented($"_ => throw new NotImplementedException(\"Resource {resourceExportName} can only have a single {propertyName} value\")");
+            CloseScope(includeSemicolon: true, suppressNewline: true);
+
+            CloseScope(suppressNewline: true);
+            CloseScope();
+        }
+
+        void writeIncompatibleGetterSetter(string propertyType, string propertyName)
+        {
+            string message = $"{resourceExportName}.{resourceEi.PropertyName} is incompatible with " +
+                             $"{interfaceExportName}.{interfaceEi.FhirElementName}.";
+            WriteIndentedComment(message, isSummary: false, isRemarks: true);
+
+            _writer.WriteLineIndented("[IgnoreDataMember]");
+            _writer.WriteLineIndented($"{propertyType} {interfaceExportName}.{propertyName}");
+
+            OpenScope();
+            _writer.WriteLineIndented($"get => {emptyInterfaceType()};");
+            _writer.WriteLineIndented($"set => throw new NotImplementedException(\"{message}\");");
+            CloseScope();
+        }
+
+        string emptyInterfaceType() => interfaceEi.PropertyType is ListTypeReference ? "[]" : "null";
+
+        void writeEmptyGetterAndSetter(string propertyType, string propertyName)
+        {
+            _writer.WriteLineIndented("[IgnoreDataMember]");
+            _writer.WriteLineIndented($"{propertyType} {interfaceExportName}.{propertyName}");
+            OpenScope();
+            _writer.WriteLineIndented($"get => {emptyInterfaceType()};");
+            _writer.WriteLineIndented($"set => throw new NotImplementedException(\"Resource {resourceExportName}" +
+                                      $" does not implement {interfaceExportName}.{interfaceEi.FhirElementName}\");");
             CloseScope();
         }
     }
+
+    private static string WithNullabilityMarking(string type) => type.EndsWith("?") ? type : type + "?";
+
 
     private void WriteInterfaceElements(
         ComponentDefinition complex,
@@ -1779,12 +1768,16 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             {
                 WriteIndentedComment(element.Short.Replace("{{title}}", structureName));
                 _writer.WriteLineIndented($"/// <remarks>This uses the native .NET datatype, rather than the FHIR equivalent</remarks>");
-                _writer.WriteLineIndented($"{eiPtr.ConveniencePropertyTypeString} {ei.PrimitiveHelperName} {{ get; set; }}");
+
+                _writer.WriteLineIndented($"{WithNullabilityMarking(eiPtr.ConveniencePropertyTypeString)} {ei.PrimitiveHelperName} {{ get; set; }}");
                 _writer.WriteLine();
             }
 
             if (description != null) WriteIndentedComment(description);
-            _writer.WriteLineIndented($"{ei.PropertyType.PropertyTypeString ?? string.Empty} {ei.PropertyName} {{ get; set; }}");
+            var typ = ei.PropertyType is ListTypeReference
+                ? ei.PropertyType.PropertyTypeString
+                : WithNullabilityMarking(ei.PropertyType.PropertyTypeString);
+            _writer.WriteLineIndented($"{typ} {ei.PropertyName} {{ get; set; }}");
             _writer.WriteLine();
         }
     }
@@ -1888,18 +1881,19 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
                 if (identifierElement.cgIsArray())
                     interfaces.Add("IIdentifiable<List<Identifier>>");
                 else
-                    interfaces.Add("IIdentifiable<Identifier>");
+                    interfaces.Add("IIdentifiable<Identifier?>");
             }
         }
 
-        var primaryCodeElementInfo = isResource ? getPrimaryCodedElementInfo(complex, exportName) : null;
+        WrittenElementInfo? primaryCodeElementInfo = isResource ? getPrimaryCodedElementInfo(complex, exportName) : null;
 
         if (primaryCodeElementInfo != null)
         {
-            interfaces.Add($"ICoded<{primaryCodeElementInfo.PropertyType.PropertyTypeString}>");
+            string nullable = primaryCodeElementInfo.PropertyType is ListTypeReference ? "" : "?";
+            interfaces.Add($"ICoded<{primaryCodeElementInfo.PropertyType.PropertyTypeString}{nullable}>");
         }
 
-        var modifierElement = complex.cgGetChild("modifierExtension");
+        ElementDefinition? modifierElement = complex.cgGetChild("modifierExtension");
         if (modifierElement != null)
         {
             if (!modifierElement.cgIsInherited(complex.Structure))
@@ -1971,15 +1965,22 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             if (identifierElement.cgIsArray())
                 _writer.WriteLineIndented("List<Identifier> IIdentifiable<List<Identifier>>.Identifier { get => Identifier; set => Identifier = value; }");
             else
-                _writer.WriteLineIndented("Identifier? IIdentifiable<Identifier>.Identifier { get => Identifier; set => Identifier = value; }");
+                _writer.WriteLineIndented("Identifier? IIdentifiable<Identifier?>.Identifier { get => Identifier; set => Identifier = value; }");
 
             _writer.WriteLine(string.Empty);
         }
 
         if (primaryCodeElementInfo != null)
         {
-            _writer.WriteLineIndented($"{primaryCodeElementInfo.PropertyType.PropertyTypeString} ICoded<{primaryCodeElementInfo.PropertyType.PropertyTypeString}>.Code {{ get => {primaryCodeElementInfo.PropertyName}; set => {primaryCodeElementInfo.PropertyName} = value; }}");
-            _writer.WriteLineIndented($"IEnumerable<Coding> ICoded.ToCodings() => {primaryCodeElementInfo.PropertyName}.ToCodings();");
+            var (codedType, bang) = primaryCodeElementInfo.PropertyType switch
+            {
+                ListTypeReference { PropertyTypeString: { } n } => (n, string.Empty),
+                { PropertyTypeString: {} n } => (WithNullabilityMarking(n), "!")
+            };
+
+            _writer.WriteLineIndented($"{codedType} ICoded<{codedType}>.Code {{ get => {primaryCodeElementInfo.PropertyName}; " +
+                                      $"set => {primaryCodeElementInfo.PropertyName} = value{bang}; }}");
+            _writer.WriteLineIndented($"IEnumerable<Coding> ICoded.ToCodings() => {primaryCodeElementInfo.PropertyName}?.ToCodings() ?? [];");
             _writer.WriteLine(string.Empty);
         }
 
@@ -1989,7 +1990,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
             if (birthdayProperty != null)
             {
-                _writer.WriteLineIndented($"Hl7.Fhir.Model.Date {Namespace}.IPatient.BirthDate => {birthdayProperty.PropertyName};");
+                _writer.WriteLineIndented($"Hl7.Fhir.Model.Date? {Namespace}.IPatient.BirthDate => {birthdayProperty.PropertyName};");
                 _writer.WriteLine(string.Empty);
             }
         }
@@ -2982,20 +2983,18 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
     internal static bool TryGetPrimitiveType(TypeReference tr, [NotNullWhen(true)] out PrimitiveTypeReference? ptr)
     {
-        if (tr is PrimitiveTypeReference p)
+        switch (tr)
         {
-            ptr = p;
-            return true;
+            case PrimitiveTypeReference p:
+                ptr = p;
+                return true;
+            case ListTypeReference { Element: PrimitiveTypeReference pltr }:
+                ptr = pltr;
+                return true;
+            default:
+                ptr = null;
+                return false;
         }
-
-        if (tr is ListTypeReference { Element: PrimitiveTypeReference pltr })
-        {
-            ptr = pltr;
-            return true;
-        }
-
-        ptr = null;
-        return false;
     }
 
     internal WrittenElementInfo BuildElementInfo(
@@ -3106,7 +3105,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         switch (propType)
         {
             case PrimitiveTypeReference ptr:
-                var nullableType = ptr.ConveniencePropertyTypeString.EndsWith('?') ? ptr.ConveniencePropertyTypeString : ptr.ConveniencePropertyTypeString + '?';
+                string nullableType = WithNullabilityMarking(ptr.ConveniencePropertyTypeString);
                 _writer.WriteLineIndented($"public {nullableType} {helperPropName}");
 
                 OpenScope();
@@ -3123,7 +3122,8 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
                 CloseScope();
                 break;
             case ListTypeReference { Element: PrimitiveTypeReference lptr }:
-                _writer.WriteLineIndented($"public IEnumerable<{lptr.ConveniencePropertyTypeString}?>? {helperPropName}");
+                string nullableTypeList = WithNullabilityMarking(lptr.ConveniencePropertyTypeString);
+                _writer.WriteLineIndented($"public IEnumerable<{nullableTypeList}>? {helperPropName}");
 
                 OpenScope();
 
