@@ -1980,7 +1980,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
             _writer.WriteLineIndented($"{codedType} ICoded<{codedType}>.Code {{ get => {primaryCodeElementInfo.PropertyName}; " +
                                       $"set => {primaryCodeElementInfo.PropertyName} = value{bang}; }}");
-            _writer.WriteLineIndented($"IEnumerable<Coding> ICoded.ToCodings() => {primaryCodeElementInfo.PropertyName}?.ToCodings() ?? [];");
+            _writer.WriteLineIndented($"IReadOnlyCollection<Coding> ICoded.ToCodings() => {primaryCodeElementInfo.PropertyName}?.ToCodings() ?? [];");
             _writer.WriteLine(string.Empty);
         }
 
@@ -2240,7 +2240,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
         _writer.WriteLineIndented("if(!base.CompareChildren(otherT, comparer)) return false;");
 
-        _writer.WriteIndented(
+        _writer.WriteLineIndented(
             "#pragma warning disable CS8604 // Possible null reference argument - netstd2.1 has a wrong nullable signature here");
 
         foreach (WrittenElementInfo info in exportedElements)
@@ -2265,7 +2265,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             }
         }
 
-        _writer.WriteLine("#pragma warning restore CS8604 // Possible null reference argument.");
+        _writer.WriteLineIndented("#pragma warning restore CS8604 // Possible null reference argument.");
         _writer.WriteLine(string.Empty);
 
         if (exportName == "PrimitiveType")
@@ -3051,8 +3051,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             _writer.WriteLineIndented($"public {ei.PropertyType.PropertyTypeString} {ei.PropertyName}");
 
             OpenScope();
-            _writer.WriteLineIndented($"get => _{ei.PropertyName} ??" +
-                                      $" new {ei.PropertyType.PropertyTypeString}();");
+            _writer.WriteLineIndented($"get => _{ei.PropertyName} ??= [];");
             _writer.WriteLineIndented($"set {{ _{ei.PropertyName} = value; OnPropertyChanged(\"{ei.PropertyName}\"); }}");
             CloseScope();
 
@@ -3069,7 +3068,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             // If the property has had multiple types over time, we need to generate a helper property for each type.
             if(_elementTypeChanges.TryGetValue(element.Path, out ElementTypeChange[]? changes))
             {
-                var lastChange = changes.Last();
+                ElementTypeChange lastChange = changes.Last();
 
                 foreach(ElementTypeChange change in changes)
                 {
@@ -3123,14 +3122,14 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
                 break;
             case ListTypeReference { Element: PrimitiveTypeReference lptr }:
                 string nullableTypeList = WithNullabilityMarking(lptr.ConveniencePropertyTypeString);
-                _writer.WriteLineIndented($"public IEnumerable<{nullableTypeList}>? {helperPropName}");
+                _writer.WriteLineIndented($"public IEnumerable<{nullableTypeList}> {helperPropName}");
 
                 OpenScope();
 
                 _writer.WriteIndented($"get => _{ei.PropertyName}");
                 if(versionsRemark is not null)
                     _writer.Write($"?.Cast<{MostGeneralValueAccessorType(lptr)}>()");
-                _writer.WriteLine($"?.Select(elem => elem.Value);");
+                _writer.WriteLine($"?.Select(elem => elem.Value) ?? [];");
 
                 _writer.WriteLineIndented("set");
                 OpenScope();
