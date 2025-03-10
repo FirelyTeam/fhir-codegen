@@ -128,6 +128,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
     /// </summary>
     private static readonly List<string> _baseSubsetComplexTypes =
     [
+        "Address",
         "Attachment",
         "BackboneElement",
         "BackboneType",
@@ -137,8 +138,10 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         "ContactPoint",
         "ContactDetail",
         "DataType",
+        "Duration",
         "Element",
         "Extension",
+        "HumanName",
         "Identifier",
         "Meta",
         "Narrative",
@@ -146,6 +149,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         "PrimitiveType",
         "Quantity",
         "Range",
+        "Ratio",
         "Reference",
         "Signature",
         "UsageContext",
