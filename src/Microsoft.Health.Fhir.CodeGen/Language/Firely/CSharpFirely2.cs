@@ -2100,7 +2100,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         foreach (WrittenElementInfo info in exportedElements)
         {
             string elementProp = $"\"{info.FhirElementName}\"";
-            _writer.WriteLineIndented($"if (!_{info.PropertyName}.InOverflow<{getDynamicTypeForAbstractTypeName(info.PropertyType.PropertyTypeString)}>() && _{info.PropertyName}{(info.PropertyType is ListTypeReference ? "?.Any() is true" : " is not null")}) yield return new " +
+            _writer.WriteLineIndented($"if (_{info.PropertyName}{(info.PropertyType is ListTypeReference ? "?.Any() is true" : " is not null")} && !_{info.PropertyName}.InOverflow<{getDynamicTypeForAbstractTypeName(info.PropertyType.PropertyTypeString)}>()) yield return new " +
                 $"KeyValuePair<string,object>({elementProp},_{info.PropertyName});");
         }
 
