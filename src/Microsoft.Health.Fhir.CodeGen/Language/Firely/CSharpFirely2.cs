@@ -2064,15 +2064,21 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         return baseTypeName;
     }
 
+    private string getDynamicTypeForAbstractTypeName(string abstractTypeName) =>
+        abstractTypeName switch
+        {
+            "Hl7.Fhir.Model.Resource" => "DynamicResource",
+            "Hl7.Fhir.Model.DataType" => "DynamicDataType",
+            "Hl7.Fhir.Model.PrimitiveType" => "DynamicPrimitive",
+            { } s => s
+        };
+
     private void WriteDictionarySupport(string exportName, List<WrittenElementInfo> exportedElements)
     {
         WriteDictionaryTryGetValue(exportName, exportedElements);
         WriteDictionaryTrySetValue(exportName, exportedElements);
         WriteDictionaryPairs(exportName, exportedElements);
     }
-
-    private static string NullCheck(string propertyName, bool isList) =>
-        propertyName + (isList ? "?.Any() == true" : " is not null");
 
     private void WriteDictionaryPairs(string exportName, List<WrittenElementInfo> exportedElements)
     {
@@ -2094,7 +2100,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         foreach (WrittenElementInfo info in exportedElements)
         {
             string elementProp = $"\"{info.FhirElementName}\"";
-            _writer.WriteLineIndented($"if ({NullCheck("_"+info.PropertyName, info.PropertyType is ListTypeReference)}) yield return new " +
+            _writer.WriteLineIndented($"if (!_{info.PropertyName}.InOverflow<{getDynamicTypeForAbstractTypeName(info.PropertyType.PropertyTypeString)}>() && _{info.PropertyName}{(info.PropertyType is ListTypeReference ? "?.Any() is true" : " is not null")}) yield return new " +
                 $"KeyValuePair<string,object>({elementProp},_{info.PropertyName});");
         }
 
@@ -2124,16 +2130,23 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
         foreach (WrittenElementInfo info in exportedElements)
         {
-            writeCase(info.FhirElementName, info.PropertyName, info.PropertyType is ListTypeReference);
+            writeCase(info.FhirElementName, info.PropertyName, info.PropertyType);
         }
 
-        void writeCase(string key, string propName, bool isList)
+        void writeCase(string key, string propName, TypeReference type)
         {
+            string overflowTypeName = getDynamicTypeForAbstractTypeName(type.PropertyTypeString);
+
             _writer.WriteLineIndented($"case \"{key}\":");
             _writer.IncreaseIndent();
 
+            _writer.WriteLineIndented($"if (_{propName}.InOverflow<{overflowTypeName}>())");
+            _writer.OpenScope();
+            _writer.WriteLineIndented($"value = Overflow[\"{key}\"];");
+            _writer.WriteLineIndented("return true;");
+            _writer.CloseScope();
             _writer.WriteLineIndented($"value = _{propName};");
-            _writer.WriteLineIndented($"return {NullCheck("_"+propName, isList)};");
+            _writer.WriteLineIndented($"return (value as {type.PropertyTypeString}){(type is ListTypeReference ? "?.Any() is true" : " is not null")};");
 
             _writer.DecreaseIndent();
         }
@@ -2170,7 +2183,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         _writer.WriteLineIndented("public override Base SetValue(string key, object? value)");
         OpenScope();
 
-        _writer.WriteLineIndented("if(value is not (null or Model.Base or IEnumerable<Model.Base>)) throw new ArgumentException(\"Value must be a Base or IEnumerable<Base>\", nameof(value));");
+        _writer.WriteLineIndented("if(value is not (null or Hl7.Fhir.Model.Base or IEnumerable<Hl7.Fhir.Model.Base>)) throw new ArgumentException(\"Value must be a Base or IEnumerable<Base>\", nameof(value));");
 
         // switch
         _writer.WriteLineIndented("switch (key)");
@@ -2183,13 +2196,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
         void writeSetValueCase(string fhirName, string? when, TypeReference type, string propName)
         {
-            string overflowTypeName = type.PropertyTypeString switch
-            {
-                "Hl7.Fhir.Model.Resource" => "DynamicResource",
-                "Hl7.Fhir.Model.DataType" => "DynamicDataType",
-                "Hl7.Fhir.Model.PrimitiveType" => "DynamicPrimitive",
-                { } s => s
-            };
+            string overflowTypeName = getDynamicTypeForAbstractTypeName(type.PropertyTypeString);
 
             _writer.WriteLineIndented(when is not null ? $"case \"{fhirName}\" when {when}:" : $"case \"{fhirName}\":");
 
@@ -3050,7 +3057,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
         _writer.WriteLineIndented("get");
         OpenScope();
-        _writer.WriteLineIndented($"if(OverflowNull<{overflowTypeName}>.InOverflow(_{ei.PropertyName}))");
+        _writer.WriteLineIndented($"if(_{ei.PropertyName}.InOverflow<{overflowTypeName}>())");
         _writer.IncreaseIndent();
         _writer.WriteLineIndented($"throw CodedValidationException.FromTypes(typeof({ei.PropertyType.PropertyTypeString}), Overflow[\"{ei.FhirElementName}\"]);");
         _writer.DecreaseIndent();
@@ -3060,7 +3067,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
         _writer.WriteLineIndented("set");
         OpenScope();
-        _writer.WriteLineIndented($"if (OverflowNull<{overflowTypeName}>.InOverflow(_{ei.PropertyName}))");
+        _writer.WriteLineIndented($"if (_{ei.PropertyName}.InOverflow<{overflowTypeName}>())");
         _writer.IncreaseIndent();
         _writer.WriteLineIndented($"Overflow.Remove(\"{ei.FhirElementName}\");");
         _writer.DecreaseIndent();
