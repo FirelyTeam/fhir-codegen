@@ -2170,41 +2170,39 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         _writer.WriteLineIndented("public override Base SetValue(string key, object? value)");
         OpenScope();
 
+        _writer.WriteLineIndented("if(value is not (null or Model.Base or IEnumerable<Model.Base>)) throw new ArgumentException(\"Value must be a Base or IEnumerable<Base>\", nameof(value));");
+
         // switch
         _writer.WriteLineIndented("switch (key)");
         OpenScope();
 
         foreach (WrittenElementInfo info in exportedElements)
         {
-            // Because our list properties are never null when you get them, but can be set to null,
-            // we need a bang after the assignment here for lists, but not for other elements.
-            var listTrick = info.PropertyType is ListTypeReference ? "!" : "";
-
-            writeSetValueCase(info.FhirElementName, null,
-                  $"{info.PropertyName} = ({info.PropertyType.PropertyTypeString}?)value{listTrick};");
-
-            // if (info.PropertyType is ListTypeReference ltr)
-            // {
-            //     writeSetValueCase(info.FhirElementName, $"value is IEnumerable<{ltr.Element.PropertyTypeString}> v",
-            //         $"{info.PropertyName} = new {info.PropertyType.PropertyTypeString}(v);");
-            // }
-            // else
-            // {
-            //     writeSetValueCase(info.FhirElementName, $"value is {info.PropertyType.PropertyTypeString} v",
-            //         $"{info.PropertyName} = v;");
-            // }
-            //
-            // writeSetValueCase(info.FhirElementName, "value is null",
-            //     $"{info.PropertyName} = null;");
+            writeSetValueCase(info.FhirElementName, null, info.PropertyType, info.PropertyName);
         }
 
-        void writeSetValueCase(string name, string? when, string statement)
+        void writeSetValueCase(string fhirName, string? when, TypeReference type, string propName)
         {
-            _writer.WriteLineIndented(when is not null ? $"case \"{name}\" when {when}:" : $"case \"{name}\":");
+            string overflowTypeName = type.PropertyTypeString switch
+            {
+                "Hl7.Fhir.Model.Resource" => "DynamicResource",
+                "Hl7.Fhir.Model.DataType" => "DynamicDataType",
+                "Hl7.Fhir.Model.PrimitiveType" => "DynamicPrimitive",
+                { } s => s
+            };
+
+            _writer.WriteLineIndented(when is not null ? $"case \"{fhirName}\" when {when}:" : $"case \"{fhirName}\":");
 
             _writer.IncreaseIndent();
+            _writer.WriteLineIndented($"if (value is not ({type.PropertyTypeString} or null))");
+            _writer.OpenScope();
+            _writer.WriteLineIndented($"{propName} = OverflowNull<{overflowTypeName}>.INSTANCE;");
+            _writer.WriteLineIndented($"Overflow[\"{fhirName}\"] = value;");
+            _writer.CloseScope();
 
-            _writer.WriteLineIndented(statement);
+            // Because our list properties are never null when you get them, but can be set to null,
+            // we need a bang after the assignment here for lists, but not for other elements.
+            _writer.WriteLineIndented($"else {propName} = ({type.PropertyTypeString}?)value{(type is ListTypeReference ? "!" : "")};");
             _writer.WriteLineIndented($"return this;");
             _writer.DecreaseIndent();
         }
@@ -3038,30 +3036,41 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
     {
         _writer.WriteLineIndented("[DataMember]");
 
-        if (ei.PropertyType is not ListTypeReference)
+        string overflowTypeName = ei.PropertyType.PropertyTypeString switch
         {
-            _writer.WriteLineIndented($"public {ei.PropertyType.PropertyTypeString}? {ei.PropertyName}");
+            "Hl7.Fhir.Model.Resource" => "DynamicResource",
+            "Hl7.Fhir.Model.DataType" => "DynamicDataType",
+            "Hl7.Fhir.Model.PrimitiveType" => "DynamicPrimitive",
+            { } s => s
+        };
 
-            OpenScope();
-            _writer.WriteLineIndented($"get {{ return _{ei.PropertyName}; }}");
-            _writer.WriteLineIndented($"set {{ _{ei.PropertyName} = value; OnPropertyChanged(\"{ei.PropertyName}\"); }}");
-            CloseScope();
+        _writer.WriteLineIndented($"public {(ei.PropertyType is ListTypeReference ltr ? ltr.PropertyTypeString : $"{ei.PropertyType.PropertyTypeString}?")} {ei.PropertyName}");
 
-            _writer.WriteLineIndented($"private {ei.PropertyType.PropertyTypeString}? _{ei.PropertyName};");
-            _writer.WriteLine(string.Empty);
-        }
-        else
-        {
-            _writer.WriteLineIndented($"public {ei.PropertyType.PropertyTypeString} {ei.PropertyName}");
+        OpenScope();
 
-            OpenScope();
-            _writer.WriteLineIndented($"get => _{ei.PropertyName} ??= [];");
-            _writer.WriteLineIndented($"set {{ _{ei.PropertyName} = value; OnPropertyChanged(\"{ei.PropertyName}\"); }}");
-            CloseScope();
+        _writer.WriteLineIndented("get");
+        OpenScope();
+        _writer.WriteLineIndented($"if(OverflowNull<{overflowTypeName}>.InOverflow(_{ei.PropertyName}))");
+        _writer.IncreaseIndent();
+        _writer.WriteLineIndented($"throw CodedValidationException.FromTypes(typeof({ei.PropertyType.PropertyTypeString}), Overflow[\"{ei.FhirElementName}\"]);");
+        _writer.DecreaseIndent();
+        _writer.WriteLineIndented(ei.PropertyType is not ListTypeReference ? $"return _{ei.PropertyName};" : $"return _{ei.PropertyName} ??= [];");
 
-            _writer.WriteLineIndented($"private {ei.PropertyType.PropertyTypeString}? _{ei.PropertyName};");
-            _writer.WriteLine(string.Empty);
-        }
+        CloseScope();
+
+        _writer.WriteLineIndented("set");
+        OpenScope();
+        _writer.WriteLineIndented($"if (OverflowNull<{overflowTypeName}>.InOverflow(_{ei.PropertyName}))");
+        _writer.IncreaseIndent();
+        _writer.WriteLineIndented($"Overflow.Remove(\"{ei.FhirElementName}\");");
+        _writer.DecreaseIndent();
+        _writer.WriteLineIndented($"_{ei.PropertyName} = value;");
+        _writer.WriteLineIndented($"OnPropertyChanged(\"{ei.PropertyName}\");");
+        CloseScope();
+
+        CloseScope();
+        _writer.WriteLineIndented($"private {ei.PropertyType.PropertyTypeString}? _{ei.PropertyName};");
+        _writer.WriteLine(string.Empty);
 
         bool needsHelperProperty = ei.PropertyType is
             PrimitiveTypeReference or
@@ -3472,7 +3481,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             OpenScope();
 
             var typeNameInSwitch = typeName.EndsWith("?") ? typeName[..^1] : typeName;
-            _writer.WriteLineIndented($"get {{ return ObjectValue is {typeNameInSwitch} or null ? ({nullableTypeName})ObjectValue : throw COVE.INCORRECT_LITERAL_VALUE_TYPE(null, ObjectValue, this.TypeName); }}");
+            _writer.WriteLineIndented($"get {{ return ObjectValue is {typeNameInSwitch} or null ? ({nullableTypeName})ObjectValue : throw COVE.FromTypes(typeof({exportName}), ObjectValue); }}");
             _writer.WriteLineIndented("set { ObjectValue = value; OnPropertyChanged(\"Value\"); }");
             CloseScope();
         }
