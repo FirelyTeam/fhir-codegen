@@ -3129,8 +3129,8 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
                 OpenScope();
                 string propAccess = versionsRemark is not null
-                    ? $"(({MostGeneralValueAccessorType(ptr)}?)_{ei.PropertyName})"
-                    : $"_{ei.PropertyName}";
+                    ? $"(({MostGeneralValueAccessorType(ptr)}?){ei.PropertyName})"
+                    : $"{ei.PropertyName}";
                 _writer.WriteLineIndented($"get => {propAccess}?.Value;");
 
                 _writer.WriteLineIndented("set");
