@@ -65,22 +65,6 @@ public static class CSharpFirelyCommon
         { "Resource", "DomainResource" },
     };
 
-    /// <summary>Primitive types that have a specific validation attribute on their Value property.</summary>
-    public static readonly Dictionary<string, string> PrimitiveValidationPatterns = new()
-    {
-        ["uri"] = "UriPattern",
-        ["uuid"] = "UuidPattern",
-        ["id"] = "IdPattern",
-        ["date"] = "DatePattern",
-        ["dateTime"] = "DateTimePattern",
-        ["oid"] = "OidPattern",
-        ["code"] = "CodePattern",
-        ["time"] = "TimePattern",
-        ["string"] = "StringPattern",
-        ["markdown"] = "StringPattern",
-        ["xhtml"] = "NarrativeXhtmlPattern"
-    };
-
     /// <summary>
     /// Determines the subset of code to generate.
     /// </summary>
