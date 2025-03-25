@@ -2788,7 +2788,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         {
             WriteFhirElementAttribute(name, summary, isModifier, element, orderOffset, ", Choice = ChoiceType.DatatypeChoice", fiveWs);
             WriteFhirElementAttribute(name, summary, isModifier, element, orderOffset, "", fiveWs, since: since);
-            _writer.WriteLineIndented($"[DeclaredType(typeof(ResourceReference), Since = FhirRelease.R4)]");
+            _writer.WriteLineIndented($"[DeclaredType(Type = typeof(ResourceReference), Since = FhirRelease.R4)]");
         }
         else
         {
@@ -2797,12 +2797,12 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
         if (ei.PropertyType is CqlTypeReference ctr)
         {
-            _writer.WriteLineIndented($"[DeclaredType(typeof({ctr.DeclaredTypeString}))]");
+            _writer.WriteLineIndented($"[DeclaredType(Type = typeof({ctr.DeclaredTypeString}))]");
         }
 
         if (TryGetPrimitiveType(ei.PropertyType, out PrimitiveTypeReference? ptr) && ptr is CodedTypeReference)
         {
-            _writer.WriteLineIndented("[DeclaredType(typeof(Code))]");
+            _writer.WriteLineIndented("[DeclaredType(Type = typeof(Code))]");
         }
 
         if (!string.IsNullOrEmpty(element.cgBindingName()))
@@ -2830,7 +2830,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             // the metadata for the property is correct for each version.
             foreach(ElementTypeChange change in changes)
             {
-                _writer.WriteIndented($"[DeclaredType(typeof({change.DeclaredTypeReference.PropertyTypeString})");
+                _writer.WriteIndented($"[DeclaredType(Type = typeof({change.DeclaredTypeReference.PropertyTypeString})");
                 _writer.Write($", Since = FhirRelease.{change.Since}");
                 _writer.WriteLine(")]");
             }
@@ -3475,7 +3475,12 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
             _writer.WriteLineIndented(
                 "[FhirElement(\"value\", IsPrimitiveValue=true, XmlSerialization=XmlRepresentation.XmlAttr, InSummary=true, Order=30)]");
-            _writer.WriteLineIndented($"[DeclaredType(typeof({getSystemTypeForFhirType(primitive.Name)}))]");
+            _writer.WriteLineIndented($"[DeclaredType(Type = typeof({getSystemTypeForFhirType(primitive.Name)}))]");
+
+            if (PrimitiveValidationPatterns.TryGetValue(primitive.Name, out string? primitivePattern))
+            {
+                _writer.WriteLineIndented($"[{primitivePattern}]");
+            }
 
             _writer.WriteLineIndented("[DataMember]");
 
