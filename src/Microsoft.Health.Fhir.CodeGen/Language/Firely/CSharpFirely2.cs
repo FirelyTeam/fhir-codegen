@@ -2183,7 +2183,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         _writer.WriteLineIndented("public override Base SetValue(string key, object? value)");
         OpenScope();
 
-        _writer.WriteLineIndented("if(value is not (null or Hl7.Fhir.Model.Base or List<Hl7.Fhir.Model.Base>)) throw new ArgumentException(\"Value must be a Base or IEnumerable<Base>\", nameof(value));");
+        _writer.WriteLineIndented("if(value is not (null or Hl7.Fhir.Model.Base or IList)) throw new ArgumentException(\"Value must be a Base or IEnumerable<Base>\", nameof(value));");
 
         // switch
         _writer.WriteLineIndented("switch (key)");
@@ -3588,6 +3588,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         WriteGenerationComment();
 
         _writer.WriteLineIndented("using System;");
+        _writer.WriteLineIndented("using System.Collections;");
         _writer.WriteLineIndented("using System.Collections.Generic;");
         _writer.WriteLineIndented("using System.Linq;");
         _writer.WriteLineIndented("using System.Runtime.Serialization;");
