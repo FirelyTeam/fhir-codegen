@@ -2183,7 +2183,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         _writer.WriteLineIndented("public override Base SetValue(string key, object? value)");
         OpenScope();
 
-        _writer.WriteLineIndented("if(value is not (null or Hl7.Fhir.Model.Base or IList)) throw new ArgumentException(\"Value must be a Base or IEnumerable<Base>\", nameof(value));");
+        _writer.WriteLineIndented("if(value is not (null or Hl7.Fhir.Model.Base or IList)) throw new ArgumentException(\"Value must be a Base or a list of Base\", nameof(value));");
 
         // switch
         _writer.WriteLineIndented("switch (key)");
@@ -2788,7 +2788,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         {
             WriteFhirElementAttribute(name, summary, isModifier, element, orderOffset, ", Choice = ChoiceType.DatatypeChoice", fiveWs);
             WriteFhirElementAttribute(name, summary, isModifier, element, orderOffset, "", fiveWs, since: since);
-            _writer.WriteLineIndented($"[DeclaredType(typeof(ResourceReference), Since = FhirRelease.R4)]");
+            _writer.WriteLineIndented($"[AllowedTypes(typeof(ResourceReference), Since = FhirRelease.R4)]");
         }
         else
         {
@@ -2797,12 +2797,12 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
         if (ei.PropertyType is CqlTypeReference ctr)
         {
-            _writer.WriteLineIndented($"[DeclaredType(typeof({ctr.DeclaredTypeString}))]");
+            _writer.WriteLineIndented($"[AllowedTypes(typeof({ctr.DeclaredTypeString}))]");
         }
 
         if (TryGetPrimitiveType(ei.PropertyType, out PrimitiveTypeReference? ptr) && ptr is CodedTypeReference)
         {
-            _writer.WriteLineIndented("[DeclaredType(typeof(Code))]");
+            _writer.WriteLineIndented("[AllowedTypes(typeof(Code))]");
         }
 
         if (!string.IsNullOrEmpty(element.cgBindingName()))
@@ -2830,7 +2830,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             // the metadata for the property is correct for each version.
             foreach(ElementTypeChange change in changes)
             {
-                _writer.WriteIndented($"[DeclaredType(typeof({change.DeclaredTypeReference.PropertyTypeString})");
+                _writer.WriteIndented($"[AllowedTypes(typeof({change.DeclaredTypeReference.PropertyTypeString})");
                 _writer.Write($", Since = FhirRelease.{change.Since}");
                 _writer.WriteLine(")]");
             }
@@ -3475,7 +3475,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
             _writer.WriteLineIndented(
                 "[FhirElement(\"value\", IsPrimitiveValue=true, XmlSerialization=XmlRepresentation.XmlAttr, InSummary=true, Order=30)]");
-            _writer.WriteLineIndented($"[DeclaredType(typeof({getSystemTypeForFhirType(primitive.Name)}))]");
+            _writer.WriteLineIndented($"[AllowedTypes(typeof({getSystemTypeForFhirType(primitive.Name)}))]");
 
             _writer.WriteLineIndented("[DataMember]");
 
