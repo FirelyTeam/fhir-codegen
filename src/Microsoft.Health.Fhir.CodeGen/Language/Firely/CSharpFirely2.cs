@@ -2813,23 +2813,9 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
         if (_elementTypeChanges.TryGetValue(path, out ElementTypeChange[]? changes))
         {
-            IEnumerable<TypeReference>? ats = changes.Select(c => c.DeclaredTypeReference);
-            _writer.WriteLineIndented("[CLSCompliant(false)]");
-            _writer.WriteLineIndented(BuildAllowedTypesAttribute(ats, null));
-
             foreach(ElementTypeChange change in changes)
             {
-                string allowedType = BuildAllowedTypesAttribute([change.DeclaredTypeReference], change.Since);
-               _writer.WriteIndentedComment(allowedType, isSummary: false, singleLine: true);
-            }
-
-            // Write the DeclaredTypes with the since, that will at least make sure
-            // the metadata for the property is correct for each version.
-            foreach(ElementTypeChange change in changes)
-            {
-                _writer.WriteIndented($"[AllowedTypes(typeof({change.DeclaredTypeReference.PropertyTypeString})");
-                _writer.Write($", Since = FhirRelease.{change.Since}");
-                _writer.WriteLine(")]");
+                _writer.WriteIndented(BuildAllowedTypesAttribute([change.DeclaredTypeReference], change.Since));
             }
         }
 
