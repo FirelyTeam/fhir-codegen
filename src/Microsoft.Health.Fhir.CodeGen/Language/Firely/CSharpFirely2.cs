@@ -2816,10 +2816,6 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             _writer.WriteLineIndented("[CLSCompliant(false)]");
             _writer.WriteLineIndented(BuildAllowedTypesAttribute(ats, null));
 
-            // Write comments for future improved AllowedTypesAttribute, with a Since
-            _writer.WriteIndentedComment(
-                "Attribute validation is not sensitive to FHIR version, so the next, more precise validations, will not work yet.",
-                isSummary: false, singleLine: true);
             foreach(ElementTypeChange change in changes)
             {
                 string allowedType = BuildAllowedTypesAttribute([change.DeclaredTypeReference], change.Since);
