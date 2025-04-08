@@ -2704,13 +2704,20 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
                 orderOffset);
         }
     }
-    private void WriteFhirElementAttribute(string name, string summary, string? isModifier, ElementDefinition element, int orderOffset, string choice, string fiveWs, string? since = null, (string, string)? until = null, string? xmlSerialization = null)
+    private void WriteFhirElementAttribute(string name, string summary, string? isModifier, ElementDefinition element,
+        string choice, string fiveWs, string? since = null, (string, string)? until = null,
+        string? xmlSerialization = null, string? declaredType = null)
     {
         var xmlser = xmlSerialization is null ? null : $", XmlSerialization = XmlRepresentation.{xmlSerialization}";
         string attributeText = $"[FhirElement(\"{name}\"{xmlser}{summary}{isModifier}, Order={GetOrder(element)}{choice}{fiveWs}";
-        if (since is { })
+        if (since is not null)
         {
             attributeText += $", Since=FhirRelease.{since}";
+        }
+
+        if (declaredType is not null)
+        {
+            attributeText += $", DeclaredType={declaredType}";
         }
 
         attributeText += ")]";
@@ -2782,28 +2789,18 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
         if (path == "OperationOutcome.issue.severity")
         {
-            WriteFhirElementAttribute(name, summary, ", IsModifier=true", element, orderOffset, choice, fiveWs);
-            WriteFhirElementAttribute(name, summary, null, element, orderOffset, choice, fiveWs, since: "R4");
+            WriteFhirElementAttribute(name, summary, ", IsModifier=true", element, choice, fiveWs);
+            WriteFhirElementAttribute(name, summary, null, element, choice, fiveWs, since: "R4");
         }
         else if (path is "Signature.who" or "Signature.onBehalfOf")
         {
-            WriteFhirElementAttribute(name, summary, isModifier, element, orderOffset, ", Choice = ChoiceType.DatatypeChoice", fiveWs);
-            WriteFhirElementAttribute(name, summary, isModifier, element, orderOffset, "", fiveWs, since: since);
+            WriteFhirElementAttribute(name, summary, isModifier, element, ", Choice = ChoiceType.DatatypeChoice", fiveWs);
+            WriteFhirElementAttribute(name, summary, isModifier, element, "", fiveWs, since: since);
             _writer.WriteLineIndented($"[AllowedTypes(typeof(ResourceReference), Since = FhirRelease.R4)]");
         }
         else
         {
-            WriteFhirElementAttribute(name, summary, isModifier, element, orderOffset, choice, fiveWs, since, until, xmlSerialization);
-        }
-
-        if (ei.PropertyType is CqlTypeReference ctr)
-        {
-            _writer.WriteLineIndented($"[AllowedTypes(typeof({ctr.DeclaredTypeString}))]");
-        }
-
-        if (TryGetPrimitiveType(ei.PropertyType, out PrimitiveTypeReference? ptr) && ptr is CodedTypeReference)
-        {
-            _writer.WriteLineIndented("[AllowedTypes(typeof(Code))]");
+            WriteFhirElementAttribute(name, summary, isModifier, element, choice, fiveWs, since, until, xmlSerialization);
         }
 
         if (!string.IsNullOrEmpty(element.cgBindingName()))
@@ -3260,7 +3257,6 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
                 if (elementType == "Resource")
                 {
                     choice = ", Choice=ChoiceType.ResourceChoice";
-                    allowedTypes = $"[AllowedTypes(typeof({Namespace}.Resource))]";
                 }
             }
             else
@@ -3458,7 +3454,6 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
             _writer.WriteLineIndented(
                 "[FhirElement(\"value\", IsPrimitiveValue=true, XmlSerialization=XmlRepresentation.XmlAttr, InSummary=true, Order=30)]");
-            _writer.WriteLineIndented($"[AllowedTypes(typeof({getSystemTypeForFhirType(primitive.Name)}))]");
 
             _writer.WriteLineIndented("[DataMember]");
 
