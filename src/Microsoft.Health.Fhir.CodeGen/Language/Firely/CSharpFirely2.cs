@@ -2815,7 +2815,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         {
             foreach(ElementTypeChange change in changes)
             {
-                _writer.WriteIndented(BuildAllowedTypesAttribute([change.DeclaredTypeReference], change.Since));
+                _writer.WriteLineIndented(BuildAllowedTypesAttribute([change.DeclaredTypeReference], change.Since));
             }
         }
 
