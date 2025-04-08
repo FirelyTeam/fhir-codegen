@@ -883,6 +883,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         WriteGenerationComment();
 
         _writer.WriteLineIndented("using System;");
+        _writer.WriteLineIndented("using System.Collections;");
         _writer.WriteLineIndented("using System.Collections.Generic;");
         _writer.WriteLineIndented("using Hl7.Fhir.Introspection;");
         _writer.WriteLineIndented("using Hl7.Fhir.Validation;");
@@ -3583,6 +3584,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         WriteGenerationComment();
 
         _writer.WriteLineIndented("using System;");
+        _writer.WriteLineIndented("using System.Collections;");
         _writer.WriteLineIndented("using System.Collections.Generic;");
         _writer.WriteLineIndented("using System.Linq;");
         _writer.WriteLineIndented("using System.Runtime.Serialization;");
