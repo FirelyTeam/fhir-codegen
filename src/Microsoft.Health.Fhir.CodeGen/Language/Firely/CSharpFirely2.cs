@@ -2314,7 +2314,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             _writer.WriteLineIndented("dest.annotations.AddRange(annotations);");
             _writer.DecreaseIndent();
             _writer.WriteLine(string.Empty);
-            _writer.WriteLineIndented("if (Overflow.Any())");
+            _writer.WriteLineIndented("if (HasOverflow)");
             _writer.IncreaseIndent();
             _writer.WriteLineIndented("Overflow.CopyToInternal(dest.Overflow);");
             _writer.DecreaseIndent();
