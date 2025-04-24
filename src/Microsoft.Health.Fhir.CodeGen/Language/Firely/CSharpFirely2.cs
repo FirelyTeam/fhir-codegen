@@ -2280,7 +2280,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
         if (exportName == "PrimitiveType")
         {
-            _writer.WriteLineIndented("return Equals(ObjectValue, otherT.ObjectValue);");
+            _writer.WriteLineIndented("return Equals(JsonValue, otherT.JsonValue);");
             _writer.WriteLine(string.Empty);
         }
         else
@@ -2343,7 +2343,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         }
 
         if (exportName == "PrimitiveType")
-            _writer.WriteLineIndented("if (ObjectValue != null) dest.ObjectValue = ObjectValue;");
+            _writer.WriteLineIndented("if (JsonValue != null) dest.JsonValue = JsonValue;");
 
         CloseScope();
     }
@@ -3461,8 +3461,8 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             OpenScope();
 
             var typeNameInSwitch = typeName.EndsWith("?") ? typeName[..^1] : typeName;
-            _writer.WriteLineIndented($"get {{ return ObjectValue is {typeNameInSwitch} or null ? ({nullableTypeName})ObjectValue : throw COVE.FromTypes(typeof({exportName}), ObjectValue); }}");
-            _writer.WriteLineIndented("set { ObjectValue = value; OnPropertyChanged(\"Value\"); }");
+            _writer.WriteLineIndented($"get {{ return JsonValue is {typeNameInSwitch} or null ? ({nullableTypeName})JsonValue : throw COVE.FromTypes(typeof({exportName}), JsonValue); }}");
+            _writer.WriteLineIndented("set { JsonValue = value; OnPropertyChanged(\"Value\"); }");
             CloseScope();
         }
 
