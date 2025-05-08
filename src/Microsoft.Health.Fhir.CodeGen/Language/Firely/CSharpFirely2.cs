@@ -1137,10 +1137,8 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
     /// <summary>Writes the FHIR version.</summary>
     private void WriteFhirVersion()
     {
-        _writer.WriteLineIndented("public static string Version");
-        OpenScope();
-        _writer.WriteLineIndented($"get {{ return \"{_info.FhirVersionLiteral}\"; }}");
-        CloseScope();
+        _writer.WriteLineIndented($"""public static string Version => "{_info.FhirVersionLiteral}";""");
+        _writer.WriteLine();
     }
 
     /// <summary>Writes the supported resources dictionary.</summary>
@@ -1638,26 +1636,27 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         WrittenElementInfo interfaceEi)
     {
         string pn = interfaceEi.PropertyName;
-        string it = interfaceEi.PropertyType is ListTypeReference ? interfaceEi.PropertyType.PropertyTypeString : WithNullabilityMarking(interfaceEi.PropertyType.PropertyTypeString);
+        bool isList = interfaceEi.PropertyType is ListTypeReference;
+        string it = isList ? interfaceEi.PropertyType.PropertyTypeString : WithNullabilityMarking(interfaceEi.PropertyType.PropertyTypeString);
 
         if ((resourceEd == null) || (resourceEi == null))
         {
-            writeEmptyGetterAndSetter(it, pn);
+            writeEmptyGetterAndSetter(it, pn, isList);
         }
         else if (interfaceEi.PropertyType.PropertyTypeString == resourceEi.PropertyType.PropertyTypeString)
         {
-            writeOneOnOneGetterAndSetter(it, pn);
+            writeOneOnOneGetterAndSetter(it, pn, isList);
         }
 
         // a resource is allowed to have a scalar in place of a list
         else if ((interfaceEi.PropertyType is ListTypeReference interfaceLtr) &&
             (interfaceLtr.Element.PropertyTypeString == resourceEi.PropertyType.PropertyTypeString))
         {
-            writeSingleToListGetterAndSetter(it, pn);
+            writeSingleToListGetterAndSetter(it, pn, isList);
         }
         else
         {
-            writeIncompatibleGetterSetter(it, pn);
+            writeIncompatibleGetterSetter(it, pn, isList);
         }
 
         if (!TryGetPrimitiveType(interfaceEi.PropertyType, out PrimitiveTypeReference? interfacePtr))
@@ -1666,25 +1665,27 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         }
 
         string ppn = interfaceEi.PrimitiveHelperName!;
-        string pit = interfaceEi.PropertyType is ListTypeReference ? interfacePtr.ConveniencePropertyTypeString : WithNullabilityMarking(interfacePtr.ConveniencePropertyTypeString);
+        string pit = isList ? interfacePtr.ConveniencePropertyTypeString : WithNullabilityMarking(interfacePtr.ConveniencePropertyTypeString);
 
         if ((resourceEd == null) || (resourceEi == null))
         {
-            writeEmptyGetterAndSetter(pit, ppn);
+            writeEmptyGetterAndSetter(pit, ppn, isList);
         }
         else if (interfaceEi.PropertyType == resourceEi.PropertyType)
         {
-            writeOneOnOneGetterAndSetter(pit, ppn);
+            writeOneOnOneGetterAndSetter(pit, ppn, isList);
         }
         else
         {
-            writeIncompatibleGetterSetter(pit, ppn);
+            writeIncompatibleGetterSetter(pit, ppn, isList);
         }
 
         return;
 
-        void writeOneOnOneGetterAndSetter(string propertyType, string propertyName)
+        void writeOneOnOneGetterAndSetter(string propertyType, string propertyName, bool allowNull)
         {
+            if(allowNull)
+                _writer.WriteLineIndented("[AllowNull]");
             _writer.WriteLineIndented("[IgnoreDataMember]");
             _writer.WriteLineIndented($"{propertyType} {interfaceExportName}.{propertyName}");
             OpenScope();
@@ -1693,8 +1694,10 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             CloseScope();
         }
 
-        void writeSingleToListGetterAndSetter(string propertyType, string propertyName)
+        void writeSingleToListGetterAndSetter(string propertyType, string propertyName, bool allowNull)
         {
+            if (allowNull)
+                _writer.WriteLineIndented("[AllowNull]");
             _writer.WriteLineIndented("[IgnoreDataMember]");
             _writer.WriteLineIndented($"{propertyType} {interfaceExportName}.{propertyName}");
             OpenScope();
@@ -1715,12 +1718,14 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             CloseScope();
         }
 
-        void writeIncompatibleGetterSetter(string propertyType, string propertyName)
+        void writeIncompatibleGetterSetter(string propertyType, string propertyName, bool allowNull)
         {
             string message = $"{resourceExportName}.{resourceEi.PropertyName} is incompatible with " +
                              $"{interfaceExportName}.{interfaceEi.FhirElementName}.";
             WriteIndentedComment(message, isSummary: false, isRemarks: true);
 
+            if (allowNull)
+                _writer.WriteLineIndented("[AllowNull]");
             _writer.WriteLineIndented("[IgnoreDataMember]");
             _writer.WriteLineIndented($"{propertyType} {interfaceExportName}.{propertyName}");
 
@@ -1732,8 +1737,10 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
         string emptyInterfaceType() => interfaceEi.PropertyType is ListTypeReference ? "[]" : "null";
 
-        void writeEmptyGetterAndSetter(string propertyType, string propertyName)
+        void writeEmptyGetterAndSetter(string propertyType, string propertyName, bool allowNull)
         {
+            if (allowNull)
+                _writer.WriteLineIndented("[AllowNull]");
             _writer.WriteLineIndented("[IgnoreDataMember]");
             _writer.WriteLineIndented($"{propertyType} {interfaceExportName}.{propertyName}");
             OpenScope();
@@ -1782,6 +1789,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             var typ = ei.PropertyType is ListTypeReference
                 ? ei.PropertyType.PropertyTypeString
                 : WithNullabilityMarking(ei.PropertyType.PropertyTypeString);
+            _writer.WriteLineIndented("[AllowNull]");
             _writer.WriteLineIndented($"{typ} {ei.PropertyName} {{ get; set; }}");
             _writer.WriteLine();
         }
@@ -3031,6 +3039,8 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             { } s => s
         };
 
+        if(ei.PropertyType is ListTypeReference)
+            _writer.WriteLineIndented("[AllowNull]");
         _writer.WriteLineIndented($"public {(ei.PropertyType is ListTypeReference ltr ? ltr.PropertyTypeString : $"{ei.PropertyType.PropertyTypeString}?")} {ei.PropertyName}");
 
         OpenScope();
@@ -3314,7 +3324,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
     {
         WriteIndentedComment("FHIR Type Name");
 
-        _writer.WriteLineIndented($"public override string TypeName {{ get {{ return \"{name}\"; }} }}");
+        _writer.WriteLineIndented($"""public override string TypeName => "{name}";""");
 
         _writer.WriteLine(string.Empty);
     }
