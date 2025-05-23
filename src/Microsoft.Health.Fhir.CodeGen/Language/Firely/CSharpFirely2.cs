@@ -420,18 +420,20 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         }
 
         // only generate base definitions for R5
-        if (subset.HasFlag(GenSubset.Base) && info.FhirSequence != FhirReleases.FhirSequenceCodes.R5)
+        if (subset.HasFlag(GenSubset.Base) &&
+            info.FhirSequence is not (FhirReleases.FhirSequenceCodes.R6 or FhirReleases.FhirSequenceCodes.R5))
         {
-            Console.WriteLine($"Aborting {LanguageName} for {info.FhirSequence}: code generation for the 'base' subset should be run on R5 only.");
+            Console.WriteLine($"Aborting {LanguageName} for {info.FhirSequence}: code generation for the 'base' subset should be run on R5/R6 only.");
             return;
         }
 
         // conformance subset is only valid for STU3 and R5
         if (subset.HasFlag(GenSubset.Conformance) &&
-            (info.FhirSequence != FhirReleases.FhirSequenceCodes.STU3 &&
-            info.FhirSequence != FhirReleases.FhirSequenceCodes.R5))
+            info.FhirSequence is not (FhirReleases.FhirSequenceCodes.STU3 or
+                FhirReleases.FhirSequenceCodes.R5 or FhirReleases.FhirSequenceCodes.R6))
+
         {
-            Console.WriteLine($"Aborting {LanguageName} for {info.FhirSequence}: code generation for the 'conformance' subset should be run on STU3 or R5 only.");
+            Console.WriteLine($"Aborting {LanguageName} for {info.FhirSequence}: code generation for the 'conformance' subset should be run on STU3 or R5/R6 only.");
             return;
         }
 
@@ -936,6 +938,13 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
             foreach (SearchParameter sp in resourceSearchParams.Values.OrderBy(s => s.Name))
             {
+                // TODO:R6: Add support for the 'resource' search parameter type
+                if ((sp.TypeElement.ObjectValue is "resource"))
+                {
+                    Console.WriteLine($"Skipping SearchParameter {sp.Id} ({sp.Url}) because it is target type of 'resource'!!!");
+                    continue;
+                }
+
                 if (sp.Experimental == true)
                 {
                     continue;
