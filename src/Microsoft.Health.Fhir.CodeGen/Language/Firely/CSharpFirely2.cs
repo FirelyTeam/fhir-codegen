@@ -387,6 +387,32 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         ["Signature.contentType"] = ("R4", "")
     };
 
+    private static string? GetExplicitName(ElementDefinition ed, FhirReleases.FhirSequenceCodes sequence) =>
+        (ed.Path, sequence) switch
+        {
+            ("Evidence.statistic.attributeEstimate.attributeEstimate", _) => "AttributeEstimate",
+            ("Citation.citedArtifact.contributorship.summary", _) => "CitedArtifactContributorshipSummary",
+            ("Measure.group", FhirReleases.FhirSequenceCodes.R6) => "GroupBackboneComponent",
+            ("Measure.group.component", FhirReleases.FhirSequenceCodes.R6) => "GroupComponent",
+            ("Measure.group.stratifier.component", FhirReleases.FhirSequenceCodes.R6) => "GroupStratifierComponent",
+            ("MolecularDefinition.location.sequenceLocation.coordinateInterval", FhirReleases.FhirSequenceCodes.R6) =>
+                "LocationSequenceLocationCoordinateIntervalComponent",
+            ("MolecularDefinition.location.sequenceLocation.coordinateInterval.coordinateSystem", FhirReleases.FhirSequenceCodes.R6) =>
+                "LocationSequenceLocationCoordinateIntervalCoordinateSystemComponent",
+            ("MolecularDefinition.representation.extracted.coordinateInterval", FhirReleases.FhirSequenceCodes.R6) =>
+                "RepresentationExtractedCoordinateIntervalComponent",
+            ("MolecularDefinition.representation.extracted.coordinateInterval.coordinateSystem", FhirReleases.FhirSequenceCodes.R6) =>
+                "RepresentationExtractedCoordinateIntervalCoordinateSystemComponent",
+            ("MolecularDefinition.representation.relative.edit.coordinateInterval", FhirReleases.FhirSequenceCodes.R6) =>
+                "RepresentationRelativeEditCoordinateIntervalComponent",
+            ("MolecularDefinition.representation.relative.edit.coordinateInterval.coordinateSystem", FhirReleases.FhirSequenceCodes.R6) =>
+                "RepresentationRelativeEditCoordinateIntervalCoordinateSystemComponent",
+
+            ("TestPlan.scope", FhirReleases.FhirSequenceCodes.R6) => "ScopeComponent",
+            ("TestPlan.testCase.scope", FhirReleases.FhirSequenceCodes.R6) => "TestCaseScopeComponent",
+            _ => ed.cgExplicitName()
+        };
+
     /// <summary>True to export five ws.</summary>
     private bool _exportFiveWs = true;
 
@@ -1575,29 +1601,6 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         // open class
         OpenScope();
 
-        // right now, no interfaces have components - TODO: determine naming convention if this comes up
-        //foreach (ComponentDefinition component in complex.cgChildComponents(_info))
-        //{
-        //    string componentExportName;
-        //    if (string.IsNullOrEmpty(component.cgExplicitName()))
-        //    {
-        //        componentExportName =
-        //            $"{component.cgName(NamingConvention.PascalCase)}Component";
-        //    }
-        //    else
-        //    {
-        //        // Consent.provisionActorComponent is explicit lower case...
-        //        componentExportName =
-        //            $"{component.cgExplicitName()}" +
-        //            $"Component";
-        //    }
-        //    WriteBackboneComponent(
-        //        component,
-        //        componentExportName,
-        //        exportName,
-        //        subset);
-        //}
-
         WriteInterfaceElements(complex, exportName, ref exportedElements);
 
         // close class
@@ -1983,16 +1986,14 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         {
             string componentExportName;
 
-            if (string.IsNullOrEmpty(component.cgExplicitName()))
+            if (GetExplicitName(component.Element, _info.FhirSequence) is {} explicitName)
             {
-                componentExportName =
-                    $"{component.cgName(NamingConvention.PascalCase)}Component";
+                componentExportName = $"{explicitName}Component";
             }
             else
             {
                 componentExportName =
-                    $"{component.cgExplicitName()}" +
-                    $"Component";
+                    $"{component.cgName(NamingConvention.PascalCase)}Component";
             }
 
             WriteBackboneComponent(
@@ -2567,44 +2568,12 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
         WriteComponentComment(complex);
 
-        string explicitName = complex.cgExplicitName();
-
-        /* TODO(ginoc): 2024.06.28 - Special cases to remove in SDK 6.0
-         * - Evidence.statistic.attributeEstimate.attributeEstimate the explicit name is duplicative and was not passed through.
-         * - Citation.citedArtifact.contributorship.summary had a generator prefix.
-         */
-        switch (explicitName)
-        {
-            case "AttributeEstimateAttributeEstimate":
-                explicitName = "AttributeEstimate";
-                break;
-            case "ContributorshipSummary":
-                explicitName = "CitedArtifactContributorshipSummary";
-                break;
-        }
-
-        // ginoc 2024.03.12: Release has happened and these are no longer needed - leaving here but commented out until confirmed
-        /*
-        // TODO: the following renames (repairs) should be removed when release 4B is official and there is an
-        //   explicit name in the definition for attributes:
-        //   - Statistic.attributeEstimate.attributeEstimate
-        //   - Citation.contributorship.summary
-
-        if (complex.Id.StartsWith("Citation") || complex.Id.StartsWith("Statistic") || complex.Id.StartsWith("DeviceDefinition"))
-        {
-            string parentName = complex.Id.Substring(0, complex.Id.IndexOf('.'));
-            var sillyBackboneName = complex.Id.Substring(parentName.Length);
-            explicitName = capitalizeThoseSillyBackboneNames(sillyBackboneName);
-            exportName = explicitName + "Component";
-        }
-        // end of repair
-        */
+        string? explicitName = GetExplicitName(complex.Element, _info.FhirSequence);
 
         bool useConcatenationInName = complex.Structure.Name == "Citation";
 
-        string explicitNamePart = string.IsNullOrEmpty(explicitName)
-            ? complex.cgName(NamingConvention.PascalCase, useConcatenationInName, useConcatenationInName)
-            : explicitName;
+        string explicitNamePart = explicitName ??
+                                  complex.cgName(NamingConvention.PascalCase, useConcatenationInName, useConcatenationInName);
         string componentName = parentExportName + "#" + explicitNamePart;
 
         WriteSerializable();
@@ -2647,53 +2616,15 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         foreach (ComponentDefinition component in complex.cgChildComponents(_info))
         {
             string componentExportName;
-            string componentExplicitName = component.cgExplicitName();
 
-            if (string.IsNullOrEmpty(componentExplicitName))
+            if (GetExplicitName(component.Element, _info.FhirSequence) is {} componentExplicitName)
             {
-                componentExportName =
-                    $"{component.cgName(NamingConvention.PascalCase, useConcatenationInName, useConcatenationInName)}Component";
+                componentExportName = $"{componentExplicitName}Component";
             }
             else
             {
-                /* TODO(ginoc): 2024.06.28 - Special cases to remove in SDK 6.0
-                 * - Evidence.statistic.attributeEstimate.attributeEstimate the explicit name is duplicative and was not passed through.
-                 * - Citation.citedArtifact.contributorship.summary had a generator prefix.
-                 */
-
-                switch (componentExplicitName)
-                {
-                    case "AttributeEstimateAttributeEstimate":
-                        componentExportName = "AttributeEstimateComponent";
-                        break;
-                    case "ContributorshipSummary":
-                        componentExportName = "CitedArtifactContributorshipSummaryComponent";
-                        break;
-                    default:
-                        // Consent.provisionActorComponent is explicit lower case...
-                        componentExportName = $"{component.cgExplicitName()}Component";
-                        break;
-                }
-
-                ///* TODO(ginoc): 2024.06.28 - Special cases to remove in SDK 6.0
-                // * - Consent.provision is explicit lower case in R4B and earlier
-                // * - Consent.provision.actor is explicit lower case in R4B and earlier
-                // */
-                //if (_info.FhirSequence < FhirReleases.FhirSequenceCodes.R5)
-                //{
-                //    switch (complex.Element.Path)
-                //    {
-                //        case "Consent.provision":
-                //            componentExportName = "provisionComponent";
-                //            break;
-                //        case "Consent.provision.actor":
-                //            componentExportName = "provisionActorComponent";
-                //            break;
-                //        case "Consent.provision.data":
-                //            componentExportName = "provisionDataComponent";
-                //            break;
-                //    }
-                //}
+                componentExportName =
+                    $"{component.cgName(NamingConvention.PascalCase, useConcatenationInName, useConcatenationInName)}Component";
             }
 
             WriteBackboneComponent(
@@ -2820,6 +2751,66 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             return true;
         }
 
+        /* TODO(ginoc): 2024.07.01 - Special cases to remove in SDK 6.0
+         * - ValueSet http://hl7.org/fhir/ValueSet/item-type used to enumerate non-selectable: 'question'
+         * - ValueSet http://hl7.org/fhir/ValueSet/v3-ActInvoiceGroupCode in STU3 used to enumerate non-selectable: '_ActInvoiceInterGroupCode' and '_ActInvoiceRootGroupCode'
+         */
+        switch (vs.Url)
+        {
+            case "http://hl7.org/fhir/ValueSet/item-type":
+                {
+                    if (vs.Expansion.Contains.Find(vsContains => vsContains.Code == "question") == null)
+                    {
+                        vs.Expansion.Contains.Insert(2, new ValueSet.ContainsComponent()
+                        {
+                            System = "http://hl7.org/fhir/item-type",
+                            Code = "question",
+                            Display = "Question",
+                        });
+                    }
+
+                    break;
+                }
+            case "http://hl7.org/fhir/ValueSet/v3-ActInvoiceGroupCode":
+                {
+                    // only care about the version present in STU3
+                    if (vs.Version == "2014-03-26")
+                    {
+                        if (vs.Expansion.Contains.Find(vsContains => vsContains.Code == "_ActInvoiceInterGroupCode") == null)
+                        {
+                            vs.Expansion.Contains.Insert(0, new ValueSet.ContainsComponent()
+                            {
+                                System = "http://hl7.org/fhir/v3/ActCode",
+                                Code = "_ActInvoiceInterGroupCode",
+                                Display = "ActInvoiceInterGroupCode",
+                            });
+                        }
+
+                        if (vs.Expansion.Contains.Find(vsContains => vsContains.Code == "_ActInvoiceRootGroupCode") == null)
+                        {
+                            vs.Expansion.Contains.Insert(8, new ValueSet.ContainsComponent()
+                            {
+                                System = "http://hl7.org/fhir/v3/ActCode",
+                                Code = "_ActInvoiceRootGroupCode",
+                                Display = "ActInvoiceRootGroupCode",
+                            });
+                        }
+                    }
+
+                    break;
+                }
+        }
+
+        FhirConcept[] concepts = vs.cgGetFlatConcepts(_info).ToArray();
+
+        if (concepts.Length == 0)
+        {
+            // TODO(ginoc): 2024.09.19 - do we want to start using a Terminology server to expand these?
+            // value set that cannot be expanded and does not have an expansion provided
+            return false;
+        }
+
+
         IEnumerable<string> referencedCodeSystems = vs.cgReferencedCodeSystems();
 
         if (referencedCodeSystems.Count() == 1)
@@ -2835,33 +2826,6 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
                 $"{vs.Description}\n" +
                 $"(url: {vs.Url})\n" +
                 $"(systems: {referencedCodeSystems.Count()})");
-        }
-
-        /* TODO(ginoc): 2024.07.01 - Special cases to remove in SDK 6.0
-         * - ValueSet http://hl7.org/fhir/ValueSet/item-type used to enumerate non-selectable: 'question'
-         * - ValueSet http://hl7.org/fhir/ValueSet/v3-ActInvoiceGroupCode in STU3 used to enumerate non-selectable: '_ActInvoiceInterGroupCode' and '_ActInvoiceRootGroupCode'
-         * ewout: 20250623 - These invoice codes seem to have disappeared before, so we don't need to add them back in.
-         */
-        if(vs.Url == "http://hl7.org/fhir/ValueSet/item-type")
-        {
-            if (!vs.Expansion.Contains.Any(vsContains => vsContains.Code == "question"))
-            {
-                vs.Expansion.Contains.Insert(2, new ValueSet.ContainsComponent()
-                {
-                    System = "http://hl7.org/fhir/item-type",
-                    Code = "question",
-                    Display = "Question",
-                });
-            }
-        }
-
-        FhirConcept[] concepts = vs.cgGetFlatConcepts(_info).ToArray();
-
-        if (concepts.Length == 0)
-        {
-            // TODO(ginoc): 2024.09.19 - do we want to start using a Terminology server to expand these?
-            // value set that cannot be expanded and does not have an expansion provided
-            return false;
         }
 
         var defaultSystem = GetDefaultCodeSystem(concepts);
@@ -2919,6 +2883,47 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
             _writer.WriteLineIndented($"{codeName},");
         }
+
+        // HACK for short-term R6 support....
+        // We need to add the FHIR version enum literals for R6, as they are not part of the
+        // R5 distribution, which we are using at this moment to generate Base/Conformance.
+        if (vs.Url == "http://hl7.org/fhir/ValueSet/FHIR-version")
+        {
+            _writer.WriteIndented(
+                """
+                    /// <summary>
+                    /// R6 Versions.
+                    /// (system: http://hl7.org/fhir/FHIR-version)
+                    /// </summary>
+                    [EnumLiteral("6.0"), Description("6.0")]
+                    N6_0,
+                    /// <summary>
+                    /// R6 Final Version.
+                    /// (system: http://hl7.org/fhir/FHIR-version)
+                    /// </summary>
+                    [EnumLiteral("6.0.0"), Description("6.0.0")]
+                    N6_0_0,
+                    /// <summary>
+                    /// R6 1st Draft Ballot.
+                    /// (system: http://hl7.org/fhir/FHIR-version)
+                    /// </summary>
+                    [EnumLiteral("6.0.0-ballo1"), Description("6.0.0-ballot1")]
+                    N6_0_0Ballo1,
+                    /// <summary>
+                    /// R6 2nd Draft Ballot.
+                    /// (system: http://hl7.org/fhir/FHIR-version)
+                    /// </summary>
+                    [EnumLiteral("6.0.0-ballot2"), Description("6.0.0-ballot2")]
+                    N6_0_0Ballot2,
+                    /// <summary>
+                    /// R6 3rd Draft Ballot.
+                    /// (system: http://hl7.org/fhir/FHIR-version)
+                    /// </summary>
+                    [EnumLiteral("6.0.0-ballot3"), Description("6.0.0-ballot3")]
+                    N6_0_0Ballot3,
+                """);
+        }
+
 
         CloseScope();
 
@@ -3263,7 +3268,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
                     // check to see if the referenced element has an explicit name
                     if (info.TryFindElementByPath(btn, out StructureDefinition? targetSd, out ElementDefinition? targetEd))
                     {
-                        return BuildTypeNameForNestedComplexType(targetEd, btn);
+                        return BuildTypeNameForNestedComplexType(targetEd, btn, info.FhirSequence);
                     }
 
                     return btn;
@@ -3277,7 +3282,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             string getPocoNameForComplexTypeReference(string name)
             {
                 return name.Contains('.')
-                    ? BuildTypeNameForNestedComplexType(element, name)
+                    ? BuildTypeNameForNestedComplexType(element, name, info.FhirSequence)
                     : TypeReference.MapTypeName(name);
             }
         }
@@ -3434,43 +3439,10 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
     /// <param name="ed">  The ed.</param>
     /// <param name="type">The type.</param>
     /// <returns>A string.</returns>
-    private static string BuildTypeNameForNestedComplexType(ElementDefinition ed, string type)
+    private static string BuildTypeNameForNestedComplexType(ElementDefinition ed, string type, FhirReleases.FhirSequenceCodes sequence)
     {
-        // ginoc 2024.03.12: Release has happened and these are no longer needed - leaving here but commented out until confirmed
-        /*
-        // TODO: the following renames (repairs) should be removed when release 4B is official and there is an
-        //   explicit name in the definition for attributes:
-        //   - Statistic.attributeEstimate.attributeEstimate
-        //   - Citation.contributorship.summary
-
-        if (type.StartsWith("Citation") || type.StartsWith("Statistic") || type.StartsWith("DeviceDefinition"))
+        if (GetExplicitName(ed, sequence) is {} explicitTypeName)
         {
-            string parentName = type.Substring(0, type.IndexOf('.'));
-            var sillyBackboneName = type.Substring(parentName.Length);
-            type = parentName + "." + capitalizeThoseSillyBackboneNames(sillyBackboneName) + "Component";
-        }
-        // end of repair
-        */
-
-        string explicitTypeName = ed.cgExplicitName();
-
-        if (!string.IsNullOrEmpty(explicitTypeName))
-        {
-            /* TODO(ginoc): 2024.06.28 - Special cases to remove in SDK 6.0
-             * - Evidence.statistic.attributeEstimate.attributeEstimate the explicit name is duplicative and was not passed through.
-             * - Citation.citedArtifact.contributorship.summary had a generator prefix.
-             */
-
-            switch (explicitTypeName)
-            {
-                case "AttributeEstimateAttributeEstimate":
-                    explicitTypeName = "AttributeEstimate";
-                    break;
-                case "ContributorshipSummary":
-                    explicitTypeName = "CitedArtifactContributorshipSummary";
-                    break;
-            }
-
             string parentName = type.Substring(0, type.IndexOf('.'));
             return $"{parentName}" +
                 $".{explicitTypeName}" +

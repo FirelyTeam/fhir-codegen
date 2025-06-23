@@ -35,17 +35,17 @@
             "commandLineArgs": "generate CSharpFirely2 --output-path ..\\..\\..\\firely-net-sdk\\src\\Hl7.Fhir.R5\\Model -p hl7.fhir.r5.core#5.0.0 -p hl7.fhir.r5.expansions#5.0.0 --subset satellite",
             "workingDirectory": "$(MSBuildProjectDirectory)"
         },
-        "NEW Firely 6.x R6": {
+        "Firely 5.x R6": {
             "commandName": "Project",
             "commandLineArgs": "generate CSharpFirely2 --output-path ..\\..\\..\\firely-net-sdk\\src\\Hl7.Fhir.R6\\Model -p hl7.fhir.r6.core#6.0.0-ballot3 -p hl7.fhir.r6.expansions#6.0.0-ballot3 --subset satellite",
             "workingDirectory": "$(MSBuildProjectDirectory)"
         },
-         "NEW Firely 6.x Base": {
+        "DONT USE YET Firely 5.x Base (R6)": {
             "commandName": "Project",
             "commandLineArgs": "generate CSharpFirely2 --output-path ..\\..\\..\\firely-net-sdk\\src\\Hl7.Fhir.Base\\Model -p hl7.fhir.r6.core#6.0.0-ballot3 -p hl7.fhir.r6.expansions#6.0.0-ballot3 --subset base",
             "workingDirectory": "$(MSBuildProjectDirectory)"
         },
-        "NEW Firely 6.x Conformance": {
+        "DONT USE YET Firely 5.x Conformance (R6)": {
             "commandName": "Project",
             "commandLineArgs": "generate CSharpFirely2 --output-path ..\\..\\..\\firely-net-sdk\\src\\Hl7.Fhir.Conformance\\Model -p hl7.fhir.r6.core#6.0.0-ballot3 -p hl7.fhir.r6.expansions#6.0.0-ballot3 --subset conformance",
             "workingDirectory": "$(MSBuildProjectDirectory)"
