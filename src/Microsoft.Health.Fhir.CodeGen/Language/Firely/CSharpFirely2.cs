@@ -2751,23 +2751,6 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             return true;
         }
 
-        IEnumerable<string> referencedCodeSystems = vs.cgReferencedCodeSystems();
-
-        if (referencedCodeSystems.Count() == 1)
-        {
-            WriteIndentedComment(
-                $"{vs.Description}\n" +
-                $"(url: {vs.Url})\n" +
-                $"(system: {referencedCodeSystems.First()})");
-        }
-        else
-        {
-            WriteIndentedComment(
-                $"{vs.Description}\n" +
-                $"(url: {vs.Url})\n" +
-                $"(systems: {referencedCodeSystems.Count()})");
-        }
-
         /* TODO(ginoc): 2024.07.01 - Special cases to remove in SDK 6.0
          * - ValueSet http://hl7.org/fhir/ValueSet/item-type used to enumerate non-selectable: 'question'
          * - ValueSet http://hl7.org/fhir/ValueSet/v3-ActInvoiceGroupCode in STU3 used to enumerate non-selectable: '_ActInvoiceInterGroupCode' and '_ActInvoiceRootGroupCode'
@@ -2775,7 +2758,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
          */
         if(vs.Url == "http://hl7.org/fhir/ValueSet/item-type")
         {
-            if (!vs.Expansion.Contains.Any(vsContains => vsContains.Code == "question"))
+            if (vs.Expansion.Contains.Find(vsContains => vsContains.Code == "question") == null)
             {
                 vs.Expansion.Contains.Insert(2, new ValueSet.ContainsComponent()
                 {
@@ -2793,6 +2776,24 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             // TODO(ginoc): 2024.09.19 - do we want to start using a Terminology server to expand these?
             // value set that cannot be expanded and does not have an expansion provided
             return false;
+        }
+
+
+        IEnumerable<string> referencedCodeSystems = vs.cgReferencedCodeSystems();
+
+        if (referencedCodeSystems.Count() == 1)
+        {
+            WriteIndentedComment(
+                $"{vs.Description}\n" +
+                $"(url: {vs.Url})\n" +
+                $"(system: {referencedCodeSystems.First()})");
+        }
+        else
+        {
+            WriteIndentedComment(
+                $"{vs.Description}\n" +
+                $"(url: {vs.Url})\n" +
+                $"(systems: {referencedCodeSystems.Count()})");
         }
 
         var defaultSystem = GetDefaultCodeSystem(concepts);
@@ -2858,36 +2859,36 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         {
             _writer.WriteIndented(
                 """
-                /// <summary>
-                /// R6 Versions.
-                /// (system: http://hl7.org/fhir/FHIR-version)
-                /// </summary>
-                [EnumLiteral("6.0"), Description("6.0")]
-                N6_0,
-                /// <summary>
-                /// R6 Final Version.
-                /// (system: http://hl7.org/fhir/FHIR-version)
-                /// </summary>
-                [EnumLiteral("6.0.0"), Description("6.0.0")]
-                N6_0_0,
-                /// <summary>
-                /// R6 1st Draft Ballot.
-                /// (system: http://hl7.org/fhir/FHIR-version)
-                /// </summary>
-                [EnumLiteral("6.0.0-ballo1"), Description("6.0.0-ballot1")]
-                N6_0_0Ballo1,
-                /// <summary>
-                /// R6 2nd Draft Ballot.
-                /// (system: http://hl7.org/fhir/FHIR-version)
-                /// </summary>
-                [EnumLiteral("6.0.0-ballot2"), Description("6.0.0-ballot2")]
-                N6_0_0Ballot2,
-                /// <summary>
-                /// R6 3rd Draft Ballot.
-                /// (system: http://hl7.org/fhir/FHIR-version)
-                /// </summary>
-                [EnumLiteral("6.0.0-ballot3"), Description("6.0.0-ballot3")]
-                N6_0_0Ballot3,
+                    /// <summary>
+                    /// R6 Versions.
+                    /// (system: http://hl7.org/fhir/FHIR-version)
+                    /// </summary>
+                    [EnumLiteral("6.0"), Description("6.0")]
+                    N6_0,
+                    /// <summary>
+                    /// R6 Final Version.
+                    /// (system: http://hl7.org/fhir/FHIR-version)
+                    /// </summary>
+                    [EnumLiteral("6.0.0"), Description("6.0.0")]
+                    N6_0_0,
+                    /// <summary>
+                    /// R6 1st Draft Ballot.
+                    /// (system: http://hl7.org/fhir/FHIR-version)
+                    /// </summary>
+                    [EnumLiteral("6.0.0-ballo1"), Description("6.0.0-ballot1")]
+                    N6_0_0Ballo1,
+                    /// <summary>
+                    /// R6 2nd Draft Ballot.
+                    /// (system: http://hl7.org/fhir/FHIR-version)
+                    /// </summary>
+                    [EnumLiteral("6.0.0-ballot2"), Description("6.0.0-ballot2")]
+                    N6_0_0Ballot2,
+                    /// <summary>
+                    /// R6 3rd Draft Ballot.
+                    /// (system: http://hl7.org/fhir/FHIR-version)
+                    /// </summary>
+                    [EnumLiteral("6.0.0-ballot3"), Description("6.0.0-ballot3")]
+                    N6_0_0Ballot3,
                 """);
         }
 
