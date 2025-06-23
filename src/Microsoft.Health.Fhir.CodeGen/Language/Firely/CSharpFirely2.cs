@@ -2787,15 +2787,6 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             return false;
         }
 
-        FhirConcept[] concepts = vs.cgGetFlatConcepts(_info).ToArray();
-
-        if (concepts.Length == 0)
-        {
-            // TODO(ginoc): 2024.09.19 - do we want to start using a Terminology server to expand these?
-            // value set that cannot be expanded and does not have an expansion provided
-            return false;
-        }
-
         string name = (vs.Name ?? vs.Id)
             .Replace(" ", string.Empty, StringComparison.Ordinal)
             .Replace("_", string.Empty, StringComparison.Ordinal);
@@ -2849,50 +2840,28 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         /* TODO(ginoc): 2024.07.01 - Special cases to remove in SDK 6.0
          * - ValueSet http://hl7.org/fhir/ValueSet/item-type used to enumerate non-selectable: 'question'
          * - ValueSet http://hl7.org/fhir/ValueSet/v3-ActInvoiceGroupCode in STU3 used to enumerate non-selectable: '_ActInvoiceInterGroupCode' and '_ActInvoiceRootGroupCode'
+         * ewout: 20250623 - These invoice codes seem to have disappeared before, so we don't need to add them back in.
          */
-        switch (vs.Url)
+        if(vs.Url == "http://hl7.org/fhir/ValueSet/item-type")
         {
-            case "http://hl7.org/fhir/ValueSet/item-type":
+            if (!vs.Expansion.Contains.Any(vsContains => vsContains.Code == "question"))
+            {
+                vs.Expansion.Contains.Insert(2, new ValueSet.ContainsComponent()
                 {
-                    if (!vs.Expansion.Contains.Any(vsContains => vsContains.Code == "question"))
-                    {
-                        vs.Expansion.Contains.Insert(2, new ValueSet.ContainsComponent()
-                        {
-                            System = "http://hl7.org/fhir/item-type",
-                            Code = "question",
-                            Display = "Question",
-                        });
-                    }
-                }
-                break;
+                    System = "http://hl7.org/fhir/item-type",
+                    Code = "question",
+                    Display = "Question",
+                });
+            }
+        }
 
-            case "http://hl7.org/fhir/ValueSet/v3-ActInvoiceGroupCode":
-                {
-                    // only care about the version present in STU3
-                    if (vs.Version == "2014-03-26")
-                    {
-                        if (!vs.Expansion.Contains.Any(vsContains => vsContains.Code == "_ActInvoiceInterGroupCode"))
-                        {
-                            vs.Expansion.Contains.Insert(0, new ValueSet.ContainsComponent()
-                            {
-                                System = "http://hl7.org/fhir/v3/ActCode",
-                                Code = "_ActInvoiceInterGroupCode",
-                                Display = "ActInvoiceInterGroupCode",
-                            });
-                        }
+        FhirConcept[] concepts = vs.cgGetFlatConcepts(_info).ToArray();
 
-                        if (!vs.Expansion.Contains.Any(vsContains => vsContains.Code == "_ActInvoiceRootGroupCode"))
-                        {
-                            vs.Expansion.Contains.Insert(8, new ValueSet.ContainsComponent()
-                            {
-                                System = "http://hl7.org/fhir/v3/ActCode",
-                                Code = "_ActInvoiceRootGroupCode",
-                                Display = "ActInvoiceRootGroupCode",
-                            });
-                        }
-                    }
-                }
-                break;
+        if (concepts.Length == 0)
+        {
+            // TODO(ginoc): 2024.09.19 - do we want to start using a Terminology server to expand these?
+            // value set that cannot be expanded and does not have an expansion provided
+            return false;
         }
 
         var defaultSystem = GetDefaultCodeSystem(concepts);
