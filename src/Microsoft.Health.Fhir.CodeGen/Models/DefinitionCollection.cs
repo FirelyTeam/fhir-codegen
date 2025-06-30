@@ -854,8 +854,14 @@ public partial class DefinitionCollection
                 fo = outFieldOrder.Count + 1;
                 outFieldOrder.Add(pc.Name, fo);
             }
-            else 
+            else
             {
+                if (inFieldOrder.ContainsKey(pc.Name))
+                {
+                    Console.WriteLine($"Operation: {op.Id} ({op.Url}) defines the parameter {pc.Name} more than once!!!");
+                    continue;
+                }
+
                 fo = inFieldOrder.Count + 1;
                 inFieldOrder.Add(pc.Name, fo);
             }
