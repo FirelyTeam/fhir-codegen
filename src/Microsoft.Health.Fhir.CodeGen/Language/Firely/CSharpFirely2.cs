@@ -2591,56 +2591,6 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             return true;
         }
 
-        /* TODO(ginoc): 2024.07.01 - Special cases to remove in SDK 6.0
-         * - ValueSet http://hl7.org/fhir/ValueSet/item-type used to enumerate non-selectable: 'question'
-         * - ValueSet http://hl7.org/fhir/ValueSet/v3-ActInvoiceGroupCode in STU3 used to enumerate non-selectable: '_ActInvoiceInterGroupCode' and '_ActInvoiceRootGroupCode'
-         */
-        switch (vs.Url)
-        {
-            case "http://hl7.org/fhir/ValueSet/item-type":
-                {
-                    if (vs.Expansion.Contains.Find(vsContains => vsContains.Code == "question") == null)
-                    {
-                        vs.Expansion.Contains.Insert(2, new ValueSet.ContainsComponent()
-                        {
-                            System = "http://hl7.org/fhir/item-type",
-                            Code = "question",
-                            Display = "Question",
-                        });
-                    }
-
-                    break;
-                }
-            case "http://hl7.org/fhir/ValueSet/v3-ActInvoiceGroupCode":
-                {
-                    // only care about the version present in STU3
-                    if (vs.Version == "2014-03-26")
-                    {
-                        if (vs.Expansion.Contains.Find(vsContains => vsContains.Code == "_ActInvoiceInterGroupCode") == null)
-                        {
-                            vs.Expansion.Contains.Insert(0, new ValueSet.ContainsComponent()
-                            {
-                                System = "http://hl7.org/fhir/v3/ActCode",
-                                Code = "_ActInvoiceInterGroupCode",
-                                Display = "ActInvoiceInterGroupCode",
-                            });
-                        }
-
-                        if (vs.Expansion.Contains.Find(vsContains => vsContains.Code == "_ActInvoiceRootGroupCode") == null)
-                        {
-                            vs.Expansion.Contains.Insert(8, new ValueSet.ContainsComponent()
-                            {
-                                System = "http://hl7.org/fhir/v3/ActCode",
-                                Code = "_ActInvoiceRootGroupCode",
-                                Display = "ActInvoiceRootGroupCode",
-                            });
-                        }
-                    }
-
-                    break;
-                }
-        }
-
         FhirConcept[] concepts = vs.cgGetFlatConcepts(_info).ToArray();
 
         if (concepts.Length == 0)
