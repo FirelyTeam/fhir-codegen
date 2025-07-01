@@ -441,6 +441,32 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         ["Signature.contentType"] = ("R4", "")
     };
 
+    private static string? GetExplicitName(ElementDefinition ed, FhirReleases.FhirSequenceCodes sequence) =>
+        (ed.Path, sequence) switch
+        {
+            ("Evidence.statistic.attributeEstimate.attributeEstimate", _) => "AttributeEstimate",
+            ("Citation.citedArtifact.contributorship.summary", _) => "CitedArtifactContributorshipSummary",
+            ("Measure.group", FhirReleases.FhirSequenceCodes.R6) => "GroupBackboneComponent",
+            ("Measure.group.component", FhirReleases.FhirSequenceCodes.R6) => "GroupComponent",
+            ("Measure.group.stratifier.component", FhirReleases.FhirSequenceCodes.R6) => "GroupStratifierComponent",
+            ("MolecularDefinition.location.sequenceLocation.coordinateInterval", FhirReleases.FhirSequenceCodes.R6) =>
+                "LocationSequenceLocationCoordinateIntervalComponent",
+            ("MolecularDefinition.location.sequenceLocation.coordinateInterval.coordinateSystem", FhirReleases.FhirSequenceCodes.R6) =>
+                "LocationSequenceLocationCoordinateIntervalCoordinateSystemComponent",
+            ("MolecularDefinition.representation.extracted.coordinateInterval", FhirReleases.FhirSequenceCodes.R6) =>
+                "RepresentationExtractedCoordinateIntervalComponent",
+            ("MolecularDefinition.representation.extracted.coordinateInterval.coordinateSystem", FhirReleases.FhirSequenceCodes.R6) =>
+                "RepresentationExtractedCoordinateIntervalCoordinateSystemComponent",
+            ("MolecularDefinition.representation.relative.edit.coordinateInterval", FhirReleases.FhirSequenceCodes.R6) =>
+                "RepresentationRelativeEditCoordinateIntervalComponent",
+            ("MolecularDefinition.representation.relative.edit.coordinateInterval.coordinateSystem", FhirReleases.FhirSequenceCodes.R6) =>
+                "RepresentationRelativeEditCoordinateIntervalCoordinateSystemComponent",
+
+            ("TestPlan.scope", FhirReleases.FhirSequenceCodes.R6) => "ScopeComponent",
+            ("TestPlan.testCase.scope", FhirReleases.FhirSequenceCodes.R6) => "TestCaseScopeComponent",
+            _ => ed.cgExplicitName()
+        };
+
     /// <summary>True to export five ws.</summary>
     private bool _exportFiveWs = true;
 
@@ -477,18 +503,20 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             _elementTypeChanges.Clear();
 
         // only generate base definitions for R5
-        if (subset.HasFlag(GenSubset.Base) && info.FhirSequence != FhirReleases.FhirSequenceCodes.R5)
+        if (subset.HasFlag(GenSubset.Base) &&
+            info.FhirSequence is not (FhirReleases.FhirSequenceCodes.R6 or FhirReleases.FhirSequenceCodes.R5))
         {
-            Console.WriteLine($"Aborting {LanguageName} for {info.FhirSequence}: code generation for the 'base' subset should be run on R5 only.");
+            Console.WriteLine($"Aborting {LanguageName} for {info.FhirSequence}: code generation for the 'base' subset should be run on R5/R6 only.");
             return;
         }
 
         // conformance subset is only valid for STU3 and R5
         if (subset.HasFlag(GenSubset.Conformance) &&
-            (info.FhirSequence != FhirReleases.FhirSequenceCodes.STU3 &&
-            info.FhirSequence != FhirReleases.FhirSequenceCodes.R5))
+            info.FhirSequence is not (FhirReleases.FhirSequenceCodes.STU3 or
+                FhirReleases.FhirSequenceCodes.R5 or FhirReleases.FhirSequenceCodes.R6))
+
         {
-            Console.WriteLine($"Aborting {LanguageName} for {info.FhirSequence}: code generation for the 'conformance' subset should be run on STU3 or R5 only.");
+            Console.WriteLine($"Aborting {LanguageName} for {info.FhirSequence}: code generation for the 'conformance' subset should be run on STU3 or R5/R6 only.");
             return;
         }
 
@@ -951,6 +979,13 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
             foreach (SearchParameter sp in resourceSearchParams.Values.OrderBy(s => s.Name))
             {
+                // TODO:R6: Add support for the 'resource' search parameter type
+                if ((sp.TypeElement.ObjectValue is "resource"))
+                {
+                    Console.WriteLine($"Skipping SearchParameter {sp.Id} ({sp.Url}) because it is target type of 'resource'!!!");
+                    continue;
+                }
+
                 if (sp.Experimental == true)
                 {
                     continue;
@@ -1554,29 +1589,6 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         // open class
         OpenScope();
 
-        // right now, no interfaces have components - TODO: determine naming convention if this comes up
-        //foreach (ComponentDefinition component in complex.cgChildComponents(_info))
-        //{
-        //    string componentExportName;
-        //    if (string.IsNullOrEmpty(component.cgExplicitName()))
-        //    {
-        //        componentExportName =
-        //            $"{component.cgName(NamingConvention.PascalCase)}Component";
-        //    }
-        //    else
-        //    {
-        //        // Consent.provisionActorComponent is explicit lower case...
-        //        componentExportName =
-        //            $"{component.cgExplicitName()}" +
-        //            $"Component";
-        //    }
-        //    WriteBackboneComponent(
-        //        component,
-        //        componentExportName,
-        //        exportName,
-        //        subset);
-        //}
-
         WriteInterfaceElements(complex, exportName, ref exportedElements);
 
         // close class
@@ -1952,16 +1964,14 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         {
             string componentExportName;
 
-            if (string.IsNullOrEmpty(component.cgExplicitName()))
+            if (GetExplicitName(component.Element, _info.FhirSequence) is {} explicitName)
             {
-                componentExportName =
-                    $"{component.cgName(NamingConvention.PascalCase)}Component";
+                componentExportName = $"{explicitName}Component";
             }
             else
             {
                 componentExportName =
-                    $"{component.cgExplicitName()}" +
-                    $"Component";
+                    $"{component.cgName(NamingConvention.PascalCase)}Component";
             }
 
             WriteBackboneComponent(
@@ -2431,7 +2441,12 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
         WriteComponentComment(complex);
 
+        string? explicitName = GetExplicitName(complex.Element, _info.FhirSequence);
+
         bool useConcatenationInName = complex.Structure.Name == "Citation";
+
+        string explicitNamePart = explicitName ??
+                                  complex.cgName(NamingConvention.PascalCase, useConcatenationInName, useConcatenationInName);
         string componentName = complex.Element.Path;
 
         WriteSerializable();
@@ -2469,10 +2484,17 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         // check for nested components
         foreach (ComponentDefinition component in complex.cgChildComponents(_info))
         {
-            string componentExplicitName = component.cgExplicitName();
-            string componentExportName = string.IsNullOrEmpty(componentExplicitName) ?
-                $"{component.cgName(NamingConvention.PascalCase, useConcatenationInName, useConcatenationInName)}Component"
-                : $"{component.cgExplicitName()}Component";
+            string componentExportName;
+
+            if (GetExplicitName(component.Element, _info.FhirSequence) is {} componentExplicitName)
+            {
+                componentExportName = $"{componentExplicitName}Component";
+            }
+            else
+            {
+                componentExportName =
+                    $"{component.cgName(NamingConvention.PascalCase, useConcatenationInName, useConcatenationInName)}Component";
+            }
 
             WriteBackboneComponent(
                 component,
@@ -2540,15 +2562,6 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             return false;
         }
 
-        FhirConcept[] concepts = vs.cgGetFlatConcepts(_info).ToArray();
-
-        if (concepts.Length == 0)
-        {
-            // TODO(ginoc): 2024.09.19 - do we want to start using a Terminology server to expand these?
-            // value set that cannot be expanded and does not have an expansion provided
-            return false;
-        }
-
         string name = (vs.Name ?? vs.Id)
             .Replace(" ", string.Empty, StringComparison.Ordinal)
             .Replace("_", string.Empty, StringComparison.Ordinal);
@@ -2577,6 +2590,16 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
             return true;
         }
+
+        FhirConcept[] concepts = vs.cgGetFlatConcepts(_info).ToArray();
+
+        if (concepts.Length == 0)
+        {
+            // TODO(ginoc): 2024.09.19 - do we want to start using a Terminology server to expand these?
+            // value set that cannot be expanded and does not have an expansion provided
+            return false;
+        }
+
 
         IEnumerable<string> referencedCodeSystems = vs.cgReferencedCodeSystems().ToList();
 
@@ -2650,6 +2673,47 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
             _writer.WriteLineIndented($"{codeName},");
         }
+
+        // HACK for short-term R6 support....
+        // We need to add the FHIR version enum literals for R6, as they are not part of the
+        // R5 distribution, which we are using at this moment to generate Base/Conformance.
+        if (vs.Url == "http://hl7.org/fhir/ValueSet/FHIR-version")
+        {
+            _writer.WriteIndented(
+                """
+                    /// <summary>
+                    /// R6 Versions.
+                    /// (system: http://hl7.org/fhir/FHIR-version)
+                    /// </summary>
+                    [EnumLiteral("6.0"), Description("6.0")]
+                    N6_0,
+                    /// <summary>
+                    /// R6 Final Version.
+                    /// (system: http://hl7.org/fhir/FHIR-version)
+                    /// </summary>
+                    [EnumLiteral("6.0.0"), Description("6.0.0")]
+                    N6_0_0,
+                    /// <summary>
+                    /// R6 1st Draft Ballot.
+                    /// (system: http://hl7.org/fhir/FHIR-version)
+                    /// </summary>
+                    [EnumLiteral("6.0.0-ballo1"), Description("6.0.0-ballot1")]
+                    N6_0_0Ballo1,
+                    /// <summary>
+                    /// R6 2nd Draft Ballot.
+                    /// (system: http://hl7.org/fhir/FHIR-version)
+                    /// </summary>
+                    [EnumLiteral("6.0.0-ballot2"), Description("6.0.0-ballot2")]
+                    N6_0_0Ballot2,
+                    /// <summary>
+                    /// R6 3rd Draft Ballot.
+                    /// (system: http://hl7.org/fhir/FHIR-version)
+                    /// </summary>
+                    [EnumLiteral("6.0.0-ballot3"), Description("6.0.0-ballot3")]
+                    N6_0_0Ballot3,
+                """);
+        }
+
 
         CloseScope();
 
@@ -2965,7 +3029,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
                     // check to see if the referenced element has an explicit name
                     if (info.TryFindElementByPath(btn, out StructureDefinition? _, out ElementDefinition? targetEd))
                     {
-                        return BuildTypeNameForNestedComplexType(targetEd, btn);
+                        return BuildTypeNameForNestedComplexType(targetEd, btn, info.FhirSequence);
                     }
 
                     return btn;
@@ -3180,11 +3244,9 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
     /// <param name="ed">  The ed.</param>
     /// <param name="type">The type.</param>
     /// <returns>A string.</returns>
-    private static string BuildTypeNameForNestedComplexType(ElementDefinition ed, string type)
+    private static string BuildTypeNameForNestedComplexType(ElementDefinition ed, string type, FhirReleases.FhirSequenceCodes sequence)
     {
-        string explicitTypeName = ed.cgExplicitName();
-
-        if (!string.IsNullOrEmpty(explicitTypeName))
+        if (GetExplicitName(ed, sequence) is {} explicitTypeName)
         {
             string parentName = type.Substring(0, type.IndexOf('.'));
             return $"{parentName}" +
