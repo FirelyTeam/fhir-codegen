@@ -1702,7 +1702,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             _writer.WriteLineIndented($"{propertyType} {interfaceExportName}.{propertyName}");
             OpenScope();
             _writer.WriteLineIndented($"get => {propertyName};");
-            _writer.WriteLineIndented($"set => {propertyName} = value;");
+            _writer.WriteLineIndented($"set => {propertyName} = value!;");
             CloseScope();
         }
 
@@ -1986,9 +1986,9 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         if (identifierElement != null)
         {
             if (identifierElement.cgIsArray())
-                _writer.WriteLineIndented("List<Identifier> IIdentifiable<List<Identifier>>.Identifier { get => Identifier; set => Identifier = value; }");
+                _writer.WriteLineIndented("List<Identifier> IIdentifiable<List<Identifier>>.Identifier { get => Identifier; set => Identifier = value!; }");
             else
-                _writer.WriteLineIndented("Identifier? IIdentifiable<Identifier?>.Identifier { get => Identifier; set => Identifier = value; }");
+                _writer.WriteLineIndented("Identifier? IIdentifiable<Identifier?>.Identifier { get => Identifier; set => Identifier = value!; }");
 
             _writer.WriteLine(string.Empty);
         }
@@ -2210,10 +2210,10 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
         foreach (WrittenElementInfo info in exportedElements)
         {
-            writeSetValueCase(info.FhirElementName, null, info.PropertyType, info.PropertyName);
+            writeSetValueCase(info.FhirElementName, null, info.PropertyType, info.PropertyName, info.Required);
         }
 
-        void writeSetValueCase(string fhirName, string? when, TypeReference type, string propName)
+        void writeSetValueCase(string fhirName, string? when, TypeReference type, string propName, bool required)
         {
             string overflowTypeName = getDynamicTypeForAbstractTypeName(type.PropertyTypeString);
 
@@ -2228,7 +2228,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
             // Because our list properties are never null when you get them, but can be set to null,
             // we need a bang after the assignment here for lists, but not for other elements.
-            _writer.WriteLineIndented($"else {propName} = ({type.PropertyTypeString}?)value{(type is ListTypeReference ? "!" : "")};");
+            _writer.WriteLineIndented($"else {propName} = ({type.PropertyTypeString}?)value{(type is ListTypeReference || required ? "!" : "")};");
             _writer.WriteLineIndented($"return this;");
             _writer.DecreaseIndent();
         }
@@ -3087,7 +3087,8 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             PropertyType: typeRef,
             PrimitiveHelperName: forPrimitiveType
                     ? (pascal == exportedComplexName ? $"{pascal}_" : pascal)
-                    : null // Since properties cannot have the same name as their enclosing types, we'll add a '_' suffix if this happens.
+                    : null, // Since properties cannot have the same name as their enclosing types, we'll add a '_' suffix if this happens.
+            Required: element.Min > 0
         );
     }
 
@@ -3103,9 +3104,9 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             { } s => s
         };
 
-        if(ei.PropertyType is ListTypeReference)
+        if (ei.PropertyType is ListTypeReference)
             _writer.WriteLineIndented("[AllowNull]");
-        _writer.WriteLineIndented($"public {(ei.PropertyType is ListTypeReference ltr ? ltr.PropertyTypeString : $"{ei.PropertyType.PropertyTypeString}?")} {ei.PropertyName}");
+        _writer.WriteLineIndented($"public {(ei.PropertyType is ListTypeReference || ei.Required ? ei.PropertyType.PropertyTypeString : $"{ei.PropertyType.PropertyTypeString}?")} {ei.PropertyName}");
 
         OpenScope();
 
@@ -3115,7 +3116,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         _writer.IncreaseIndent();
         _writer.WriteLineIndented($"throw CodedValidationException.FromTypes(typeof({ei.PropertyType.PropertyTypeString}), Overflow[\"{ei.FhirElementName}\"]);");
         _writer.DecreaseIndent();
-        _writer.WriteLineIndented(ei.PropertyType is not ListTypeReference ? $"return _{ei.PropertyName};" : $"return _{ei.PropertyName} ??= [];");
+        _writer.WriteLineIndented(ei.PropertyType is not ListTypeReference ? $"return _{ei.PropertyName}{(ei.Required ? "!" : "")};" : $"return _{ei.PropertyName} ??= [];");
 
         CloseScope();
 
@@ -3178,8 +3179,8 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         switch (propType)
         {
             case PrimitiveTypeReference ptr:
-                string nullableType = WithNullabilityMarking(ptr.ConveniencePropertyTypeString);
-                _writer.WriteLineIndented($"public {nullableType} {helperPropName}");
+                string typeString = WithNullabilityMarking(ptr.ConveniencePropertyTypeString);
+                _writer.WriteLineIndented($"public {typeString} {helperPropName}");
 
                 OpenScope();
                 string propAccess = versionsRemark is not null
@@ -3189,7 +3190,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
                 _writer.WriteLineIndented("set");
                 OpenScope();
-                _writer.WriteLineIndented($"{ei.PropertyName} = value is null ? null : new {ptr.PropertyTypeString}(value);");
+                _writer.WriteLineIndented($"{ei.PropertyName} = value is null ? null! : new {ptr.PropertyTypeString}(value);");
                 _writer.WriteLineIndented($"OnPropertyChanged(\"{helperPropName}\");");
                 CloseScope(suppressNewline: true);
                 CloseScope();
@@ -3801,7 +3802,8 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         string FhirElementPath,
         string PropertyName,
         TypeReference PropertyType,
-        string? PrimitiveHelperName);
+        string? PrimitiveHelperName,
+        bool Required = false);
 
     /// <summary>Information about the written model.</summary>
     internal record WrittenModelInfo(string FhirName, string CsName, bool IsAbstract);
