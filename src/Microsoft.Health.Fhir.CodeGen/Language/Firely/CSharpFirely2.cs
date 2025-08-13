@@ -3366,6 +3366,11 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
                     IEnumerable<TypeReference> typeRefs = elementTypes.Values.Select(v => TypeReference.BuildFromFhirTypeName(v.Code));
                     allowedTypes = BuildAllowedTypesAttribute(typeRefs, null);
                 }
+
+                if (elementTypes.Count > 30)
+                {
+                    allowedTypes = BuildOpenAllowedTypesAttribute();
+                }
             }
         }
 
