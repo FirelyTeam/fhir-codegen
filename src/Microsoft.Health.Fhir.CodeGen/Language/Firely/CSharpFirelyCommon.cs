@@ -240,6 +240,8 @@ public static class CSharpFirelyCommon
         return (relativeOrder * 10) + 10;
     }
 
+    public static string BuildOpenAllowedTypesAttribute() => "[AllowedTypes(OpenChoice = true)]";
+
     public static string BuildAllowedTypesAttribute(IEnumerable<TypeReference> types, FhirReleases.FhirSequenceCodes? since)
     {
         StringBuilder sb = new();
