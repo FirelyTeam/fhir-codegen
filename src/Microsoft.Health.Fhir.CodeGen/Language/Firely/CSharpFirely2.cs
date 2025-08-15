@@ -3399,7 +3399,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
                 else
                     throw new InvalidOperationException("Cannot generate AllowedTypes attribute for element " +
                         $"{element.Path} with types {string.Join(", ", elementTypes.Keys)} because " +
-                        $"not all types in the choice not available in the current subset ({subset}).");
+                        $"not all types in the choice are available in the current subset ({subset}).");
             }
         }
 
