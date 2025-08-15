@@ -940,6 +940,8 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         WriteCsToString(writtenPrimitives.Values.Where(_csToStringFilter), writtenComplexTypes.Values.Where(_csToStringFilter), writtenResources.Values.Where(_csToStringFilter));
 
         WriteSearchParameters();
+        var dataTypes = writtenPrimitives.Concat(writtenComplexTypes).ToDictionary(we => we.Key, we => we.Value);
+        WriteOpenTypes(dataTypes);
 
         // close class
         CloseScope();
@@ -961,6 +963,30 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
             writer.Flush();
             writer.Close();
         }
+    }
+
+
+    private void WriteOpenTypes(Dictionary<string,WrittenModelInfo> types)
+    {
+        _writer.WriteIndentedComment("The open types that are used in the FHIR model. These are types that can be used in the 'value' field of an Extension.", isSummary: true);
+        _writer.WriteIndentedComment("This list differs from the one in the written documentation (https://www.hl7.org/fhir/datatypes.html),\n" +
+            "but we assume the list in Extension.value[x] is the more authorative.",
+                                     isRemarks: true, isSummary: false);
+        _writer.WriteLineIndented("public static readonly Type[] OpenTypes =");
+        OpenScope();
+
+        var extensionValue = _info.TryFindElementByPath("Extension.value[x]",
+            out StructureDefinition? _,
+            out ElementDefinition? edExtensionValue)
+            ? edExtensionValue.Type
+            : throw new InvalidOperationException("Could not find Extension.value[x] element in definitions");
+
+        foreach (var typeName in extensionValue.Select(ev => ev.Code).OrderBy(c => c))
+        {
+            _writer.WriteLineIndented($"typeof({types[typeName].CsName}),");
+        }
+
+        CloseScope(includeSemicolon: true);
     }
 
     /// <summary>Writes the search parameters.</summary>
@@ -3366,11 +3392,14 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
                     IEnumerable<TypeReference> typeRefs = elementTypes.Values.Select(v => TypeReference.BuildFromFhirTypeName(v.Code));
                     allowedTypes = BuildAllowedTypesAttribute(typeRefs, null);
                 }
-
-                if (elementTypes.Count > 30)
+                else if (elementTypes.Count > 30)
                 {
                     allowedTypes = BuildOpenAllowedTypesAttribute();
                 }
+                else
+                    throw new InvalidOperationException("Cannot generate AllowedTypes attribute for element " +
+                        $"{element.Path} with types {string.Join(", ", elementTypes.Keys)} because " +
+                        $"not all types in the choice not available in the current subset ({subset}).");
             }
         }
 
