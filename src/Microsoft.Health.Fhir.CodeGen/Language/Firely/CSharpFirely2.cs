@@ -2656,6 +2656,9 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
 
         foreach (FhirConcept concept in concepts)
         {
+            if (concept.IsAbstract is true)
+                continue;
+
             string codeName = ConvertEnumValue(concept.Code);
             string codeValue = FhirSanitizationUtils.SanitizeForValue(concept.Code);
             string description = string.IsNullOrEmpty(concept.Definition)
