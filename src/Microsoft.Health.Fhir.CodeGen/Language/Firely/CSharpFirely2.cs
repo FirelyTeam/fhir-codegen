@@ -3145,7 +3145,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         _writer.IncreaseIndent();
         _writer.WriteLineIndented($"throw CodedValidationException.FromTypes(typeof({ei.PropertyType.PropertyTypeString}), Overflow[\"{ei.FhirElementName}\"]);");
         _writer.DecreaseIndent();
-        _writer.WriteLineIndented(ei.PropertyType is not ListTypeReference ? $"return _{ei.PropertyName}{(ei.Required ? "!" : "")};" : $"return _{ei.PropertyName} ??= [];");
+        _writer.WriteLineIndented(ei.PropertyType is not ListTypeReference ? $"return _{ei.PropertyName}{(ei.Required ? "!" : "")};" : $"return LazyInitializer.EnsureInitialized(ref _{ei.PropertyName}, () => []);");
 
         CloseScope();
 
@@ -3675,6 +3675,7 @@ public sealed class CSharpFirely2 : ILanguage, IFileHashTestable
         _writer.WriteLineIndented("using System.Collections.Generic;");
         _writer.WriteLineIndented("using System.Linq;");
         _writer.WriteLineIndented("using System.Runtime.Serialization;");
+        _writer.WriteLineIndented("using System.Threading;");
         _writer.WriteLineIndented("using Hl7.Fhir.Introspection;");
         _writer.WriteLineIndented("using Hl7.Fhir.Serialization;");
         _writer.WriteLineIndented("using Hl7.Fhir.Specification;");
